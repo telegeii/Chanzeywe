@@ -1,0 +1,106 @@
+/* src/pages/About/About.css */
+
+.about-page {
+  width: 100%;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+}
+
+/* HERO */
+.about-hero {
+  position: relative;
+  height: 45vh; /* not shouting */
+  overflow: hidden;
+}
+
+.about-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+.about-hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-hero-overlay h1 {
+  color: #fff;
+  font-size: 2.8rem;
+  letter-spacing: 1px;
+}
+
+/* CONTENT */
+.about-content {
+  max-width: 900px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  text-align: center;
+}
+
+.about-content h2 {
+  font-size: 1.9rem;
+  margin-bottom: 1rem;
+  color: #0b4fa3;
+}
+
+.about-content p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #555;
+}
+
+/* MISSION & VISION */
+.about-cards {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.about-card {
+  background: #fff;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+  transform: translateY(-5px);
+}
+
+.about-card img {
+  width: 70px;
+  margin-bottom: 1rem;
+}
+
+.about-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+  color: #0b4fa3;
+}
+
+.about-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .about-hero {
+    height: 35vh;
+  }
+
+  .about-hero-overlay h1 {
+    font-size: 2rem;
+  }
+}

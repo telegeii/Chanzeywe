@@ -1,0 +1,195 @@
+/* Hero Section */
+.courses-hero {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+
+.courses-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.courses-hero:hover img {
+  transform: scale(1.05);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 192, 203, 0.3); /* blush overlay */
+}
+
+.hero-text-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  text-align: center;
+  text-shadow: 2px 2px 12px rgba(0,0,0,0.6);
+}
+
+.hero-text-overlay h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+/* Courses Page */
+.courses-page {
+  max-width: 1200px;
+  margin: auto;
+  padding: 2rem 1rem;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.intro-text {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Card Styling */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.15);
+}
+
+/* Department Header */
+.department-section h2 {
+  color: #004aad;
+  margin-bottom: 1rem;
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.courses-table th,
+.courses-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.courses-table th {
+  background: linear-gradient(135deg, #004aad, #0066cc);
+  color: #fff;
+  font-weight: 600;
+}
+
+.courses-table tr:hover {
+  background: #f1f6ff;
+}
+
+.apply-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #004aad;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+
+}
+
+.apply-btn:hover {
+  background: #ffd700;
+  color: #004aad;
+  cursor: pointer;
+}
+
+/* Pagination */
+.pagination {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.pagination button {
+  margin: 0 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #004aad;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.pagination button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 500;
+}
+
+/* Student Forms */
+.student-forms ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.student-forms ul li a {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #004aad;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.student-forms ul li a:hover {
+  background: #ffd700;
+  color: #004aad;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .hero-text-overlay h1 {
+    font-size: 1.8rem;
+  }
+
+  .courses-table th,
+  .courses-table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .student-forms ul {
+    flex-direction: column;
+  }
+}

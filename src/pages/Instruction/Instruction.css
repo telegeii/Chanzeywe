@@ -1,0 +1,187 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* =========================
+   HERO SECTION
+========================= */
+.instruction-hero {
+  position: relative;
+  width: 100%;
+  height: 75vh;
+  max-height: 520px;
+  overflow: hidden;
+  border-radius: 0 0 28px 28px;
+}
+
+.instruction-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Gradient overlay */
+.instruction-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.6)
+  );
+}
+
+/* Text overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: #ffffff;
+}
+
+.hero-overlay h2 {
+  font-size: 2.4rem;
+  max-width: 900px;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.hero-overlay p {
+  font-size: 1.1rem;
+  max-width: 720px;
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+/* Apply Button */
+.hero-btn {
+  margin-top: 1.8rem;
+  padding: 0.8rem 2.4rem;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #035aa6, #1e90ff);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================
+   CONTENT SECTIONS
+========================= */
+.instruction-section {
+  padding: 3rem 6%;
+}
+
+.instruction-section h2 {
+  font-size: 1.9rem;
+  color: #035aa6;
+  margin-bottom: 1rem;
+}
+
+.instruction-section h3 {
+  margin-top: 1.5rem;
+  color: #023e73;
+}
+
+.instruction-section p {
+  color: #555;
+  line-height: 1.7;
+  max-width: 900px;
+}
+
+.instruction-section ul {
+  margin-top: 1rem;
+  padding-left: 1.2rem;
+}
+
+.instruction-section li {
+  margin-bottom: 0.6rem;
+  color: #444;
+}
+
+/* Highlight Box */
+.highlight {
+  background: #f9fbff;
+  border-left: 6px solid #035aa6;
+  border-radius: 14px;
+}
+
+/* =========================
+   LEVEL CARDS
+========================= */
+.levels {
+  padding: 3rem 6%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.level-card {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.level-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+}
+
+.level-card img {
+  width: 80px;
+  margin-bottom: 1rem;
+}
+
+.level-card h3 {
+  color: #023e73;
+  margin-bottom: 0.5rem;
+}
+
+.level-card p {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* =========================
+   MOBILE RESPONSIVENESS
+========================= */
+@media (max-width: 768px) {
+  .instruction-hero {
+    height: 60vh;
+  }
+
+  .hero-overlay h2 {
+    font-size: 1.7rem;
+  }
+
+  .hero-overlay p {
+    font-size: 0.95rem;
+  }
+
+  .instruction-section {
+    padding: 2.2rem 5%;
+  }
+}
