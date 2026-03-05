@@ -1,73 +1,325 @@
-/* Slider container */
+/* ============================================
+   SLIDER — Cinematic Edition
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --slider-accent: #c9a96e;
+  --slider-white: #f5f2ee;
+  --slider-dark: rgba(10, 10, 14, 0.55);
+  --slide-duration: 800ms;
+  --auto-duration: 6s;
+}
+
+/* ── Container ─────────────────────────────── */
 .slider {
   position: relative;
   width: 100%;
-  height: 70vh;
+  height: 75vh;
+  min-height: 480px;
   overflow: hidden;
-  margin-top: 0; /* start directly at top */
+  background: #0a0a0e;
+  font-family: 'DM Sans', sans-serif;
 }
 
-/* Slider image */
-.slider-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+/* ── Individual slide ───────────────────────── */
+.slide {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-/* Overlay for text */
-.overlay {
+.slide--hidden {
+  opacity: 0;
+  z-index: 0;
+}
+
+.slide--active {
+  z-index: 2;
+  pointer-events: auto;
+  animation: slideIn var(--slide-duration) cubic-bezier(0.77, 0, 0.18, 1) forwards;
+}
+
+.slide--exit {
+  z-index: 1;
+  animation: slideOut var(--slide-duration) cubic-bezier(0.77, 0, 0.18, 1) forwards;
+}
+
+/* ── Background image with Ken Burns ─────────── */
+.slide__bg {
+  position: absolute;
+  inset: -5%;
+  background-size: cover;
+  background-position: center;
+  will-change: transform;
+}
+
+.slide--active .slide__bg {
+  animation: kenBurns 7s ease-out forwards;
+}
+
+@keyframes kenBurns {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1.0);  }
+}
+
+/* ── Dark gradient overlay ───────────────────── */
+.slide__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(5, 5, 8, 0.72) 0%,
+      rgba(5, 5, 8, 0.35) 55%,
+      rgba(5, 5, 8, 0.15) 100%
+    ),
+    linear-gradient(
+      to top,
+      rgba(5, 5, 8, 0.6) 0%,
+      transparent 50%
+    );
+}
+
+/* ── Content block ───────────────────────────── */
+.slide__content {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 20px 40px;
-  border-radius: 10px;
   text-align: center;
-  color: white;
-  background: none; /* semi-transparent background */
-  max-width: 90%;
+
+  width: 100%;
+  max-width: 900px;
+
+  padding: 0 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
 }
 
-/* Overlay text */
-.overlay h1 {
-  font-size: 3rem;
-  font-weight: 600;
-  letter-spacing: 1px;
+/* Animate content in when slide is active */
+.slide--active .slide__eyebrow {
+  animation: fadeUp 0.7s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.slide--active .slide__title {
+  animation: fadeUp 0.7s 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.slide--active .slide__subtitle {
+  animation: fadeUp 0.7s 0.50s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.slide--active .slide__cta {
+  animation: fadeUp 0.7s 0.64s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ── Eyebrow label ───────────────────────────── */
+.slide__eyebrow {
+  display: inline-block;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--slider-accent);
+  position: relative;
+  padding-left: 36px;
+}
+
+.slide__eyebrow::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 1px;
+  background: var(--slider-accent);
+}
+
+/* ── Title ───────────────────────────────────── */
+.slide__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--slider-white);
   margin: 0;
 }
 
-/* MOBILE RESPONSIVE */
-@media (max-width: 1024px) {
-  .slider {
-    height: 60vh;
-  }
+/* ── Subtitle ─────────────────────────────────── */
+.slide__subtitle {
+  font-size: 0.95rem;
+  font-weight: 300;
+  line-height: 1.65;
+  color: rgba(245, 242, 238, 0.72);
+  margin: 0;
+  max-width: 420px;
+}
 
-  .overlay h1 {
-    font-size: 2.2rem;
-  }
+/* ── CTA Button ───────────────────────────────── */
+.slide__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 13px 28px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0a0a0e;
+  background: var(--slider-accent);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  width: fit-content;
+  transition: background 0.25s, transform 0.2s;
+}
+
+.slide__cta:hover {
+  background: var(--slider-white);
+  transform: translateY(-2px);
+}
+
+/* ── Slide transition animations ─────────────── */
+@keyframes slideIn {
+  from { opacity: 0; clip-path: inset(0 0 0 6%); }
+  to   { opacity: 1; clip-path: inset(0 0 0 0%); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ── Arrow buttons ────────────────────────────── */
+.slider__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50%;
+  color: var(--slider-white);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.25s, border-color 0.25s, transform 0.2s;
+}
+
+.slider__arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.slider__arrow--prev { left: 28px; }
+.slider__arrow--next { right: 28px; }
+
+.slider__arrow:hover {
+  background: var(--slider-accent);
+  border-color: var(--slider-accent);
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* ── Dot navigation ───────────────────────────── */
+.slider__dots {
+  position: absolute;
+  bottom: 32px;
+  right: 7%;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.slider__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, transform 0.3s, width 0.3s;
+}
+
+.slider__dot--active {
+  background: var(--slider-accent);
+  width: 22px;
+  border-radius: 3px;
+  transform: none;
+}
+
+/* ── Auto-play progress bar ───────────────────── */
+.slider__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.slider__progress-bar {
+  height: 100%;
+  background: var(--slider-accent);
+  animation: progress var(--auto-duration) linear forwards;
+  transform-origin: left;
+}
+
+@keyframes progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .slider { height: 62vh; }
 }
 
 @media (max-width: 768px) {
-  .slider {
-    height: 50vh;
+  .slider { height: 55vh; }
+
+  .slide__content {
+    padding: 0 5% 7%;
+    max-width: 100%;
   }
 
-  .overlay {
-    padding: 15px 20px;
+  .slider__arrow {
+    width: 38px;
+    height: 38px;
   }
-
-  .overlay h1 {
-    font-size: 1.8rem;
-  }
+  .slider__arrow--prev { left: 14px; }
+  .slider__arrow--next { right: 14px; }
 }
 
 @media (max-width: 480px) {
-  .slider {
-    height: 40vh;
+  .slider { height: 52vh; min-height: 360px; }
+
+  .slide__subtitle { display: none; }
+
+  .slider__dots {
+    right: 50%;
+    transform: translateX(50%);
+    bottom: 22px;
   }
 
-  .overlay h1 {
-    font-size: 1.4rem;
-  }
+  .slider__arrow { display: none; }
 }

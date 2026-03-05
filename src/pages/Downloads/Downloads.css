@@ -1,152 +1,414 @@
-/* =========================
-   RESET
-========================= */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ============================================
+   DOWNLOADS PAGE — Chanzeywe TVC
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap');
+
+:root {
+  --dl-blue: #0a3d8f;
+  --dl-blue-dark: #072d6b;
+  --dl-blue-deep: #051f4e;
+  --dl-accent: #f0a500;
+  --dl-accent-hover: #ffc233;
+  --dl-text: #1a1f36;
+  --dl-muted: #6b7280;
+  --dl-bg: #f4f6fb;
+  --dl-white: #ffffff;
+  --dl-border: rgba(10, 61, 143, 0.09);
+  --dl-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 16px 40px rgba(10,61,143,0.09);
+  --dl-radius: 16px;
+  --dl-font: 'Outfit', sans-serif;
 }
 
-/* =========================
-   HERO SECTION
-========================= */
-.downloads-hero {
+/* ── Hero ─────────────────────────────────────── */
+.dl-hero {
   position: relative;
   width: 100%;
-  height: 60vh;
-  max-height: 480px;
+  height: 380px;
   overflow: hidden;
-  border-radius: 0 0 28px 28px;
+  background: var(--dl-blue-deep);
 }
 
-.downloads-hero img {
+.dl-hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 35%;
+  filter: brightness(0.52);
+  animation: dlHeroZoom 12s ease-out forwards;
 }
 
-.downloads-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.35),
-    rgba(0, 0, 0, 0.65)
-  );
+@keyframes dlHeroZoom {
+  from { transform: scale(1.07); }
+  to   { transform: scale(1.0);  }
 }
 
-.downloads-overlay {
+.dl-hero__overlay {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(5,31,78,0.20) 0%,
+      rgba(5,31,78,0.60) 50%,
+      rgba(5,31,78,0.94) 100%
+    ),
+    linear-gradient(
+      to right,
+      rgba(5,31,78,0.85) 0%,
+      rgba(5,31,78,0.30) 55%,
+      transparent 100%
+    );
+}
+
+.dl-hero__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0 7% 52px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 12px;
+  max-width: 640px;
+}
+
+.dl-hero__eyebrow {
+  display: inline-flex;
   align-items: center;
-  padding: 1.5rem;
-  text-align: center;
-  color: #ffffff;
+  gap: 10px;
+  font-family: var(--dl-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dl-accent);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  animation: fadeUp 0.7s 0.15s both;
 }
 
-.downloads-overlay h2 {
-  font-size: 2.3rem;
-  margin-bottom: 0.8rem;
+.dl-hero__eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 26px;
+  height: 2px;
+  background: var(--dl-accent);
+  border-radius: 2px;
 }
 
-.downloads-overlay p {
-  font-size: 1.05rem;
-  max-width: 700px;
-  opacity: 0.95;
-}
-
-/* =========================
-   DOWNLOADS SECTION
-========================= */
-.downloads-section {
-  padding: 3.5rem 6%;
-  background: #f9fbff;
-}
-
-.downloads-section h2 {
-  text-align: center;
-  font-size: 2rem;
-  color: #035aa6;
-  margin-bottom: 0.5rem;
-}
-
-.downloads-subtitle {
-  text-align: center;
-  color: #555;
-  margin-bottom: 2.5rem;
-}
-
-/* Grid */
-.downloads-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 2rem;
-}
-
-/* Card */
-.download-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 2rem;
-  text-align: center;
-  text-decoration: none;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.download-card span {
-  font-size: 2.5rem;
-}
-
-.download-card h3 {
-  margin: 1rem 0;
-  font-size: 1.05rem;
-  color: #023e73;
-}
-
-/* Button */
-.download-card button {
-  padding: 0.6rem 1.8rem;
-  border-radius: 999px;
-  border: none;
-  background: linear-gradient(135deg, #035aa6, #1e90ff);
-  color: #ffffff;
+.dl-hero__content h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  color: #ffffff;
+  line-height: 1.06;
+  margin: 0;
+  text-shadow:
+    0 2px 6px rgba(0,0,0,0.9),
+    0 4px 24px rgba(0,0,0,0.7),
+    0 8px 48px rgba(0,0,0,0.5);
+  animation: fadeUp 0.7s 0.28s both;
 }
 
-.download-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.15);
+.dl-hero__content p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.94);
+  text-shadow: 0 1px 10px rgba(0,0,0,0.85);
+  margin: 0;
+  line-height: 1.6;
+  animation: fadeUp 0.7s 0.4s both;
 }
 
-.download-card:hover button {
-  transform: scale(1.05);
+.dl-hero__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--dl-font);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  animation: fadeUp 0.7s 0.5s both;
 }
 
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-  .downloads-hero {
-    height: 50vh;
-  }
+.dl-hero__breadcrumb a {
+  color: rgba(255,255,255,0.68);
+  text-decoration: none;
+  transition: color 0.2s;
+}
 
-  .downloads-overlay h2 {
-    font-size: 1.7rem;
-  }
+.dl-hero__breadcrumb a:hover { color: var(--dl-accent); }
+.dl-hero__breadcrumb svg    { font-size: 0.52rem; opacity: 0.5; }
+.dl-hero__breadcrumb span   { color: var(--dl-accent); }
 
-  .downloads-overlay p {
-    font-size: 0.95rem;
-  }
+/* ── Section ──────────────────────────────────── */
+.dl-section {
+  background: var(--dl-bg);
+  padding: 72px 5% 88px;
+  font-family: var(--dl-font);
+}
 
-  .downloads-section {
-    padding: 2.5rem 5%;
+/* ── Intro ────────────────────────────────────── */
+.dl-intro {
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dl-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dl-accent);
+}
+
+.dl-eyebrow::before,
+.dl-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--dl-accent);
+  border-radius: 2px;
+}
+
+.dl-intro h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 600;
+  color: var(--dl-text);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.dl-intro p {
+  font-size: 0.94rem;
+  color: var(--dl-muted);
+  line-height: 1.72;
+  margin: 0;
+}
+
+/* ── Grid ─────────────────────────────────────── */
+.dl-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ── Card ─────────────────────────────────────── */
+.dl-card {
+  background: var(--dl-white);
+  border: 1px solid var(--dl-border);
+  border-radius: var(--dl-radius);
+  box-shadow: var(--dl-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease;
+  position: relative;
+}
+
+.dl-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.04), 0 28px 56px rgba(10,61,143,0.13);
+}
+
+/* Blue top bar on hover */
+.dl-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, var(--dl-blue), #1a56c4);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 16px 16px 0 0;
+}
+
+.dl-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Card top row */
+.dl-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 22px 0;
+}
+
+.dl-card__icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(10,61,143,0.07);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--dl-blue);
+  transition: background 0.28s, transform 0.28s;
+  flex-shrink: 0;
+}
+
+.dl-card:hover .dl-card__icon {
+  background: var(--dl-blue);
+  color: var(--dl-white);
+  transform: scale(1.08) rotate(-4deg);
+}
+
+.dl-card__tag {
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dl-blue);
+  background: rgba(10,61,143,0.08);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* Card body */
+.dl-card__body {
+  padding: 16px 22px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.dl-card__body h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--dl-text);
+  line-height: 1.35;
+  margin: 0;
+  transition: color 0.22s;
+}
+
+.dl-card:hover .dl-card__body h3 {
+  color: var(--dl-blue);
+}
+
+.dl-card__body p {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: var(--dl-muted);
+  margin: 0;
+}
+
+/* Card footer */
+.dl-card__footer {
+  padding: 0 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dl-card__divider {
+  height: 1px;
+  background: var(--dl-border);
+}
+
+/* Download button */
+.dl-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  font-family: var(--dl-font);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--dl-blue-deep);
+  background: var(--dl-accent);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.22s, transform 0.2s, gap 0.22s;
+  box-shadow: 0 3px 10px rgba(240,165,0,0.25);
+}
+
+.dl-card__btn:hover {
+  background: var(--dl-accent-hover);
+  transform: translateY(-1px);
+  gap: 12px;
+}
+
+.dl-card__btn-icon {
+  font-size: 0.75rem;
+  transition: transform 0.22s;
+}
+
+.dl-card__btn:hover .dl-card__btn-icon {
+  transform: translateY(2px);
+}
+
+/* ── Info note ────────────────────────────────── */
+.dl-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 540px;
+  margin: 36px auto 0;
+  padding: 14px 20px;
+  background: var(--dl-white);
+  border: 1px solid var(--dl-border);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.dl-note__icon {
+  font-size: 1.1rem;
+  color: #e53e3e;
+  flex-shrink: 0;
+}
+
+.dl-note p {
+  font-size: 0.82rem;
+  color: var(--dl-muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* ── Animation ────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 900px) {
+  .dl-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
+
+@media (max-width: 600px) {
+  .dl-hero { height: 300px; }
+  .dl-hero__content { padding: 0 5% 44px; }
+  .dl-hero__content h1 { font-size: 2.2rem; }
+
+  .dl-section { padding: 52px 5% 72px; }
+
+  .dl-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 400px) {
+  .dl-hero { height: 260px; }
+  .dl-hero__content h1 { font-size: 1.9rem; }
 }

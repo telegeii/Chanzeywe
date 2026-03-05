@@ -1,171 +1,379 @@
-/* SECTION WRAPPER */
-.Auto {
+/* ============================================
+   FEATURED PROGRAMMES — Chanzeywe
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap');
+
+:root {
+  --pf-blue: #0a3d8f;
+  --pf-accent: #f0a500;
+  --pf-text: #1a1f36;
+  --pf-muted: #6b7280;
+  --pf-bg: #f4f6fb;
+  --pf-card: #ffffff;
+  --pf-border: rgba(10, 61, 143, 0.08);
+  --pf-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 16px 40px rgba(10,61,143,0.09);
+  --pf-radius: 16px;
+}
+
+/* ── Section ──────────────────────────────────── */
+.pf-section {
   width: 100%;
-  padding: 50px 20px;
-  background: #f1f5f9; /* subtle light background */
+  padding: 80px 5% 90px;
+  background: var(--pf-bg);
   box-sizing: border-box;
-  overflow-x: hidden; /* FIX horizontal scroll */
-  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  font-family: 'Outfit', sans-serif;
 }
 
-/* TITLE */
-.title {
+/* ── Header ───────────────────────────────────── */
+.pf-header {
   text-align: center;
-  font-size: 26px;
-  font-weight: 700;
-  color: #111827;
-  margin-bottom: 40px;
-}
-
-/* SLIDER CONTAINER */
-.Mt20 {
-  max-width: 1200px;
-  margin: auto;
-  padding: 0 10px;
-}
-
-/* SLIDE SPACING */
-.slick-slide > div {
-  margin: 0 10px;
-  box-sizing: border-box;
-}
-
-/* CARD */
-.cont {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 28px 22px;
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+  max-width: 580px;
+  margin: 0 auto 52px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
-  height: 100%;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
-  min-height: 260px;
 }
 
-.cont:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
-}
-
-/* ICON */
-.icon svg {
-  font-size: 44px;
-  color: #2563eb;
-}
-
-/* COURSE TITLE */
-.course {
-  font-size: 16px;
+.pf-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
   font-weight: 600;
-  color: #111827;
-  margin-bottom: 5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pf-accent);
 }
 
-/* TEXT */
-.cont p {
+.pf-eyebrow::before,
+.pf-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--pf-accent);
+  border-radius: 2px;
+}
+
+.pf-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.9rem, 4vw, 2.6rem);
+  font-weight: 600;
+  color: var(--pf-text);
+  line-height: 1.15;
   margin: 0;
-  font-size: 14px;
-  color: #374151;
 }
 
-/* BUTTON */
-.cont button {
-  margin-top: auto;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #2563eb;
-  color: #ffffff;
-  font-size: 14px;
+.pf-subtitle {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--pf-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Slider wrapper ───────────────────────────── */
+.pf-slider-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px; /* room for arrows */
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* Per-slide outer padding */
+.pf-slide {
+  padding: 8px 10px 16px;
+  box-sizing: border-box;
+}
+
+/* ── Card ─────────────────────────────────────── */
+.pf-card {
+  background: var(--pf-card);
+  border-radius: var(--pf-radius);
+  border: 1px solid var(--pf-border);
+  box-shadow: var(--pf-shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.32s ease;
+  height: 100%;
+}
+
+.pf-card:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.04), 0 28px 56px rgba(10,61,143,0.13);
+}
+
+/* ── Icon ─────────────────────────────────────── */
+.pf-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin: 24px 22px 0;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.pf-card:hover .pf-icon {
+  transform: scale(1.1) rotate(-4deg);
+}
+
+/* ── Card body ────────────────────────────────── */
+.pf-card__body {
+  padding: 16px 22px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pf-dept {
+  font-size: 0.72rem;
   font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pf-muted);
+  margin: 0;
+}
+
+.pf-course {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--pf-text);
+  line-height: 1.38;
+  margin: 0;
+  transition: color 0.2s;
+}
+
+.pf-card:hover .pf-course {
+  color: var(--pf-blue);
+}
+
+/* ── Tags row ─────────────────────────────────── */
+.pf-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.pf-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--pf-muted);
+  background: #f3f4f6;
+  border-radius: 20px;
+}
+
+.pf-tag svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+}
+
+.pf-tag--exam {
+  color: var(--pf-blue);
+  background: rgba(10, 61, 143, 0.07);
+  font-weight: 600;
+}
+
+/* ── Card footer ──────────────────────────────── */
+.pf-card__footer {
+  padding: 0 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.pf-accent-bar {
+  height: 2px;
+  border-radius: 2px;
+  opacity: 0.18;
+  transition: opacity 0.3s;
+}
+
+.pf-card:hover .pf-accent-bar {
+  opacity: 0.5;
+}
+
+/* ── Enroll button ────────────────────────────── */
+.pf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--btn-color, var(--pf-blue));
+  background: transparent;
+  border: 1.5px solid currentColor;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.22s, color 0.22s, gap 0.22s;
+  width: 100%;
 }
 
-.cont button:hover {
-  background: #1e40af;
+.pf-btn:hover {
+  background: var(--btn-color, var(--pf-blue));
+  color: #fff;
+  gap: 12px;
 }
 
-/* CUSTOM ARROWS */
-.custom-arrow {
+.pf-btn__icon {
+  font-size: 0.7rem;
+  transition: transform 0.22s;
+}
+
+.pf-btn:hover .pf-btn__icon {
+  transform: translateX(2px);
+}
+
+/* ── Custom arrows ────────────────────────────── */
+.pf-arrow {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  width: 42px;
-  height: 42px;
-  background: #2563eb;
-  color: #ffffff;
+  transform: translateY(-60%);
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
+  background: var(--pf-card);
+  color: var(--pf-blue);
+  border: 1.5px solid var(--pf-border);
+  box-shadow: 0 4px 14px rgba(10,61,143,0.12);
   display: flex !important;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 0.85rem;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  z-index: 999;
+  z-index: 10;
+  transition: background 0.22s, color 0.22s, transform 0.22s;
 }
 
-.custom-arrow.prev {
-  left: -15px; /* move slightly outside */
+.pf-arrow--prev { left: 0; }
+.pf-arrow--next { right: 0; }
+
+.pf-arrow:hover {
+  background: var(--pf-blue);
+  color: #fff;
+  border-color: var(--pf-blue);
+  transform: translateY(-60%) scale(1.08);
 }
 
-.custom-arrow.next {
-  right: -15px; /* move slightly outside */
+/* ── Dots ─────────────────────────────────────── */
+.pf-dots {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  padding: 20px 0 0 !important;
+  margin: 0 !important;
 }
 
-.custom-arrow:hover {
-  background: #1e40af;
+.pf-dots li button {
+  font-size: 0;
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border-radius: 50%;
+  background: #cbd5e1;
+  border: none;
+  cursor: pointer;
+  transition: background 0.22s, width 0.22s;
 }
 
-/* DOTS */
-.slick-dots li button:before {
-  color: #2563eb;
+.pf-dots li button::before { display: none; }
+
+.pf-dots li.slick-active button {
+  background: var(--pf-blue);
+  width: 22px;
+  border-radius: 4px;
 }
 
-.slick-dots li.slick-active button:before {
-  color: #1e40af;
+/* ── View All link ────────────────────────────── */
+.pf-viewall {
+  text-align: center;
+  margin-top: 36px;
 }
 
-/* MOBILE STYLES */
-@media (max-width: 768px) {
-  .Auto {
-    padding: 30px 15px;
-  }
+.pf-viewall__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--pf-blue);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  padding-bottom: 2px;
+  border-bottom: 1.5px solid rgba(10,61,143,0.25);
+  transition: border-color 0.2s, gap 0.2s;
+}
 
-  .title {
-    font-size: 22px;
-  }
+.pf-viewall__link:hover {
+  border-bottom-color: var(--pf-blue);
+  gap: 10px;
+}
 
-  .cont {
-    padding: 20px;
-  }
-
-  .icon svg {
-    font-size: 36px;
-  }
-
-  .custom-arrow {
-    display: none; /* hide arrows on mobile */
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .pf-slider-wrap {
+    padding: 0 48px;
   }
 }
 
-@media (max-width: 480px) {
-  .Auto {
-    padding: 20px 10px;
+@media (max-width: 640px) {
+  .pf-section {
+    padding: 56px 0 72px;
   }
 
-  .title {
-    font-size: 20px;
+  .pf-header {
+    padding: 0 5%;
+    margin-bottom: 36px;
   }
 
-  .course {
-    font-size: 15px;
+  .pf-slider-wrap {
+    padding: 0;
   }
 
-  .cont p {
-    font-size: 13px;
+  .pf-slide {
+    padding: 6px 6px 14px;
+  }
+
+  .pf-arrow {
+    display: none !important;
+  }
+
+  .pf-viewall {
+    padding: 0 5%;
+  }
+}
+
+@media (max-width: 400px) {
+  .pf-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.35rem;
+  }
+
+  .pf-course {
+    font-size: 0.98rem;
   }
 }

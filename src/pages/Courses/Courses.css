@@ -1,85 +1,232 @@
-/* Hero Section */
+/* ============================================
+   COURSES PAGE — Chanzeywe TVC
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap');
+
+:root {
+  --cs-blue: #0a3d8f;
+  --cs-blue-dark: #072d6b;
+  --cs-blue-deep: #051f4e;
+  --cs-accent: #f0a500;
+  --cs-accent-hover: #ffc233;
+  --cs-text: #1a1f36;
+  --cs-muted: #6b7280;
+  --cs-bg: #f4f6fb;
+  --cs-white: #ffffff;
+  --cs-border: rgba(10, 61, 143, 0.09);
+  --cs-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 16px 40px rgba(10,61,143,0.09);
+  --cs-radius: 16px;
+  --cs-font: 'Outfit', sans-serif;
+}
+
+/* ── Hero ─────────────────────────────────────── */
 .courses-hero {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 380px;
   overflow: hidden;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  background: var(--cs-blue-deep);
 }
 
 .courses-hero img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  object-position: center 40%;
+  animation: heroZoom 12s ease-out forwards;
 }
 
-.courses-hero:hover img {
-  transform: scale(1.05);
+@keyframes heroZoom {
+  from { transform: scale(1.07); }
+  to   { transform: scale(1.0);  }
 }
 
 .hero-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 192, 203, 0.3); /* blush overlay */
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(5,31,78,0.45) 0%, rgba(5,31,78,0.72) 100%),
+    linear-gradient(to right, rgba(5,31,78,0.55) 0%, transparent 65%);
 }
 
 .hero-text-overlay {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff;
-  text-align: center;
-  text-shadow: 2px 2px 12px rgba(0,0,0,0.6);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 7% 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 680px;
+}
+
+.hero-text-overlay__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--cs-font);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cs-accent);
+  animation: fadeUp 0.7s 0.15s both;
+}
+
+.hero-text-overlay__eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--cs-accent);
+  border-radius: 2px;
 }
 
 .hero-text-overlay h1 {
-  font-size: 2.5rem;
-  font-weight: bold;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 600;
+  color: var(--cs-white);
+  line-height: 1.08;
+  margin: 0;
+  animation: fadeUp 0.7s 0.28s both;
 }
 
-/* Courses Page */
+.hero-text-overlay p {
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: rgba(255,255,255,0.68);
+  margin: 0;
+  animation: fadeUp 0.7s 0.4s both;
+}
+
+.hero-text-overlay__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--cs-font);
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.42);
+  animation: fadeUp 0.7s 0.5s both;
+}
+
+.hero-text-overlay__breadcrumb a {
+  color: rgba(255,255,255,0.52);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.hero-text-overlay__breadcrumb a:hover { color: var(--cs-accent); }
+.hero-text-overlay__breadcrumb svg { font-size: 0.52rem; opacity: 0.45; }
+.hero-text-overlay__breadcrumb span { color: var(--cs-accent); }
+
+/* ── Page section ─────────────────────────────── */
 .courses-page {
   max-width: 1200px;
-  margin: auto;
-  padding: 2rem 1rem;
-  font-family: "Segoe UI", sans-serif;
+  margin: 0 auto;
+  padding: 60px 5% 80px;
+  font-family: var(--cs-font);
 }
 
-.intro-text {
+/* ── Intro block ──────────────────────────────── */
+.courses-intro {
   text-align: center;
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: #333;
+  max-width: 600px;
+  margin: 0 auto 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Card Styling */
-.card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.courses-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cs-accent);
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 36px rgba(0,0,0,0.15);
+.courses-eyebrow::before,
+.courses-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1.5px;
+  background: var(--cs-accent);
+  border-radius: 2px;
 }
 
-/* Department Header */
-.department-section h2 {
-  color: #004aad;
-  margin-bottom: 1rem;
+.courses-intro h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--cs-text);
+  margin: 0;
+  line-height: 1.15;
 }
 
-/* Table Wrapper */
+.courses-intro p {
+  font-size: 0.94rem;
+  color: var(--cs-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ── Department card ──────────────────────────── */
+.department-section.card {
+  background: var(--cs-white);
+  border: 1px solid var(--cs-border);
+  border-radius: var(--cs-radius);
+  box-shadow: var(--cs-shadow);
+  padding: 0;
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: box-shadow 0.28s ease;
+}
+
+.department-section.card:hover {
+  box-shadow: 0 8px 16px rgba(0,0,0,0.04), 0 28px 56px rgba(10,61,143,0.12);
+}
+
+/* Department header strip */
+.dept-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  background: linear-gradient(135deg, var(--cs-blue-deep), var(--cs-blue));
+  border-bottom: none;
+}
+
+.dept-header__icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--cs-accent);
+  flex-shrink: 0;
+}
+
+.dept-header h2 {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cs-white);
+  margin: 0;
+}
+
+/* ── Table ────────────────────────────────────── */
 .table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -88,108 +235,240 @@
 .courses-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 620px;
+  font-size: 0.875rem;
 }
 
-.courses-table th,
-.courses-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
+.courses-table thead tr {
+  background: var(--cs-bg);
+  border-bottom: 2px solid var(--cs-border);
 }
 
 .courses-table th {
-  background: linear-gradient(135deg, #004aad, #0066cc);
-  color: #fff;
-  font-weight: 600;
+  padding: 12px 18px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cs-muted);
+  text-align: left;
+  white-space: nowrap;
 }
 
-.courses-table tr:hover {
-  background: #f1f6ff;
+.courses-table td {
+  padding: 13px 18px;
+  color: var(--cs-text);
+  border-bottom: 1px solid var(--cs-border);
+  vertical-align: middle;
 }
 
-.apply-btn {
+.courses-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.courses-table tbody tr {
+  transition: background 0.18s;
+}
+
+.courses-table tbody tr:hover {
+  background: #f0f4ff;
+}
+
+/* Code cell */
+.courses-table td:first-child {
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--cs-blue);
+  white-space: nowrap;
+}
+
+/* Level badge */
+.level-badge {
   display: inline-block;
-  padding: 6px 12px;
-  background: #004aad;
-  color: #fff;
-  border-radius: 6px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.3s ease;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+  background: rgba(10,61,143,0.08);
+  color: var(--cs-blue);
+}
 
+.level-badge--diploma {
+  background: rgba(240,165,0,0.12);
+  color: #92580a;
+}
+
+/* Apply button */
+.apply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font-family: var(--cs-font);
+  font-size: 0.77rem;
+  font-weight: 600;
+  color: var(--cs-blue);
+  background: transparent;
+  border: 1.5px solid rgba(10,61,143,0.25);
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.2s;
 }
 
 .apply-btn:hover {
-  background: #ffd700;
-  color: #004aad;
-  cursor: pointer;
+  background: var(--cs-blue);
+  color: var(--cs-white);
+  border-color: var(--cs-blue);
+  transform: translateY(-1px);
 }
 
-/* Pagination */
+/* ── Pagination ───────────────────────────────── */
 .pagination {
-  text-align: center;
-  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 40px;
 }
 
 .pagination button {
-  margin: 0 10px;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  background: #004aad;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 22px;
+  font-family: var(--cs-font);
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--cs-blue);
+  background: var(--cs-white);
+  border: 1.5px solid var(--cs-border);
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: background 0.22s, color 0.22s, border-color 0.22s, transform 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: var(--cs-blue);
+  color: var(--cs-white);
+  border-color: var(--cs-blue);
+  transform: translateY(-1px);
 }
 
 .pagination button:disabled {
-  background: #ccc;
+  opacity: 0.35;
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-.pagination span {
+.pagination__info {
+  font-size: 0.82rem;
   font-weight: 500;
+  color: var(--cs-muted);
+  padding: 0 4px;
 }
 
-/* Student Forms */
+/* ── Student Forms card ───────────────────────── */
+.student-forms.card {
+  background: var(--cs-white);
+  border: 1px solid var(--cs-border);
+  border-radius: var(--cs-radius);
+  box-shadow: var(--cs-shadow);
+  padding: 32px 28px;
+  margin-bottom: 0;
+}
+
+.student-forms.card:hover {
+  transform: none;
+  box-shadow: var(--cs-shadow);
+}
+
+.forms-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.forms-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--cs-text);
+  margin: 0;
+}
+
 .student-forms ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1rem;
+  gap: 12px;
 }
 
 .student-forms ul li a {
-  display: inline-block;
-  padding: 8px 16px;
-  background: #004aad;
-  color: #fff;
-  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 22px;
+  font-family: var(--cs-font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cs-blue-deep);
+  background: var(--cs-accent);
+  border-radius: 9px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: background 0.22s, transform 0.2s;
+  box-shadow: 0 3px 10px rgba(240,165,0,0.25);
 }
 
 .student-forms ul li a:hover {
-  background: #ffd700;
-  color: #004aad;
+  background: var(--cs-accent-hover);
+  transform: translateY(-2px);
 }
 
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .hero-text-overlay h1 {
-    font-size: 1.8rem;
+.student-forms ul li a svg {
+  font-size: 0.8rem;
+}
+
+/* ── Animation ────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+  .courses-hero { height: 300px; }
+
+  .hero-text-overlay {
+    padding: 0 5% 44px;
   }
 
   .courses-table th,
   .courses-table td {
-    padding: 8px 10px;
-    font-size: 0.85rem;
+    padding: 10px 12px;
+    font-size: 0.82rem;
   }
 
   .student-forms ul {
     flex-direction: column;
+    align-items: stretch;
   }
+
+  .student-forms ul li a {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .courses-page { padding: 40px 4% 64px; }
+  .courses-hero { height: 260px; }
 }

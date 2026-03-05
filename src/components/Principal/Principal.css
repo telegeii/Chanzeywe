@@ -1,114 +1,189 @@
-.principal-section {
-  background: #ffffff;
-  padding: 30px 1%;
+.principal-section{
+position:relative;
+background:#faf9f6;
+padding:90px 5%;
+overflow:hidden;
+font-family:'DM Sans',sans-serif;
 }
 
-.principal-container {
-  display: flex;
-  gap: 50px;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
+.principal-container{
+position:relative;
+z-index:1;
+display:flex;
+align-items:center;
+gap:72px;
+max-width:1100px;
+margin:auto;
 }
 
 /* IMAGE */
-.principal-image img {
-  width: 400px;          /* Base width for large screens */
-  max-width: 100%;       /* Never exceed container */
-  height: auto;
-  border-radius: 20px;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-  object-fit: cover;
-  transition: all 0.3s ease;
+
+.principal-image-wrap{
+position:relative;
+flex-shrink:0;
 }
 
-/* TEXT */
-.principal-content {
-  max-width: 650px;
-  text-align: left;
+.principal-image-frame{
+position:relative;
+width:360px;
+border-radius:4px 28px 4px 28px;
+overflow:hidden;
+box-shadow:0 20px 50px rgba(0,0,0,0.14);
 }
 
-.principal-quote {
-  font-size: 1.15rem;
-  line-height: 1.9;
-  color: #333;
+.principal-image-frame img{
+width:100%;
+height:460px;
+object-fit:cover;
+object-position:top center;
+display:block;
 }
 
-.principal-karibu {
-  margin-top: 15px;
-  font-weight: 600;
-  color: #0066cc;
+/* CENTERED BADGE */
+
+.principal-badge{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
+bottom:-18px;
+
+background:white;
+border:1px solid #e8d5a3;
+border-radius:100px;
+
+padding:10px 20px;
+
+display:flex;
+align-items:center;
+gap:6px;
+
+font-size:.75rem;
+font-weight:500;
+letter-spacing:.08em;
+
+color:#b5893f;
+
+box-shadow:0 8px 24px rgba(0,0,0,.10);
+white-space:nowrap;
 }
 
-.principal-name {
-  margin-top: 20px;
-  font-size: 1.3rem;
-  font-weight: 600;
+/* CONTENT */
+
+.principal-content{
+flex:1;
+max-width:580px;
+display:flex;
+flex-direction:column;
+gap:24px;
 }
 
-.principal-title {
-  color: #555;
-  font-size: 0.95rem;
+.principal-label{
+display:flex;
+align-items:center;
+gap:12px;
+font-size:.72rem;
+font-weight:500;
+letter-spacing:.22em;
+text-transform:uppercase;
+color:#b5893f;
 }
 
-/* MOBILE RESPONSIVE */
-@media screen and (max-width: 1024px) {
-  .principal-image img {
-    width: 350px;
-  }
+.principal-label__line{
+width:28px;
+height:1px;
+background:#b5893f;
 }
 
-@media screen and (max-width: 768px) {
-  .principal-container {
-    flex-direction: column; /* Stack vertically */
-    gap: 25px;
-    text-align: center;
-  }
+/* QUOTE */
 
-  .principal-image img {
-    width: 100%;       /* Fill almost entire width */
-    max-width: 600px;  /* Optional: limit max width on tablets */
-    border-radius: 20px;
-  }
+.principal-quote{
+font-family:'Cormorant Garamond',serif;
+font-size:clamp(1.35rem,2.4vw,1.75rem);
+font-style:italic;
+line-height:1.7;
+color:#1a1a22;
 
-  .principal-content {
-    max-width: 90%;
-  }
-
-  .principal-quote {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  .principal-name {
-    font-size: 1.2rem;
-  }
-
-  .principal-title {
-    font-size: 0.9rem;
-  }
+position:relative;
+padding-left:40px;
 }
 
-@media screen and (max-width: 480px) {
-  .principal-section {
-    padding: 20px 5%;
-  }
+/* DECORATIVE QUOTE */
 
-  .principal-image img {
-    width: 100%;      /* Fill full width on mobile */
-    max-width: none;  /* Remove any max-width limits */
-  }
+.principal-quote::before{
+content:"“";
+position:absolute;
+left:-15px;
+top:-10px;
 
-  .principal-quote {
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
+font-size:6rem;
+color:#e8d5a3;
+line-height:1;
 
-  .principal-name {
-    font-size: 1.1rem;
-  }
+z-index:-1;
+}
 
-  .principal-title {
-    font-size: 0.85rem;
-  }
+/* DIVIDER */
+
+.principal-divider{
+width:48px;
+height:2px;
+background:linear-gradient(to right,#b5893f,#e8d5a3);
+}
+
+/* SIGNATURE */
+
+.principal-karibu{
+font-family:'Cormorant Garamond',serif;
+font-style:italic;
+color:#b5893f;
+margin:0;
+}
+
+.principal-name{
+font-size:1.25rem;
+font-weight:500;
+margin:4px 0;
+color:#1a1a22;
+}
+
+.principal-title{
+font-size:.82rem;
+color:#6b6b7e;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.principal-container{
+flex-direction:column;
+text-align:center;
+gap:40px;
+}
+
+.principal-content{
+align-items:center;
+}
+
+.principal-label{
+justify-content:center;
+}
+
+.principal-divider{
+margin:auto;
+}
+
+.principal-badge{
+left:50%;
+transform:translateX(-50%);
+}
+
+.principal-quote{
+padding-left:0;
+}
+
+.principal-quote::before{
+display:none;
+}
+
 }

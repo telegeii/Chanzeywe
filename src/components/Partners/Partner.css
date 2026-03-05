@@ -1,95 +1,279 @@
-/* SECTION */
+/* ============================================
+   PARTNERS — Chanzeywe Institute
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap');
+
+:root {
+  --pt-blue: #0a3d8f;
+  --pt-blue-mid: #1a56c4;
+  --pt-accent: #f0a500;
+  --pt-text: #1a1f36;
+  --pt-muted: #6b7280;
+  --pt-bg: #ffffff;
+  --pt-section-bg: #f4f6fb;
+  --pt-border: rgba(10, 61, 143, 0.08);
+  --pt-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 32px rgba(10,61,143,0.08);
+}
+
+/* ── Section ──────────────────────────────────── */
 .partners-section {
-  padding: 50px 20px;
-  background: #f9fafb;
+  width: 100%;
+  background: var(--pt-bg);
+  padding: 80px 0 72px;
   overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+  box-sizing: border-box;
+}
+
+/* ── Header ───────────────────────────────────── */
+.partners-header {
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto 52px;
+  padding: 0 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.partners-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--pt-accent);
+}
+
+.partners-eyebrow::before,
+.partners-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--pt-accent);
+  border-radius: 2px;
 }
 
 .partners-title {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: #111827;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.85rem, 4vw, 2.55rem);
+  font-weight: 600;
+  color: var(--pt-text);
+  line-height: 1.15;
+  margin: 0;
 }
 
-/* MARQUEE WRAPPER */
+.partners-subtitle {
+  font-size: 0.94rem;
+  font-weight: 400;
+  color: var(--pt-muted);
+  line-height: 1.72;
+  margin: 0;
+}
+
+/* ── Marquee outer wrapper — handles edge fade ── */
+.partners-marquee-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  /* Fade left and right edges */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+/* ── Marquee inner ────────────────────────────── */
 .marquee {
   width: 100%;
   overflow: hidden;
-  position: relative;
+  padding: 16px 0 20px;
 }
 
-/* MOVING TRACK */
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: marquee 40s linear infinite;
+  animation: partners-scroll 38s linear infinite;
   will-change: transform;
+  gap: 20px;
 }
 
-/* PAUSE ON HOVER */
 .marquee-track:hover {
   animation-play-state: paused;
 }
 
-/* CARD */
-.partner-card {
-  width: 220px;
-  height: 200px;
-  margin: 0 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+@keyframes partners-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
 
+/* ── Partner card ─────────────────────────────── */
+.partner-card {
+  width: 175px;
+  flex-shrink: 0;
+  background: var(--pt-bg);
+  border: 1px solid var(--pt-border);
+  border-radius: 14px;
+  box-shadow: var(--pt-shadow);
+  padding: 22px 16px 18px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  gap: 12px;
+  cursor: default;
+  transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.28s ease,
+              border-color 0.28s;
+}
 
+.partner-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.04), 0 20px 48px rgba(10,61,143,0.13);
+  border-color: rgba(10, 61, 143, 0.18);
+}
+
+/* Image container */
+.partner-card__img-wrap {
+  width: 80px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
-/* LOGO */
-.partner-card img {
-  width: 120px;
-  height: 120px;
+.partner-card__img-wrap img {
+  width: 100%;
+  height: 100%;
   object-fit: contain;
+  filter: grayscale(20%);
+  transition: filter 0.28s ease, transform 0.28s ease;
 }
 
-/* NAME */
-.partner-card p {
-  margin-top: 10px;
-  font-size: 0.85rem;
-  color: #111827;
-  line-height: 1.2;
+.partner-card:hover .partner-card__img-wrap img {
+  filter: grayscale(0%);
+  transform: scale(1.06);
 }
 
-/* PERFECT SEAMLESS ANIMATION */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+/* Name */
+.partner-card__name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--pt-muted);
+  text-align: center;
+  line-height: 1.4;
+  margin: 0;
+  transition: color 0.22s;
 }
 
-/* RESPONSIVE */
+.partner-card:hover .partner-card__name {
+  color: var(--pt-blue);
+}
+
+/* ── Stats strip ──────────────────────────────── */
+.partners-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin: 48px auto 0;
+  max-width: 520px;
+  padding: 24px 32px;
+  background: var(--pt-section-bg);
+  border: 1px solid var(--pt-border);
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(10,61,143,0.05);
+  width: calc(100% - 10%);
+}
+
+.partners-stat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.partners-stat__num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--pt-blue);
+  line-height: 1;
+}
+
+.partners-stat__label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pt-muted);
+}
+
+.partners-stat__divider {
+  width: 1px;
+  height: 40px;
+  background: var(--pt-border);
+  flex-shrink: 0;
+}
+
+/* ── Responsive ───────────────────────────────── */
 @media (max-width: 768px) {
+  .partners-section {
+    padding: 60px 0 56px;
+  }
+
   .partner-card {
-    width: 170px;
-    height: 160px;
-    margin: 0 10px;
+    width: 145px;
+    padding: 18px 12px 14px;
   }
 
-  .partner-card img {
-    width: 90px;
-    height: 90px;
+  .partner-card__img-wrap {
+    width: 64px;
+    height: 56px;
   }
 
-  .partner-card p {
-    font-size: 0.75rem;
+  .partners-stats {
+    gap: 0;
+    padding: 20px 20px;
+  }
+
+  .partners-stat__num {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .partner-card {
+    width: 128px;
+    border-radius: 12px;
+  }
+
+  .partners-stats {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 20px;
+    width: calc(100% - 10%);
+  }
+
+  .partners-stat__divider {
+    width: 40px;
+    height: 1px;
   }
 }
