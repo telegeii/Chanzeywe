@@ -19,6 +19,7 @@ import Blog from "./pages/Blog/Blog";
 import BlogView from "./pages/BlogView/BlogView"; 
 import News from "./components/News/News";
 import Corruption from "./pages/Corruption/Corruption";
+import AdminDashboard from "./Admin/AdminDashboard";
 
 function App() {
   return (
@@ -42,7 +43,8 @@ function App() {
       <Route path="/blog" element={<Blog />} />
       <Route path="/blogview" element={<BlogView />} /> 
       <Route path="/News" element={<News />} /> 
-       <Route path="/Corruption" element={<Corruption />} /> 
+      <Route path="/Corruption" element={<Corruption />} /> 
+      <Route path="/admin" element={<AdminDashboard />} />
 
     </Routes>
   );
