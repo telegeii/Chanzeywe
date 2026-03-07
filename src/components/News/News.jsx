@@ -4,7 +4,7 @@ import "../../pages/Blog/Blog.css";
 import { FaArrowRight, FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 
 // Dummy blogs data (replace with your actual blog images/content)
-import Moe from "../../assets/MoE.png";
+import Moe from "../../assets/Moe.png";
 import Chanzeywe from "../../assets/Chanzeywe.jpg";
 import Safaricom from "../../assets/Safaricom.jpg";
 
