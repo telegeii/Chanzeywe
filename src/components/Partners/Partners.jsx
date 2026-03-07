@@ -7,7 +7,7 @@ import Nita from "../../assets/nita.jpg";
 import Moe from "../../assets/Moe.png";
 import Kuccps from "../../assets/kuccps.jpg";
 import Knqa from "../../assets/KNQA.png";
-import Knec from "../../assets/KNEC.jpg";git 
+import Knec from "../../assets/KNEC.jpg";
 import Helb from "../../assets/helb.jpg";
 import Gok from "../../assets/gok.png";
 import County from "../../assets/County.png";
