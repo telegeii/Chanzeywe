@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Blog.css";
 import { useNavigate } from "react-router-dom";
-import Moe from "../../assets/MoE.png";
+import Moe from "../../assets/Moe.png";
 import Chanzeywe from "../../assets/Chanzeywe.jpg";
 import Safaricom from "../../assets/Safaricom.jpg";
 import Vibrant from "../../assets/Vibrant.jpeg";
