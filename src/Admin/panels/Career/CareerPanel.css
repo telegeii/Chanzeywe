@@ -1,0 +1,437 @@
+/* ============================================
+   CAREERS PANEL — Chanzeywe TVC Admin
+   All classes prefixed cp- to avoid conflicts
+   ============================================ */
+
+.cp-root {
+  font-family: 'Outfit', sans-serif;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── Stat cards ─────────────────────────── */
+.cp-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.cp-stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1.5px solid transparent;
+}
+
+.cp-stat--open   { background: rgba(22,163,74,0.07);   border-color: rgba(22,163,74,0.18);   }
+.cp-stat--closed { background: rgba(220,38,38,0.06);   border-color: rgba(220,38,38,0.15);   }
+.cp-stat--total  { background: rgba(10,61,143,0.06);   border-color: rgba(10,61,143,0.14);   }
+
+.cp-stat__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.cp-stat--open   .cp-stat__icon { background: rgba(22,163,74,0.14);  color: #15803d; }
+.cp-stat--closed .cp-stat__icon { background: rgba(220,38,38,0.12);  color: #b91c1c; }
+.cp-stat--total  .cp-stat__icon { background: rgba(10,61,143,0.12);  color: #0a3d8f; }
+
+.cp-stat__num {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #1a1f36;
+}
+
+.cp-stat--open   .cp-stat__num { color: #15803d; }
+.cp-stat--closed .cp-stat__num { color: #b91c1c; }
+.cp-stat--total  .cp-stat__num { color: #0a3d8f; }
+
+.cp-stat__label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin-top: 3px;
+}
+
+/* ── Toolbar ────────────────────────────── */
+.cp-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Tabs */
+.cp-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f2f8;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.cp-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border-radius: 7px;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  color: #6b7280;
+  background: transparent;
+  transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+}
+
+.cp-tab:hover { background: rgba(255,255,255,0.7); color: #1a1f36; }
+
+.cp-tab--active.cp-tab--open   { background: #fff; color: #15803d; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+.cp-tab--active.cp-tab--closed { background: #fff; color: #b91c1c; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+.cp-tab--active.cp-tab--all    { background: #fff; color: #0a3d8f; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+
+.cp-tab__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  background: rgba(0,0,0,0.08);
+}
+
+/* Search */
+.cp-search {
+  position: relative;
+  min-width: 220px;
+  max-width: 320px;
+  flex: 1;
+}
+
+.cp-search__icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.78rem;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.cp-search input {
+  width: 100%;
+  padding: 9px 13px 9px 34px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  color: #1a1f36;
+  background: #fff;
+  border: 1.5px solid rgba(10,61,143,0.1);
+  border-radius: 9px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.cp-search input:focus {
+  border-color: #0a3d8f;
+  box-shadow: 0 0 0 3px rgba(10,61,143,0.1);
+}
+
+/* ── Section header (mirrors client) ────── */
+.cp-section-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid;
+}
+
+.cp-section-head--open   { border-color: rgba(22,163,74,0.2); }
+.cp-section-head--closed { border-color: rgba(220,38,38,0.2); }
+
+.cp-section-head h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1f36;
+  margin: 0;
+  flex: 1;
+}
+
+.cp-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  animation: cp-pulse 2s infinite;
+}
+
+.cp-dot--open   { background: #16a34a; }
+.cp-dot--closed { background: #dc2626; animation: none; }
+
+@keyframes cp-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(22,163,74,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(22,163,74,0);  }
+}
+
+.cp-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.cp-badge--open   { background: rgba(22,163,74,0.1);  color: #15803d; }
+.cp-badge--closed { background: rgba(220,38,38,0.1);  color: #b91c1c; }
+
+/* ── Table card ─────────────────────────── */
+.cp-table-card {
+  margin-bottom: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.cp-table-card .adm-table-wrap {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.cp-table {
+  min-width: 820px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.cp-table th, .cp-table td {
+  vertical-align: middle;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fixed column widths */
+.cp-table th:nth-child(1), .cp-table td:nth-child(1) { width: 36px;  }  /* # */
+.cp-table th:nth-child(2), .cp-table td:nth-child(2) { width: 160px; }  /* Vacancy No. */
+.cp-table th:nth-child(3), .cp-table td:nth-child(3) { width: auto;  }  /* Title — flex */
+.cp-table th:nth-child(4), .cp-table td:nth-child(4) { width: 86px;  }  /* Published */
+.cp-table th:nth-child(5), .cp-table td:nth-child(5) { width: 106px; }  /* Closing */
+.cp-table th:nth-child(6), .cp-table td:nth-child(6) { width: 68px;  }  /* Status */
+.cp-table th:nth-child(7), .cp-table td:nth-child(7) { width: 126px; }  /* PDF */
+.cp-table th:nth-child(8), .cp-table td:nth-child(8) { width: 78px;  }  /* Actions */
+
+.cp-row--closed { opacity: 0.6; }
+
+.cp-row__num   { color: var(--adm-muted); font-size: 0.78rem; }
+.cp-row__date  { color: var(--adm-muted); font-size: 0.8rem; white-space: nowrap; }
+.cp-row__title { font-weight: 600; }
+
+/* Vacancy number — wraps inside its fixed column instead of blowing out */
+.cp-code {
+  display: block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #0a3d8f;
+  background: rgba(10,61,143,0.07);
+  padding: 3px 7px;
+  border-radius: 5px;
+  border: 1px solid rgba(10,61,143,0.14);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.45;
+}
+
+/* Closing date cell */
+.cp-close-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cp-expiring {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #b45309;
+  background: rgba(217,119,6,0.1);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+/* PDF chip in table */
+.cp-pdf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  background: rgba(220,38,38,0.06);
+  border: 1px solid rgba(220,38,38,0.16);
+  border-radius: 7px;
+  font-size: 0.7rem;
+  color: #6b7280;
+  max-width: 140px;
+  overflow: hidden;
+}
+
+.cp-pdf-chip__icon { color: #dc2626; font-size: 0.8rem; flex-shrink: 0; }
+.cp-pdf-chip span  { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.cp-no-pdf { font-size: 0.78rem; color: #d1d5db; }
+
+/* ── Empty state ────────────────────────── */
+.cp-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 64px 24px;
+  text-align: center;
+  background: #fff;
+  border: 1.5px dashed rgba(10,61,143,0.15);
+  border-radius: 14px;
+  margin-bottom: 24px;
+}
+
+.cp-empty svg { font-size: 2.4rem; color: #d1d5db; }
+.cp-empty p   { font-size: 0.9rem; color: #6b7280; margin: 0; }
+
+/* ── Note (equal opportunity) ───────────── */
+.cp-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(10,61,143,0.04);
+  border: 1.5px solid rgba(10,61,143,0.12);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin-top: 24px;
+}
+
+.cp-note__icon { color: #0a3d8f; font-size: 1.1rem; flex-shrink: 0; }
+.cp-note strong { color: #1a1f36; }
+
+/* ── Modal — status preview banner ─────── */
+.cp-modal-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.cp-modal-status--open   { background: rgba(22,163,74,0.08);  color: #15803d; border: 1.5px solid rgba(22,163,74,0.2);  }
+.cp-modal-status--closed { background: rgba(220,38,38,0.07);  color: #b91c1c; border: 1.5px solid rgba(220,38,38,0.18); }
+.cp-modal-status svg { flex-shrink: 0; }
+
+/* ── Field hint ─────────────────────────── */
+.cp-field-hint {
+  display: block;
+  font-size: 0.72rem;
+  color: #9ca3af;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ── PDF Upload zone ────────────────────── */
+.cp-upload-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  height: 110px;
+  border: 2px dashed rgba(220,38,38,0.25);
+  border-radius: 10px;
+  background: rgba(220,38,38,0.03);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+
+.cp-upload-zone:hover {
+  border-color: #dc2626;
+  background: rgba(220,38,38,0.06);
+}
+
+.cp-upload-zone__icon  { font-size: 1.3rem; color: #dc2626; opacity: 0.6; }
+.cp-upload-zone__title { font-size: 0.84rem; font-weight: 600; color: #1a1f36; }
+.cp-upload-zone__hint  { font-size: 0.72rem; color: #9ca3af; }
+
+/* File chip (after upload) */
+.cp-file-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(220,38,38,0.05);
+  border: 1.5px solid rgba(220,38,38,0.18);
+  border-radius: 10px;
+}
+
+.cp-file-chip__icon { font-size: 1.1rem; color: #dc2626; flex-shrink: 0; }
+
+.cp-file-chip__name {
+  flex: 1;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: #1a1f36;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cp-file-chip__remove {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(220,38,38,0.1);
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.68rem;
+  flex-shrink: 0;
+  transition: background 0.18s, color 0.18s;
+}
+
+.cp-file-chip__remove:hover { background: #dc2626; color: #fff; }
+
+/* ── Responsive ─────────────────────────── */
+@media (max-width: 768px) {
+  .cp-stats   { grid-template-columns: 1fr; }
+  .cp-toolbar { flex-direction: column; align-items: stretch; }
+  .cp-search  { max-width: 100%; }
+  .cp-tabs    { overflow-x: auto; }
+}

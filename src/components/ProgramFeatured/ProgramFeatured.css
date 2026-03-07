@@ -1,36 +1,39 @@
-/* ============================================
-   FEATURED PROGRAMMES — Chanzeywe
-   ============================================ */
+/* ============================================================
+   FEATURED PROGRAMMES — Chanzeywe TVC
+   Custom carousel — no react-slick
+   Prefix: pf-
+   ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap');
 
 :root {
-  --pf-blue: #0a3d8f;
+  --pf-blue:   #0a3d8f;
   --pf-accent: #f0a500;
-  --pf-text: #1a1f36;
-  --pf-muted: #6b7280;
-  --pf-bg: #f4f6fb;
-  --pf-card: #ffffff;
-  --pf-border: rgba(10, 61, 143, 0.08);
-  --pf-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 16px 40px rgba(10,61,143,0.09);
-  --pf-radius: 16px;
+  --pf-text:   #1a1f36;
+  --pf-muted:  #6b7280;
+  --pf-bg:     #f0f3fa;
+  --pf-white:  #ffffff;
+  --pf-border: rgba(10,61,143,0.08);
+  --pf-radius: 22px;
+  --pf-trans:  0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ── Section ──────────────────────────────────── */
+/* ── Section ────────────────────────────────── */
 .pf-section {
   width: 100%;
-  padding: 80px 5% 90px;
+  padding: 80px 0 90px;
   background: var(--pf-bg);
-  box-sizing: border-box;
-  overflow-x: hidden;
+  overflow: hidden;
   font-family: 'Outfit', sans-serif;
+  box-sizing: border-box;
 }
 
-/* ── Header ───────────────────────────────────── */
+/* ── Header ─────────────────────────────────── */
 .pf-header {
   text-align: center;
   max-width: 580px;
   margin: 0 auto 52px;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -40,22 +43,21 @@
 .pf-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--pf-accent);
 }
-
 .pf-eyebrow::before,
 .pf-eyebrow::after {
   content: '';
-  display: inline-block;
-  width: 20px;
+  width: 22px;
   height: 1.5px;
   background: var(--pf-accent);
   border-radius: 2px;
+  display: inline-block;
 }
 
 .pf-title {
@@ -69,245 +71,346 @@
 
 .pf-subtitle {
   font-size: 0.95rem;
-  font-weight: 400;
   color: var(--pf-muted);
   line-height: 1.7;
   margin: 0;
 }
 
-/* ── Slider wrapper ───────────────────────────── */
-.pf-slider-wrap {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 32px; /* room for arrows */
+/* ══ STAGE ══════════════════════════════════════
+   Three-column layout on desktop:
+   [prev-peek]  [main card]  [next-peek]
+   Single column on mobile.
+══════════════════════════════════════════════ */
+.pf-stage {
   position: relative;
-  box-sizing: border-box;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  gap: 20px;
+  align-items: center;
+  /* contains the wash */
+  overflow: visible;
 }
 
-/* Per-slide outer padding */
-.pf-slide {
-  padding: 8px 10px 16px;
-  box-sizing: border-box;
+/* Animated colour wash */
+.pf-stage__wash {
+  position: absolute;
+  inset: -40px -60px;
+  border-radius: 36px;
+  pointer-events: none;
+  z-index: 0;
+  transition: background 0.55s ease;
+  opacity: 0.45;
 }
 
-/* ── Card ─────────────────────────────────────── */
-.pf-card {
-  background: var(--pf-card);
-  border-radius: var(--pf-radius);
-  border: 1px solid var(--pf-border);
-  box-shadow: var(--pf-shadow);
+/* ── Peek cards (desktop) ──────────────────── */
+.pf-peek {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity var(--pf-trans), transform var(--pf-trans);
+  opacity: 0.72;
+}
+
+.pf-peek:hover { opacity: 1; }
+
+.pf-peek--left  { flex-direction: row-reverse; }
+.pf-peek--right { flex-direction: row; }
+
+.pf-peek--left:hover  { transform: translateX(-4px); }
+.pf-peek--right:hover { transform: translateX(4px);  }
+
+.pf-peek__card {
+  background: var(--pf-white);
+  border-radius: 16px;
+  border: 1.5px solid var(--pf-border);
+  border-top: 3px solid var(--pk, #0a3d8f);
+  padding: 16px 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  transition: transform 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              box-shadow 0.32s ease;
-  height: 100%;
+  align-items: center;
+  gap: 10px;
+  min-width: 120px;
+  max-width: 160px;
+  text-align: center;
+  transition: box-shadow var(--pf-trans);
 }
 
-.pf-card:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.04), 0 28px 56px rgba(10,61,143,0.13);
+.pf-peek:hover .pf-peek__card {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.12);
 }
 
-/* ── Icon ─────────────────────────────────────── */
-.pf-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
+.pf-peek__icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.6rem;
-  margin: 24px 22px 0;
+  font-size: 1.3rem;
+}
+
+.pf-peek__label {
+  font-size: 0.69rem;
+  font-weight: 600;
+  color: var(--pf-text);
+  line-height: 1.4;
+}
+
+.pf-peek__arrow {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--pf-white);
+  border: 1.5px solid var(--pf-border);
+  box-shadow: 0 3px 10px rgba(10,61,143,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  color: var(--pf-blue);
   flex-shrink: 0;
+  transition: background var(--pf-trans), color var(--pf-trans);
+}
+
+.pf-peek:hover .pf-peek__arrow {
+  background: var(--pf-blue);
+  color: #fff;
+  border-color: var(--pf-blue);
+}
+
+/* ══ MAIN CARD ══════════════════════════════════ */
+.pf-card {
+  position: relative;
+  z-index: 3;
+  background: var(--pf-white);
+  border-radius: var(--pf-radius);
+  border: 1.5px solid var(--pf-border);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.04),
+    0 20px 56px rgba(10,61,143,0.12);
+  padding: 30px 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 340px;
+  overflow: hidden;
+  /* Default idle state */
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  transition:
+    transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity   0.22s ease;
+}
+
+/* EXIT animations */
+.pf-card--exit-left  { transform: translateX(-60px) scale(0.94); opacity: 0; }
+.pf-card--exit-right { transform: translateX(60px)  scale(0.94); opacity: 0; }
+
+/* ENTER animations */
+.pf-card--enter-right { transform: translateX(60px)  scale(0.94); opacity: 0; }
+.pf-card--enter-left  { transform: translateX(-60px) scale(0.94); opacity: 0; }
+
+/* ── Card top row ── */
+.pf-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pf-card__num {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--pf-text);
+  letter-spacing: 0.06em;
+}
+.pf-card__num em {
+  font-style: normal;
+  color: var(--pf-muted);
+  font-weight: 500;
+}
+
+.pf-card__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 20px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.pf-card__tag svg { font-size: 0.6rem; }
+
+/* ── Icon ── */
+.pf-card__icon-wrap {
+  position: relative;
+  width: 70px; height: 70px;
+}
+
+.pf-card__icon-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: opacity var(--pf-trans);
+}
+
+.pf-card:hover .pf-card__icon-ring { opacity: 1; }
+
+.pf-card__icon {
+  position: relative;
+  z-index: 1;
+  width: 70px; height: 70px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
   transition: transform 0.3s ease;
 }
 
-.pf-card:hover .pf-icon {
-  transform: scale(1.1) rotate(-4deg);
+.pf-card:hover .pf-card__icon {
+  transform: scale(1.08) rotate(-4deg);
 }
 
-/* ── Card body ────────────────────────────────── */
-.pf-card__body {
-  padding: 16px 22px 18px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pf-dept {
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
+/* ── Text ── */
+.pf-card__dept {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--pf-muted);
   margin: 0;
 }
 
-.pf-course {
-  font-size: 1.05rem;
+.pf-card__course {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.25rem, 2.2vw, 1.55rem);
   font-weight: 600;
   color: var(--pf-text);
-  line-height: 1.38;
+  line-height: 1.3;
   margin: 0;
   transition: color 0.2s;
 }
 
-.pf-card:hover .pf-course {
-  color: var(--pf-blue);
-}
+.pf-card:hover .pf-card__course { color: var(--cc, var(--pf-blue)); }
 
-/* ── Tags row ─────────────────────────────────── */
-.pf-tags {
+/* ── Pills ── */
+.pf-card__pills {
   display: flex;
-  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  margin-top: 4px;
 }
 
-.pf-tag {
+.pf-card__pill {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 4px 10px;
+  padding: 5px 12px;
+  border-radius: 20px;
   font-size: 0.72rem;
   font-weight: 500;
   color: var(--pf-muted);
   background: #f3f4f6;
-  border-radius: 20px;
 }
+.pf-card__pill svg { font-size: 0.65rem; }
 
-.pf-tag svg {
-  width: 11px;
-  height: 11px;
-  flex-shrink: 0;
-}
-
-.pf-tag--exam {
+.pf-card__pill--blue {
+  background: rgba(10,61,143,0.07);
   color: var(--pf-blue);
-  background: rgba(10, 61, 143, 0.07);
   font-weight: 600;
 }
 
-/* ── Card footer ──────────────────────────────── */
-.pf-card__footer {
-  padding: 0 22px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.pf-accent-bar {
-  height: 2px;
-  border-radius: 2px;
-  opacity: 0.18;
-  transition: opacity 0.3s;
-}
-
-.pf-card:hover .pf-accent-bar {
-  opacity: 0.5;
-}
-
-/* ── Enroll button ────────────────────────────── */
-.pf-btn {
+/* ── CTA button ── */
+.pf-card__btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  padding: 11px 20px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: 1.5px solid var(--cc, var(--pf-blue));
+  background: transparent;
+  color: var(--cc, var(--pf-blue));
   font-family: 'Outfit', sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--btn-color, var(--pf-blue));
-  background: transparent;
-  border: 1.5px solid currentColor;
-  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.22s, color 0.22s, gap 0.22s;
+  transition: background var(--pf-trans), color var(--pf-trans), gap var(--pf-trans);
+  margin-top: auto;
   width: 100%;
+  justify-content: center;
 }
 
-.pf-btn:hover {
-  background: var(--btn-color, var(--pf-blue));
+.pf-card__btn:hover {
+  background: var(--cc, var(--pf-blue));
   color: #fff;
-  gap: 12px;
+  gap: 13px;
 }
 
-.pf-btn__icon {
-  font-size: 0.7rem;
-  transition: transform 0.22s;
-}
-
-.pf-btn:hover .pf-btn__icon {
-  transform: translateX(2px);
-}
-
-/* ── Custom arrows ────────────────────────────── */
-.pf-arrow {
+/* ── Bottom accent bar ── */
+.pf-card__bar {
   position: absolute;
-  top: 50%;
-  transform: translateY(-60%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--pf-card);
-  color: var(--pf-blue);
-  border: 1.5px solid var(--pf-border);
-  box-shadow: 0 4px 14px rgba(10,61,143,0.12);
-  display: flex !important;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  border-radius: 0 0 var(--pf-radius) var(--pf-radius);
+}
+
+/* ══ MOBILE NAV ═══════════════════════════════ */
+.pf-mobile-nav {
+  display: none; /* hidden on desktop */
   align-items: center;
   justify-content: center;
-  font-size: 0.85rem;
-  cursor: pointer;
-  z-index: 10;
-  transition: background 0.22s, color 0.22s, transform 0.22s;
+  gap: 16px;
+  margin-top: 22px;
 }
 
-.pf-arrow--prev { left: 0; }
-.pf-arrow--next { right: 0; }
-
-.pf-arrow:hover {
-  background: var(--pf-blue);
-  color: #fff;
-  border-color: var(--pf-blue);
-  transform: translateY(-60%) scale(1.08);
-}
-
-/* ── Dots ─────────────────────────────────────── */
-.pf-dots {
-  display: flex !important;
+.pf-mobile-arrow {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--pf-white);
+  border: 1.5px solid var(--pf-border);
+  box-shadow: 0 3px 10px rgba(10,61,143,0.1);
+  color: var(--pf-blue);
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  cursor: pointer;
+  transition: background var(--pf-trans), color var(--pf-trans);
+}
+.pf-mobile-arrow:hover { background: var(--pf-blue); color: #fff; }
+
+/* ── Dot indicators ── */
+.pf-dots {
+  display: flex;
   align-items: center;
   gap: 6px;
-  list-style: none;
-  padding: 20px 0 0 !important;
-  margin: 0 !important;
 }
 
-.pf-dots li button {
-  font-size: 0;
-  width: 7px;
-  height: 7px;
-  padding: 0;
-  border-radius: 50%;
+.pf-dot {
+  width: 7px; height: 7px;
+  border-radius: 4px;
   background: #cbd5e1;
   border: none;
+  padding: 0;
   cursor: pointer;
   transition: background 0.22s, width 0.22s;
 }
 
-.pf-dots li button::before { display: none; }
-
-.pf-dots li.slick-active button {
-  background: var(--pf-blue);
+.pf-dot--on {
   width: 22px;
   border-radius: 4px;
+  /* color set inline */
 }
 
-/* ── View All link ────────────────────────────── */
+/* ── Desktop dot strip (below stage) ── */
 .pf-viewall {
   text-align: center;
   margin-top: 36px;
@@ -316,7 +419,7 @@
 .pf-viewall__link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--pf-blue);
@@ -324,56 +427,82 @@
   letter-spacing: 0.04em;
   padding-bottom: 2px;
   border-bottom: 1.5px solid rgba(10,61,143,0.25);
-  transition: border-color 0.2s, gap 0.2s;
+  transition: gap 0.2s, border-color 0.2s;
 }
+.pf-viewall__link:hover { gap: 12px; border-bottom-color: var(--pf-blue); }
 
-.pf-viewall__link:hover {
-  border-bottom-color: var(--pf-blue);
-  gap: 10px;
-}
+/* ══ RESPONSIVE ═══════════════════════════════
 
-/* ── Responsive ───────────────────────────────── */
+   ≥ 1024px → three-column (peek + card + peek)
+   640–1023  → card only, arrows outside
+   < 640     → card only, mobile nav below
+*/
+
+/* 1024px – keep full layout */
 @media (max-width: 1024px) {
-  .pf-slider-wrap {
-    padding: 0 48px;
+  .pf-stage {
+    grid-template-columns: 160px 1fr 160px;
+    gap: 14px;
   }
 }
 
-@media (max-width: 640px) {
-  .pf-section {
-    padding: 56px 0 72px;
+/* 768px — collapse peeks */
+@media (max-width: 768px) {
+  .pf-stage {
+    grid-template-columns: 44px 1fr 44px;
+    gap: 8px;
   }
+
+  /* Collapse peek cards to just the arrow button */
+  .pf-peek__card { display: none; }
+
+  .pf-peek {
+    opacity: 1;
+    justify-content: center;
+  }
+
+  .pf-peek--left:hover  { transform: none; }
+  .pf-peek--right:hover { transform: none; }
+
+  .pf-peek__arrow {
+    width: 40px; height: 40px;
+  }
+}
+
+/* ── MOBILE: single column, no peeks, nav below ── */
+@media (max-width: 580px) {
+  .pf-section { padding: 52px 0 70px; }
 
   .pf-header {
-    padding: 0 5%;
-    margin-bottom: 36px;
+    padding: 0 24px;
+    margin-bottom: 30px;
   }
 
-  .pf-slider-wrap {
-    padding: 0;
+  /* Hide left/right peek columns entirely */
+  .pf-stage {
+    grid-template-columns: 1fr;   /* ONLY the card */
+    gap: 0;
+    padding: 0 20px;
   }
 
-  .pf-slide {
-    padding: 6px 6px 14px;
+  .pf-peek { display: none; }      /* No peek panels at all */
+
+  /* Card fills its container exactly */
+  .pf-card {
+    min-height: 300px;
+    padding: 24px 22px 20px;
   }
 
-  .pf-arrow {
-    display: none !important;
-  }
+  /* Show mobile nav below stage */
+  .pf-mobile-nav { display: flex; }
 
-  .pf-viewall {
-    padding: 0 5%;
-  }
+  .pf-viewall { margin-top: 20px; }
 }
 
-@media (max-width: 400px) {
-  .pf-icon {
-    width: 48px;
-    height: 48px;
-    font-size: 1.35rem;
-  }
-
-  .pf-course {
-    font-size: 0.98rem;
-  }
+/* Very small screens */
+@media (max-width: 360px) {
+  .pf-card { padding: 20px 18px 16px; min-height: 280px; }
+  .pf-card__course { font-size: 1.15rem; }
+  .pf-card__icon { width: 58px; height: 58px; font-size: 1.55rem; }
+  .pf-card__icon-wrap { width: 58px; height: 58px; }
 }

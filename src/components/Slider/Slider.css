@@ -1,325 +1,386 @@
 /* ============================================
-   SLIDER — Cinematic Edition
+   SLIDER — Chanzeywe TVC
+   Gold (#f0a500) + Navy (#051f4e) palette.
+   Cormorant Garamond headlines · Outfit UI.
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
 
-:root {
-  --slider-accent: #c9a96e;
-  --slider-white: #f5f2ee;
-  --slider-dark: rgba(10, 10, 14, 0.55);
-  --slide-duration: 800ms;
-  --auto-duration: 6s;
-}
-
-/* ── Container ─────────────────────────────── */
+/* ── Root ───────────────────────────────── */
 .slider {
   position: relative;
   width: 100%;
-  height: 75vh;
-  min-height: 480px;
-  overflow: hidden;
-  background: #0a0a0e;
-  font-family: 'DM Sans', sans-serif;
+  height: 100vh;
+  min-height: 520px;
+  max-height: 900px;
+  overflow: hidden;          /* CRITICAL — clips any translateX bleed */
+  background: #051f4e;
+  /* Prevent horizontal scroll on the page itself */
+  max-width: 100vw;
 }
 
-/* ── Individual slide ───────────────────────── */
+/* ── Individual slide ───────────────────── */
 .slide {
   position: absolute;
   inset: 0;
-  pointer-events: none;
+  width: 100%;               /* never wider than the slider */
+  overflow: hidden;          /* double-guard against content bleed */
+  will-change: transform, opacity;
 }
 
 .slide--hidden {
   opacity: 0;
+  pointer-events: none;
   z-index: 0;
 }
 
 .slide--active {
+  opacity: 1;
   z-index: 2;
   pointer-events: auto;
-  animation: slideIn var(--slide-duration) cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  animation: slideEnter 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
 .slide--exit {
+  opacity: 1;
   z-index: 1;
-  animation: slideOut var(--slide-duration) cubic-bezier(0.77, 0, 0.18, 1) forwards;
+  animation: slideExit 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-/* ── Background image with Ken Burns ─────────── */
+.slide--exit-rev {
+  opacity: 1;
+  z-index: 1;
+  animation: slideExitRev 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes slideEnter {
+  from { transform: translateX(3%); opacity: 0; }
+  to   { transform: translateX(0);  opacity: 1; }
+}
+
+@keyframes slideExit {
+  from { transform: translateX(0);   opacity: 1; }
+  to   { transform: translateX(-3%); opacity: 0; }
+}
+
+@keyframes slideExitRev {
+  from { transform: translateX(0);  opacity: 1; }
+  to   { transform: translateX(3%); opacity: 0; }
+}
+
+/* ── Background image — mobile responsive ── */
 .slide__bg {
   position: absolute;
-  inset: -5%;
+  inset: 0;
   background-size: cover;
-  background-position: center;
-  will-change: transform;
+  background-position: center center;  /* always centred on all screens */
+  background-repeat: no-repeat;
+  animation: kenBurns 9s ease-in-out infinite alternate;
 }
 
-.slide--active .slide__bg {
-  animation: kenBurns 7s ease-out forwards;
-}
-
+/* Ken Burns — subtle so it doesn't fight the text */
 @keyframes kenBurns {
-  from { transform: scale(1.08); }
-  to   { transform: scale(1.0);  }
+  from { transform: scale(1.03) translate(0, 0); }
+  to   { transform: scale(1.07) translate(-0.6%, -0.3%); }
 }
 
-/* ── Dark gradient overlay ───────────────────── */
+/* ── Overlay — STRONG so text always wins over the photo ── */
 .slide__overlay {
   position: absolute;
   inset: 0;
+  /* A heavy bottom-weighted gradient so headline + CTA always pop */
   background:
     linear-gradient(
-      to right,
-      rgba(5, 5, 8, 0.72) 0%,
-      rgba(5, 5, 8, 0.35) 55%,
-      rgba(5, 5, 8, 0.15) 100%
+      to bottom,
+      rgba(5, 31, 78, 0.28)  0%,    /* lighter at top — sky visible */
+      rgba(5, 31, 78, 0.55) 40%,
+      rgba(5, 31, 78, 0.82) 70%,    /* strong by middle */
+      rgba(5, 31, 78, 0.96) 100%    /* near-solid at text zone */
     ),
-    linear-gradient(
-      to top,
-      rgba(5, 5, 8, 0.6) 0%,
-      transparent 50%
+    /* Extra vignette layer for edges */
+    radial-gradient(
+      ellipse at center,
+      transparent 50%,
+      rgba(5, 31, 78, 0.30) 100%
     );
 }
 
-/* ── Content block ───────────────────────────── */
+/* ── Content block ──────────────────────── */
 .slide__content {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-
-  width: 100%;
-  max-width: 900px;
-
-  padding: 0 20px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 8% 114px;   /* leaves room for dots + progress bar */
+  z-index: 3;
+  max-width: 860px;
 }
 
-/* Animate content in when slide is active */
-.slide--active .slide__eyebrow {
-  animation: fadeUp 0.7s 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.slide--active .slide__title {
-  animation: fadeUp 0.7s 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.slide--active .slide__subtitle {
-  animation: fadeUp 0.7s 0.50s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.slide--active .slide__cta {
-  animation: fadeUp 0.7s 0.64s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0);    }
-}
-
-/* ── Eyebrow label ───────────────────────────── */
+/* ── Eyebrow pill ───────────────────────── */
 .slide__eyebrow {
   display: inline-block;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--slider-accent);
-  position: relative;
-  padding-left: 36px;
+  color: #f0a500;
+  background: rgba(240, 165, 0, 0.18);
+  border: 1px solid rgba(240, 165, 0, 0.38);
+  padding: 5px 16px;
+  border-radius: 24px;
+  margin-bottom: 14px;
+  animation: contentFadeUp 0.65s 0.12s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.slide__eyebrow::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 24px;
-  height: 1px;
-  background: var(--slider-accent);
-}
-
-/* ── Title ───────────────────────────────────── */
+/* ── Main headline ──────────────────────── */
 .slide__title {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(2.4rem, 5vw, 4.2rem);
-  font-weight: 300;
-  line-height: 1.08;
-  letter-spacing: -0.01em;
-  color: var(--slider-white);
-  margin: 0;
+  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+  font-weight: 700;                         /* bumped to 700 — bolder on all BGs */
+  color: #ffffff;
+  line-height: 1.12;
+  margin: 0 0 16px;
+  /* Strong text shadow so it punches through any photo */
+  text-shadow:
+    0 2px 8px  rgba(0, 0, 0, 0.55),
+    0 4px 28px rgba(0, 0, 0, 0.45),
+    0 0  60px  rgba(5, 31, 78, 0.6);
+  animation: contentFadeUp 0.65s 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── Subtitle ─────────────────────────────────── */
+/* ── Subtitle ───────────────────────────── */
 .slide__subtitle {
-  font-size: 0.95rem;
-  font-weight: 300;
-  line-height: 1.65;
-  color: rgba(245, 242, 238, 0.72);
-  margin: 0;
-  max-width: 420px;
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.88);         /* slightly brighter than before */
+  line-height: 1.7;
+  margin: 0 0 28px;
+  max-width: 580px;
+  /* Soft shadow to lift subtitle off photo */
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+  animation: contentFadeUp 0.65s 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── CTA Button ───────────────────────────────── */
+/* ── CTA button ─────────────────────────── */
 .slide__cta {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 6px;
-  padding: 13px 28px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #0a0a0e;
-  background: var(--slider-accent);
+  gap: 8px;
+  padding: 13px 34px;
+  border-radius: 32px;
   border: none;
-  border-radius: 2px;
+  background: #f0a500;
+  color: #051f4e;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  width: fit-content;
-  transition: background 0.25s, transform 0.2s;
+  box-shadow:
+    0 6px 24px rgba(240, 165, 0, 0.45),
+    0 2px 6px  rgba(0, 0, 0, 0.25);
+  transition: background 0.22s, transform 0.18s, box-shadow 0.22s;
+  animation: contentFadeUp 0.65s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .slide__cta:hover {
-  background: var(--slider-white);
+  background: #ffc233;
   transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(240, 165, 0, 0.5);
 }
 
-/* ── Slide transition animations ─────────────── */
-@keyframes slideIn {
-  from { opacity: 0; clip-path: inset(0 0 0 6%); }
-  to   { opacity: 1; clip-path: inset(0 0 0 0%); }
+@keyframes contentFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes slideOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
-
-/* ── Arrow buttons ────────────────────────────── */
+/* ══════════════════════════════════════════
+   ARROW BUTTONS — desktop only
+   Hidden entirely on mobile / tablet
+══════════════════════════════════════════ */
 .slider__arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  background: rgba(5, 31, 78, 0.48);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 50%;
-  color: var(--slider-white);
   cursor: pointer;
-  backdrop-filter: blur(8px);
-  transition: background 0.25s, border-color 0.25s, transform 0.2s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background 0.22s, border-color 0.22s, transform 0.18s;
 }
 
 .slider__arrow svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
+}
+
+.slider__arrow:hover {
+  background: #f0a500;
+  border-color: #f0a500;
+  color: #051f4e;
+  transform: translateY(-50%) scale(1.08);
 }
 
 .slider__arrow--prev { left: 28px; }
 .slider__arrow--next { right: 28px; }
 
-.slider__arrow:hover {
-  background: var(--slider-accent);
-  border-color: var(--slider-accent);
-  transform: translateY(-50%) scale(1.08);
-}
-
-/* ── Dot navigation ───────────────────────────── */
+/* ── Dots ───────────────────────────────── */
 .slider__dots {
   position: absolute;
-  bottom: 32px;
-  right: 7%;
-  z-index: 10;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  gap: 8px;
   align-items: center;
+  gap: 9px;
+  z-index: 10;
 }
 
 .slider__dot {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.35);
   border: none;
-  cursor: pointer;
   padding: 0;
-  transition: background 0.3s, transform 0.3s, width 0.3s;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .slider__dot--active {
-  background: var(--slider-accent);
-  width: 22px;
-  border-radius: 3px;
-  transform: none;
+  background: #f0a500;
+  width: 28px;
+  border-radius: 4px;
 }
 
-/* ── Auto-play progress bar ───────────────────── */
+/* ── Progress bar ───────────────────────── */
 .slider__progress {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: rgba(255,255,255,0.1);
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
   z-index: 10;
-  overflow: hidden;
 }
 
 .slider__progress-bar {
   height: 100%;
-  background: var(--slider-accent);
-  animation: progress var(--auto-duration) linear forwards;
-  transform-origin: left;
+  background: #f0a500;
+  animation: sliderProgress 6s linear forwards;
 }
 
-@keyframes progress {
+@keyframes sliderProgress {
   from { width: 0%; }
   to   { width: 100%; }
 }
 
-/* ── Responsive ───────────────────────────────── */
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+
+/* ── Tablet (≤ 1024px) ── */
 @media (max-width: 1024px) {
-  .slider { height: 62vh; }
+  .slider          { height: 75vh; }
+  .slide__content  { padding: 0 6% 108px; }
 }
 
+/* ── Small tablet / large phone (≤ 768px) ── */
 @media (max-width: 768px) {
-  .slider { height: 55vh; }
+  .slider         { height: 68vh; min-height: 400px; }
+  .slide__content { padding: 0 6% 100px; }
 
-  .slide__content {
-    padding: 0 5% 7%;
+  /* ── ARROWS HIDDEN — swipe to navigate on touch ── */
+  .slider__arrow  { display: none; }
+
+  /* ── NO SLIDE TRANSITIONS — pure fade only, no translateX tilt ── */
+  .slide--active    { animation: mobileFadeIn 0.6s ease both; }
+  .slide--exit,
+  .slide--exit-rev  { animation: mobileFadeOut 0.6s ease both; }
+
+  /* Image: shift focus to top-centre on portrait phones */
+  .slide__bg      { background-position: center top; }
+
+  /* Strengthen overlay on small screens */
+  .slide__overlay {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(5, 31, 78, 0.32)  0%,
+        rgba(5, 31, 78, 0.60) 38%,
+        rgba(5, 31, 78, 0.88) 68%,
+        rgba(5, 31, 78, 0.98) 100%
+      ),
+      radial-gradient(
+        ellipse at center,
+        transparent 45%,
+        rgba(5, 31, 78, 0.35) 100%
+      );
+  }
+
+  .slider__dots { bottom: 28px; }
+}
+
+@keyframes mobileFadeIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mobileFadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+/* ── Mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+  .slider          { height: 85vh; min-height: 380px; }
+  .slide__content  { padding: 0 5% 90px; max-width: 100%; }
+
+  .slide__bg       { background-position: center center; }
+
+  .slide__overlay {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(5, 31, 78, 0.35)  0%,
+        rgba(5, 31, 78, 0.65) 35%,
+        rgba(5, 31, 78, 0.92) 65%,
+        rgba(5, 31, 78, 1.00) 100%
+      );
+  }
+
+  .slide__title {
+    font-size: clamp(1.8rem, 7.5vw, 2.6rem);
+    word-break: break-word;
+  }
+
+  .slide__eyebrow  { font-size: 0.62rem; padding: 4px 12px; margin-bottom: 10px; }
+
+  .slide__subtitle {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 22px;
     max-width: 100%;
   }
 
-  .slider__arrow {
-    width: 38px;
-    height: 38px;
+  .slide__cta {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 24px;
+    font-size: 0.86rem;
   }
-  .slider__arrow--prev { left: 14px; }
-  .slider__arrow--next { right: 14px; }
+
+  .slider__dots  { bottom: 22px; }
 }
 
-@media (max-width: 480px) {
-  .slider { height: 52vh; min-height: 360px; }
-
-  .slide__subtitle { display: none; }
-
-  .slider__dots {
-    right: 50%;
-    transform: translateX(50%);
-    bottom: 22px;
-  }
-
-  .slider__arrow { display: none; }
+/* ── Very small (≤ 360px) ── */
+@media (max-width: 360px) {
+  .slider         { height: 90vh; }
+  .slide__title   { font-size: 1.7rem; }
+  .slide__subtitle{ display: none; }
 }
