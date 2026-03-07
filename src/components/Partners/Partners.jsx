@@ -5,7 +5,7 @@ import Tveta from "../../assets/tveta.png";
 import Vibrant from "../../assets/Vibrant.jpeg";
 import Cdacc from "../../assets/CDACC.png";
 import Nita from "../../assets/nita.jpg";
-import Moe from "../../assets/MoE.png";
+import Moe from "../../assets/Moe.png";
 import Kuccps from "../../assets/kuccps.jpg";
 import Knqa from "../../assets/KNQA.png";
 import Knec from "../../assets/KNEC.jpg";
