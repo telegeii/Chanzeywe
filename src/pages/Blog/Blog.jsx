@@ -5,7 +5,6 @@ import Moe from "../../assets/Moe.png";
 import Chanzeywe from "../../assets/Chanzeywe.jpg";
 import Safaricom from "../../assets/Safaricom.jpg";
 import Vibrant from "../../assets/Vibrant.jpeg";
-
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 
