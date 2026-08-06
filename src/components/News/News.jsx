@@ -49,7 +49,12 @@ const News = () => {
   return (
     <section className="blog-section">
       <div className="blog-header">
+        <span className="blog-eyebrow">Newsroom</span>
         <h2>Latest News & Updates</h2>
+        <p>
+          Announcements, partnerships, and achievements from Chanzeywe
+          Vocational College.
+        </p>
       </div>
 
       <div className="blog-grid">
@@ -70,7 +75,11 @@ const News = () => {
               </div>
 
               <h3>{blog.title}</h3>
-              <p>{blog.content.slice(0, 120)}...</p>
+              <p>
+                {blog.content.length > 120
+                  ? `${blog.content.slice(0, 120)}...`
+                  : blog.content}
+              </p>
 
               <button
                 className="read-more"

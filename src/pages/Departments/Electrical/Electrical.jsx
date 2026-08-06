@@ -16,8 +16,8 @@ import {
 
 const courses = [
   { code: "DEEP", title: "Electrical Engineering (Power Option) Level 6", level: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", department: "Electrical Engineering", requirement: "C- or Pass in Level 5",  duration: "9 Terms", examBody: "CDACC" },
-  { code: "CEEP", title: "Electrical Engineering (Power Option) Level 5", level: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", department: "Electrical Engineering", requirement: "D- or Pass in Level 4", duration: "6 Terms", examBody: "CDACC" },
-  { code: "AIE",  title: "Electrical Installation",                       level: "Level 4", badge: "Artisan",     color: "#d97706", bg: "rgba(217,119,6,0.07)", department: "Electrical Engineering", requirement: "Grade D – and E",        duration: "3 Terms", examBody: "CDACC" },
+  { code: "CEEP", title: "Electrical Engineering (Power Option) Level 5", level: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", department: "Electrical Engineering", requirement: "D- or Pass in Level 4", duration: "6 Terms", examBody: "CDACC" },
+  { code: "AIE",  title: "Electrical Installation",                       level: "Level 4", badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)", department: "Electrical Engineering", requirement: "Grade D – and E",        duration: "3 Terms", examBody: "CDACC" },
 ];
 
 const intakes = [
@@ -36,8 +36,8 @@ const admissionDocs = [
 
 const levels = [
   { img: Level6, label: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", req: "KCSE aggregate C- (Minus) or Passed Craft Certificate or equivalent qualification.", duration: "9 Terms" },
-  { img: Level5, label: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", req: "KCSE aggregate D (Plain) or equivalent qualification.", duration: "6 Terms" },
-  { img: Level4, label: "Level 4", badge: "Artisan",     color: "#d97706", bg: "rgba(217,119,6,0.07)", req: "KCPE Certificate or equivalent qualification.", duration: "3 Terms" },
+  { img: Level5, label: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", req: "KCSE aggregate D (Plain) or equivalent qualification.", duration: "6 Terms" },
+  { img: Level4, label: "Level 4", badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)", req: "KCPE Certificate or equivalent qualification.", duration: "3 Terms" },
 ];
 
 const Electrical = () => {
@@ -50,6 +50,8 @@ const Electrical = () => {
   return (
     <>
       <Navbar />
+
+      <div className="dept-page">
 
       {/* ── Hero ── */}
       <section className="cmp-hero">
@@ -205,6 +207,8 @@ const Electrical = () => {
           </div>
         </section>
       )}
+
+      </div>
 
       <Footer />
     </>

@@ -35,7 +35,7 @@ const navItems = [
   {
     label: "Student",
     children: [
-      { label: "Student Portal", path: "/student-portal" },
+      { label: "Student Portal", path: "/downloads" },
       { label: "Downloads", path: "/downloads" },
     ],
   },

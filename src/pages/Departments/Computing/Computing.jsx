@@ -9,7 +9,7 @@ import Level4 from "../../../assets/Level4.png";
 import Logo from "../../../assets/Logo.png";
 import "./Computing.css";
 import {
-  FaChevronRight, FaLaptop, FaCheckCircle,
+  FaChevronRight, FaLaptop,
   FaCalendarAlt, FaClock, FaBook, FaUserGraduate,
   FaMoneyBillWave, FaIdCard, FaCamera, FaFileAlt,
 } from "react-icons/fa";
@@ -32,8 +32,8 @@ const courses = [
     title: "ICT Technician Level 5",
     level: "Level 5",
     badge: "Certificate",
-    color: "#059669",
-    bg: "rgba(5,150,105,0.07)",
+    color: "#1a56c4",
+    bg: "rgba(26,86,196,0.07)",
     department: "Computing And Informatics",
     requirement: "KCSE D (Plain)",
     duration: "6 Terms",
@@ -44,8 +44,8 @@ const courses = [
     title: "Computer Packages",
     level: "Level 4",
     badge: "Artisan",
-    color: "#d97706",
-    bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36",
+    bg: "rgba(26,31,54,0.07)",
     department: "Computing And Informatics",
     requirement: "KCPE / KCSE",
     duration: "6 Weeks",
@@ -76,13 +76,13 @@ const levels = [
   },
   {
     img: Level5, label: "Level 5", badge: "Certificate",
-    color: "#059669", bg: "rgba(5,150,105,0.07)",
+    color: "#1a56c4", bg: "rgba(26,86,196,0.07)",
     req: "KCSE aggregate D (Plain) or equivalent qualification.",
     duration: "6 Terms",
   },
   {
     img: Level4, label: "Level 4", badge: "Artisan",
-    color: "#d97706", bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36", bg: "rgba(26,31,54,0.07)",
     req: "KCPE Certificate or equivalent qualification.",
     duration: "3 Terms",
   },
@@ -98,6 +98,8 @@ const Computing = () => {
   return (
     <>
       <Navbar />
+
+      <div className="dept-page">
 
       {/* ── Hero ── */}
       <section className="cmp-hero">
@@ -270,6 +272,8 @@ const Computing = () => {
           </div>
         </section>
       )}
+
+      </div>
 
       <Footer />
     </>

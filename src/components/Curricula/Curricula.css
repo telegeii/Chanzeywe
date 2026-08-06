@@ -7,7 +7,7 @@
 :root {
   --cu-blue: #0a3d8f;
   --cu-blue-mid: #1a56c4;
-  --cu-accent: #f0a500;
+  --cu-accent: #0a3d8f;
   --cu-text: #1a1f36;
   --cu-muted: #6b7280;
   --cu-bg: #ffffff;
@@ -68,13 +68,13 @@
   position: relative;
 }
 
-/* Gold underline */
+/* Underline */
 .curricula__header h2::after {
   content: '';
   display: block;
   width: 44px;
   height: 3px;
-  background: var(--cu-accent);
+  background: linear-gradient(to right, var(--cu-blue), var(--cu-blue-mid));
   border-radius: 2px;
   margin: 12px auto 0;
 }
@@ -205,7 +205,7 @@
 .curricula__divider {
   width: 32px;
   height: 2px;
-  background: linear-gradient(to right, var(--cu-accent), rgba(240,165,0,0.3));
+  background: linear-gradient(to right, var(--cu-blue), rgba(10,61,143,0.25));
   border-radius: 2px;
   transition: width 0.3s ease;
 }

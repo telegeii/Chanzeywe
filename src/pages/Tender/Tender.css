@@ -6,10 +6,11 @@
 
 :root {
   --td-blue: #0a3d8f;
+  --td-blue-mid: #1a56c4;
   --td-blue-dark: #072d6b;
   --td-blue-deep: #051f4e;
-  --td-accent: #f0a500;
-  --td-accent-hover: #ffc233;
+  --td-accent: #1a56c4;
+  --td-accent-hover: #0a3d8f;
   --td-text: #1a1f36;
   --td-muted: #6b7280;
   --td-bg: #f4f6fb;
@@ -78,7 +79,7 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--td-accent);
+  color: #ffffff;
   text-shadow: 0 1px 8px rgba(0,0,0,0.8);
 }
 
@@ -102,6 +103,26 @@
   margin: 0;
   line-height: 1.6;
 }
+
+/* Breadcrumb */
+.tender-hero-text__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--td-font);
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.tender-hero-text__breadcrumb a {
+  color: rgba(255,255,255,0.62);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.tender-hero-text__breadcrumb a:hover { color: #ffffff; }
+.tender-hero-text__breadcrumb svg    { font-size: 0.5rem; opacity: 0.45; }
+.tender-hero-text__breadcrumb span   { color: #ffffff; }
 
 /* ── Page body ────────────────────────────────── */
 .tender-body {
@@ -284,13 +305,13 @@
   font-family: var(--td-font);
   font-size: 0.77rem;
   font-weight: 600;
-  color: var(--td-blue-deep);
+  color: #ffffff;
   background: var(--td-accent);
   border-radius: 7px;
   text-decoration: none;
   white-space: nowrap;
   transition: background 0.22s, transform 0.2s;
-  box-shadow: 0 3px 8px rgba(240,165,0,0.25);
+  box-shadow: 0 3px 8px rgba(10,61,143,0.25);
 }
 
 .apply-btn:hover {

@@ -7,7 +7,8 @@
 :root {
   --blog-blue: #0a3d8f;
   --blog-blue-dark: #072d6b;
-  --blog-accent: #f0a500;
+  --blog-blue-mid: #1a56c4;
+  --blog-accent: #0a3d8f;
   --blog-text: #1a1f36;
   --blog-muted: #6b7280;
   --blog-bg: #f4f6fb;
@@ -30,6 +31,32 @@
   text-align: center;
   max-width: 640px;
   margin: 0 auto 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Eyebrow */
+.blog-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blog-blue);
+  margin-bottom: 10px;
+}
+
+.blog-eyebrow::before,
+.blog-eyebrow::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--blog-blue);
+  border-radius: 2px;
 }
 
 .blog-header h2 {
@@ -43,13 +70,13 @@
   display: inline-block;
 }
 
-/* Gold underline accent on heading */
+/* Underline accent on heading */
 .blog-header h2::after {
   content: '';
   display: block;
   width: 48px;
   height: 3px;
-  background: var(--blog-accent);
+  background: linear-gradient(to right, var(--blog-blue), var(--blog-blue-mid));
   border-radius: 2px;
   margin: 12px auto 0;
 }
@@ -115,14 +142,15 @@
   position: absolute;
   top: 14px;
   left: 14px;
-  background: var(--blog-accent);
-  color: #1a1205;
+  background: var(--blog-blue);
+  color: #ffffff;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 4px 10px;
   border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(10,61,143,0.25);
 }
 
 /* ── Card body ────────────────────────────────── */
@@ -181,11 +209,6 @@
   line-height: 1.7;
   margin: 0;
   flex: 1;
-}
-
-/* ── Divider ──────────────────────────────────── */
-.blog-body::before {
-  content: none;
 }
 
 /* ── Read More button ─────────────────────────── */

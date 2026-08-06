@@ -63,7 +63,7 @@ const INIT = [
   { id:21, code:"DSWCD", title:"Social Work Level 6",                                department:"Liberal Studies",              level:"Level 6", duration:"9 Terms", examBody:"CDACC", requirement:"C- or Pass Level 5" },
   { id:22, code:"CSWCD", title:"Social Work Level 5",                                department:"Liberal Studies",              level:"Level 5", duration:"6 Terms", examBody:"CDACC", requirement:"D (plain)" },
   { id:23, code:"DSCM",  title:"Supply Chain Management Level 6",                    department:"Liberal Studies",              level:"Level 6", duration:"9 Terms", examBody:"CDACC", requirement:"C- or Pass Level 5" },
-  { id:24, code:"CSCM",  title:"Supply Chain Management Level 5",                    department:"Liberal Studies",              level:"Level 5", duration:"6 Terms", examBody:"CADAA", requirement:"D (plain)" },
+  { id:24, code:"CSCM",  title:"Supply Chain Management Level 5",                    department:"Liberal Studies",              level:"Level 5", duration:"6 Terms", examBody:"CDACC", requirement:"D (plain)" },
 ];
 
 const BLANK = { code:"", title:"", department:"Building & Civil Engineering", level:"Level 5", duration:"", examBody:"CDACC", requirement:"" };

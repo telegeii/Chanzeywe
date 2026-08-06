@@ -7,10 +7,11 @@
 
 :root {
   --nav-blue: #0a3d8f;
+  --nav-blue-mid: #1a56c4;
   --nav-blue-dark: #072d6b;
   --nav-blue-deep: #051f4e;
-  --nav-accent: #f0a500;
-  --nav-accent-hover: #ffc233;
+  --nav-accent: #ffffff;
+  --nav-accent-hover: #eef4ff;
   --nav-white: #ffffff;
   --nav-white-dim: rgba(255,255,255,0.72);
   --nav-white-subtle: rgba(255,255,255,0.12);
@@ -22,7 +23,6 @@
 
 html { scroll-behavior: smooth; }
 
-/* ── Top accent bar ──────────────────────────── */
 /* ── Top accent bar ──────────────────────────── */
 .nav-topbar {
   background: var(--nav-blue-deep);
@@ -390,7 +390,7 @@ html { scroll-behavior: smooth; }
   border-radius: 8px;
   text-decoration: none;
   transition: background 0.22s, transform 0.2s, box-shadow 0.22s;
-  box-shadow: 0 2px 8px rgba(240,165,0,0.3);
+  box-shadow: 0 2px 8px rgba(10,61,143,0.3);
   white-space: nowrap;
   margin-left: 10px;
 }
@@ -398,7 +398,7 @@ html { scroll-behavior: smooth; }
 .nav-cta:hover {
   background: var(--nav-accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(240,165,0,0.4);
+  box-shadow: 0 4px 14px rgba(10,61,143,0.4);
 }
 
 /* ── Hamburger ───────────────────────────────── */
@@ -517,7 +517,7 @@ html { scroll-behavior: smooth; }
   color: rgba(255,255,255,0.6);
   text-decoration: none;
   border-radius: 6px;
-  border-left: 2px solid rgba(240,165,0,0.4);
+  border-left: 2px solid rgba(255,255,255,0.3);
   margin-left: 8px;
   transition: background 0.18s, color 0.18s, border-color 0.18s;
 }

@@ -2,12 +2,17 @@
    COMPUTING DEPARTMENT — Chanzeywe TVC
    ============================================ */
 
-/* ── Hero ─────────────────────────────────────── */
-* {
+/* Scoped reset — was a bare `* {}` selector that leaked into the
+   shared Navbar/Footer on every department page since this file is
+   imported alongside them. Scoped to this page's own content only. */
+.dept-page,
+.dept-page * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+/* ── Hero ─────────────────────────────────────── */
 .cmp-hero {
   position: relative;
   width: 100%;
@@ -58,7 +63,7 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #f0a500;
+  color: #ffffff;
   text-shadow: 0 1px 8px rgba(0,0,0,0.8);
   animation: cmpFadeUp 0.7s 0.15s both;
 }
@@ -100,9 +105,9 @@
   transition: color 0.2s;
 }
 
-.cmp-hero__breadcrumb a:hover { color: #f0a500; }
+.cmp-hero__breadcrumb a:hover { color: #ffffff; }
 .cmp-hero__breadcrumb svg    { font-size: 0.5rem; opacity: 0.45; }
-.cmp-hero__breadcrumb span   { color: #f0a500; }
+.cmp-hero__breadcrumb span   { color: #ffffff; }
 
 /* ── Shared eyebrow ───────────────────────────── */
 .cmp-eyebrow {
@@ -113,7 +118,7 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #f0a500;
+  color: #1a56c4;
   font-family: 'Outfit', sans-serif;
 }
 
@@ -123,7 +128,7 @@
   display: inline-block;
   width: 16px;
   height: 1.5px;
-  background: #f0a500;
+  background: #1a56c4;
   border-radius: 2px;
 }
 

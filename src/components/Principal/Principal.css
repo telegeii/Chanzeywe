@@ -1,189 +1,203 @@
-.principal-section{
-position:relative;
-background:#faf9f6;
-padding:90px 5%;
-overflow:hidden;
-font-family:'DM Sans',sans-serif;
+/* ============================================
+   PRINCIPAL — Chanzeywe TVC
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&display=swap');
+
+:root {
+  --pr-blue: #0a3d8f;
+  --pr-blue-mid: #1a56c4;
+  --pr-blue-soft: rgba(10, 61, 143, 0.08);
+  --pr-text: #1a1f36;
+  --pr-muted: #6b7280;
+  --pr-bg: #ffffff;
 }
 
-.principal-container{
-position:relative;
-z-index:1;
-display:flex;
-align-items:center;
-gap:72px;
-max-width:1100px;
-margin:auto;
+.principal-section {
+  position: relative;
+  background: var(--pr-bg);
+  padding: 90px 5%;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
 }
 
-/* IMAGE */
-
-.principal-image-wrap{
-position:relative;
-flex-shrink:0;
+/* ── Ambient decorative blobs ─────────────────── */
+.principal-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.principal-image-frame{
-position:relative;
-width:360px;
-border-radius:4px 28px 4px 28px;
-overflow:hidden;
-box-shadow:0 20px 50px rgba(0,0,0,0.14);
+.principal-blob--1 {
+  width: 340px;
+  height: 340px;
+  background: var(--pr-blue);
+  opacity: 0.07;
+  top: -110px;
+  left: -110px;
 }
 
-.principal-image-frame img{
-width:100%;
-height:460px;
-object-fit:cover;
-object-position:top center;
-display:block;
+.principal-blob--2 {
+  width: 300px;
+  height: 300px;
+  background: var(--pr-blue-mid);
+  opacity: 0.06;
+  bottom: -120px;
+  right: -90px;
 }
 
-/* CENTERED BADGE */
-
-.principal-badge{
-position:absolute;
-left:50%;
-transform:translateX(-50%);
-bottom:-18px;
-
-background:white;
-border:1px solid #e8d5a3;
-border-radius:100px;
-
-padding:10px 20px;
-
-display:flex;
-align-items:center;
-gap:6px;
-
-font-size:.75rem;
-font-weight:500;
-letter-spacing:.08em;
-
-color:#b5893f;
-
-box-shadow:0 8px 24px rgba(0,0,0,.10);
-white-space:nowrap;
+.principal-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 72px;
+  max-width: 1100px;
+  margin: auto;
 }
 
-/* CONTENT */
-
-.principal-content{
-flex:1;
-max-width:580px;
-display:flex;
-flex-direction:column;
-gap:24px;
+/* ── IMAGE ─────────────────────────────────────── */
+.principal-image-wrap {
+  position: relative;
+  flex-shrink: 0;
 }
 
-.principal-label{
-display:flex;
-align-items:center;
-gap:12px;
-font-size:.72rem;
-font-weight:500;
-letter-spacing:.22em;
-text-transform:uppercase;
-color:#b5893f;
+.principal-image-frame {
+  position: relative;
+  width: 380px;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px 28px 4px 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(10, 61, 143, 0.16);
+  background: linear-gradient(160deg, var(--pr-blue-soft), #eef2fb);
 }
 
-.principal-label__line{
-width:28px;
-height:1px;
-background:#b5893f;
+.principal-image-frame img {
+  width: 100%;
+  height: 100%;
+  /* Frame is square, matching the recommended upload size, so the
+     photo fills it edge-to-edge with no crop and no letterbox gaps. */
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* QUOTE */
-
-.principal-quote{
-font-family:'Cormorant Garamond',serif;
-font-size:clamp(1.35rem,2.4vw,1.75rem);
-font-style:italic;
-line-height:1.7;
-color:#1a1a22;
-
-position:relative;
-padding-left:40px;
+.principal-image-wrap:hover .principal-image-frame img {
+  transform: scale(1.04);
 }
 
-/* DECORATIVE QUOTE */
-
-.principal-quote::before{
-content:"“";
-position:absolute;
-left:-15px;
-top:-10px;
-
-font-size:6rem;
-color:#e8d5a3;
-line-height:1;
-
-z-index:-1;
+/* ── CONTENT ──────────────────────────────────── */
+.principal-content {
+  flex: 1;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-/* DIVIDER */
-
-.principal-divider{
-width:48px;
-height:2px;
-background:linear-gradient(to right,#b5893f,#e8d5a3);
+.principal-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--pr-blue);
 }
 
-/* SIGNATURE */
-
-.principal-karibu{
-font-family:'Cormorant Garamond',serif;
-font-style:italic;
-color:#b5893f;
-margin:0;
+.principal-label__line {
+  width: 28px;
+  height: 1.5px;
+  background: var(--pr-blue);
+  border-radius: 2px;
 }
 
-.principal-name{
-font-size:1.25rem;
-font-weight:500;
-margin:4px 0;
-color:#1a1a22;
+/* ── QUOTE ────────────────────────────────────── */
+.principal-quote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--pr-text);
+  margin: 0;
+  position: relative;
+  padding-left: 40px;
 }
 
-.principal-title{
-font-size:.82rem;
-color:#6b6b7e;
+.principal-quote::before {
+  content: '\201C';
+  position: absolute;
+  left: -15px;
+  top: -10px;
+  font-size: 6rem;
+  font-style: normal;
+  color: var(--pr-blue-soft);
+  line-height: 1;
+  z-index: -1;
 }
 
-/* MOBILE */
-
-@media(max-width:768px){
-
-.principal-container{
-flex-direction:column;
-text-align:center;
-gap:40px;
+/* ── DIVIDER ──────────────────────────────────── */
+.principal-divider {
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(to right, var(--pr-blue), var(--pr-blue-mid));
+  border-radius: 2px;
 }
 
-.principal-content{
-align-items:center;
+/* ── SIGNATURE ────────────────────────────────── */
+.principal-karibu {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--pr-blue);
+  margin: 0;
 }
 
-.principal-label{
-justify-content:center;
+.principal-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 4px 0;
+  color: var(--pr-text);
 }
 
-.principal-divider{
-margin:auto;
+.principal-title {
+  font-size: 0.82rem;
+  color: var(--pr-muted);
 }
 
-.principal-badge{
-left:50%;
-transform:translateX(-50%);
-}
+/* ── MOBILE ───────────────────────────────────── */
+@media (max-width: 768px) {
 
-.principal-quote{
-padding-left:0;
-}
+  .principal-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
 
-.principal-quote::before{
-display:none;
-}
+  .principal-content {
+    align-items: center;
+  }
+
+  .principal-label {
+    justify-content: center;
+  }
+
+  .principal-divider {
+    margin: auto;
+  }
+
+  .principal-quote {
+    padding-left: 0;
+  }
+
+  .principal-quote::before {
+    display: none;
+  }
 
 }

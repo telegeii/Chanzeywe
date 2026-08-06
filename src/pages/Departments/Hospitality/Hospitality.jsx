@@ -9,7 +9,7 @@ import Level4 from "../../../assets/Level4.png";
 import Logo from "../../../assets/Logo.png";
 import "../Computing/Computing.css";
 import {
-  FaChevronRight, FaCheckCircle, FaCalendarAlt, FaClock,
+  FaChevronRight, FaUtensils, FaCalendarAlt, FaClock,
   FaBook, FaUserGraduate, FaMoneyBillWave, FaIdCard, FaCamera, FaFileAlt
 } from "react-icons/fa";
 
@@ -31,8 +31,8 @@ const courses = [
     title: "Food and Beverage Level 5",
     level: "Level 5",
     badge: "Certificate",
-    color: "#059669",
-    bg: "rgba(5,150,105,0.07)",
+    color: "#1a56c4",
+    bg: "rgba(26,86,196,0.07)",
     department: "Hospitality",
     requirement: "D or Pass in Level 4",
     duration: "6 Terms",
@@ -43,8 +43,8 @@ const courses = [
     title: "Food and Beverage Level 4",
     level: "Level 4",
     badge: "Artisan",
-    color: "#d97706",
-    bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36",
+    bg: "rgba(26,31,54,0.07)",
     department: "Hospitality",
     requirement: "D- or E",
     duration: "3 Terms",
@@ -55,8 +55,8 @@ const courses = [
     title: "Fashion and Design Level 4",
     level: "Level 4",
     badge: "Artisan",
-    color: "#d97706",
-    bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36",
+    bg: "rgba(26,31,54,0.07)",
     department: "Hospitality",
     requirement: "D- or E",
     duration: "3 Terms",
@@ -67,8 +67,8 @@ const courses = [
     title: "Hairdressing & Beauty Therapy Level 4",
     level: "Level 4",
     badge: "Artisan",
-    color: "#d97706",
-    bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36",
+    bg: "rgba(26,31,54,0.07)",
     department: "Hospitality",
     requirement: "D- or E",
     duration: "3 Terms",
@@ -99,13 +99,13 @@ const levels = [
   },
   {
     img: Level5, label: "Level 5", badge: "Certificate",
-    color: "#059669", bg: "rgba(5,150,105,0.07)",
+    color: "#1a56c4", bg: "rgba(26,86,196,0.07)",
     req: "KCSE D or Passed Level 4",
     duration: "6 Terms",
   },
   {
     img: Level4, label: "Level 4", badge: "Artisan",
-    color: "#d97706", bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36", bg: "rgba(26,31,54,0.07)",
     req: "KCPE Certificate or Equivalent",
     duration: "3 Terms",
   },
@@ -122,14 +122,25 @@ const Hospitality = () => {
     <>
       <Navbar />
 
+      <div className="dept-page">
+
       {/* Hero */}
       <section className="cmp-hero">
         <img src={Photo} alt="Hospitality Department" />
         <div className="cmp-hero__overlay" />
         <div className="cmp-hero__content">
-          <span className="cmp-hero__eyebrow">Hospitality & Creative Arts</span>
+          <span className="cmp-hero__eyebrow">
+            <FaUtensils /> Hospitality &amp; Creative Arts
+          </span>
           <h1>Training Skilled Professionals in Hospitality</h1>
           <p>Excellence in Food, Fashion, and Beauty Therapy.</p>
+          <div className="cmp-hero__breadcrumb">
+            <Link to="/">Home</Link>
+            <FaChevronRight />
+            <Link to="/courses">Departments</Link>
+            <FaChevronRight />
+            <span>Hospitality</span>
+          </div>
         </div>
       </section>
 
@@ -201,6 +212,10 @@ const Hospitality = () => {
           </section>
 
           <section className="cmp-levels">
+            <div className="cmp-levels__header">
+              <span className="cmp-eyebrow">Entry Requirements</span>
+              <h2>Programme Levels</h2>
+            </div>
             <div className="cmp-levels__grid">
               {levels.map((lv, i) => (
                 <div key={i} className="cmp-level-card">
@@ -230,6 +245,11 @@ const Hospitality = () => {
       {/* Courses */}
       {activeTab === "courses" && (
         <section className="cmp-courses">
+          <div className="cmp-courses__header">
+            <span className="cmp-eyebrow">What We Offer</span>
+            <h2>Courses Offered</h2>
+            <p>CDACC-accredited programmes in food, fashion, and beauty therapy.</p>
+          </div>
           <div className="cmp-courses__grid">
             {courses.map((c, i) => (
               <div key={i} className="cmp-course-card">
@@ -256,6 +276,8 @@ const Hospitality = () => {
           </div>
         </section>
       )}
+
+      </div>
 
       <Footer />
     </>

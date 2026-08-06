@@ -141,6 +141,22 @@ const About = () => {
         </div>
       </section>
 
+      {/* ── Closing CTA ── */}
+      <section className="about-cta">
+        <div className="about-cta__container">
+          <h2>Ready to Start Your Journey?</h2>
+          <p>Applications are open for our January, May, and September intakes.</p>
+          <div className="about-cta__actions">
+            <Link to="/courses" className="about-cta__btn about-cta__btn--primary">
+              Explore Courses <FaChevronRight style={{ fontSize: "0.7rem" }} />
+            </Link>
+            <Link to="/contact" className="about-cta__btn about-cta__btn--ghost">
+              Contact Us
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <Footer />
     </div>
   );

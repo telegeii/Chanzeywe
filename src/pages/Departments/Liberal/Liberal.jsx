@@ -16,9 +16,9 @@ import {
 
 const courses = [
   { code: "DSWCD", title: "Social Work Level 6",             level: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", department: "Liberal Studies", requirement: "C- or Pass Level 5", duration: "9 Terms", examBody: "CDACC" },
-  { code: "CSWCD", title: "Social Work Level 5",             level: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", department: "Liberal Studies", requirement: "D (plain)",          duration: "6 Terms", examBody: "CDACC" },
+  { code: "CSWCD", title: "Social Work Level 5",             level: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", department: "Liberal Studies", requirement: "D (plain)",          duration: "6 Terms", examBody: "CDACC" },
   { code: "DSCM",  title: "Supply Chain Management Level 6", level: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", department: "Liberal Studies", requirement: "C- or Pass Level 5", duration: "9 Terms", examBody: "CDACC" },
-  { code: "CSCM",  title: "Supply Chain Management Level 5", level: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", department: "Liberal Studies", requirement: "D (plain)",          duration: "6 Terms", examBody: "CADAA" },
+  { code: "CSCM",  title: "Supply Chain Management Level 5", level: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", department: "Liberal Studies", requirement: "D (plain)",          duration: "6 Terms", examBody: "CDACC" },
 ];
 
 const intakes = [
@@ -37,8 +37,8 @@ const admissionDocs = [
 
 const levels = [
   { img: Level6, label: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", req: "KCSE aggregate C- (Minus) or Passed Craft Certificate or equivalent qualification.", duration: "9 Terms" },
-  { img: Level5, label: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", req: "KCSE aggregate D (Plain) or equivalent qualification.",                              duration: "6 Terms" },
-  { img: Level4, label: "Level 4", badge: "Artisan",     color: "#d97706", bg: "rgba(217,119,6,0.07)", req: "KCPE Certificate or equivalent qualification.",                                      duration: "3 Terms" },
+  { img: Level5, label: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", req: "KCSE aggregate D (Plain) or equivalent qualification.",                              duration: "6 Terms" },
+  { img: Level4, label: "Level 4", badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)", req: "KCPE Certificate or equivalent qualification.",                                      duration: "3 Terms" },
 ];
 
 const Liberal = () => {
@@ -51,6 +51,8 @@ const Liberal = () => {
   return (
     <>
       <Navbar />
+
+      <div className="dept-page">
 
       {/* ── Hero ── */}
       <section className="cmp-hero">
@@ -206,6 +208,8 @@ const Liberal = () => {
           </div>
         </section>
       )}
+
+      </div>
 
       <Footer />
     </>

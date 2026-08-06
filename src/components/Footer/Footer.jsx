@@ -12,6 +12,7 @@ import {
   FaInstagram,
   FaYoutube,
   FaChevronRight,
+  FaCertificate,
 } from "react-icons/fa";
 
 const Footer = () => {
@@ -20,7 +21,7 @@ const Footer = () => {
   const quickLinks = [
     { label: "About Us", to: "/about" },
     { label: "Courses", to: "/courses" },
-    { label: "Student Portal", to: "/student-portal" },
+    { label: "Student Portal", to: "/downloads" },
     { label: "News & Updates", to: "/blog" },
     { label: "Contact Us", to: "/contact" },
     { label: "Report Corruption", to: "/corruption" },
@@ -67,7 +68,7 @@ const Footer = () => {
               1 km from Mahanga Market, Vihiga County.
             </p>
             <div className="footer-badge">
-              <span>🏅 ISO 9001:2015 Certified</span>
+              <span><FaCertificate /> ISO 9001:2015 Certified</span>
             </div>
             {/* Socials */}
             <div className="footer-social">
@@ -139,7 +140,7 @@ const Footer = () => {
       {/* ── Bottom bar ── */}
       <div className="footer-bottom">
         <p>© {year} Chanzeywe Vocational Training College. All rights reserved.</p>
-        <p>Designed & Built by <a href="#" className="footer-bottom__credit">Techfic Limited</a></p>
+        <p>Designed & Built by <a href="#" className="footer-bottom__credit">Techfric Kenya</a></p>
       </div>
 
     </footer>

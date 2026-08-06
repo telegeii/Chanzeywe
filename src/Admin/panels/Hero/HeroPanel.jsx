@@ -1,28 +1,49 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../../AdminDashboard.css";
 import "./HeroPanel.css";
 import {
   FaEdit, FaTimes, FaSave, FaImage,
   FaArrowUp, FaArrowDown, FaEye, FaEyeSlash,
-  FaPlus, FaUserTie, FaQuoteLeft, FaStar,
+  FaPlus, FaUserTie, FaQuoteLeft,
   FaLink, FaChevronLeft, FaChevronRight,
   FaUpload, FaTrash, FaCamera,
 } from "react-icons/fa";
 
+/* ── Persistence ───────────────────────── */
+const SLIDES_KEY    = "chanzeywe_admin_slides";
+const PRINCIPAL_KEY = "chanzeywe_admin_principal";
+
 /* ── Seed data ─────────────────────────── */
 const INIT_SLIDES = [
-  { id:1, eyebrow:"Welcome to Chanzeywe TVC",  headline:"Skills to Transform Livelihoods",    subtitle:"Join Chanzeywe TVC — Quality CDACC-accredited vocational training.",       ctaLabel:"Explore Courses",  ctaLink:"/courses",     active:true, image:null },
-  { id:2, eyebrow:"CDACC Accredited",           headline:"Nationally Recognised Programmes",   subtitle:"Certificates, diplomas and artisan programmes across 6 departments.",       ctaLabel:"View Departments", ctaLink:"/departments",  active:true, image:null },
-  { id:3, eyebrow:"Intakes Now Open",           headline:"January 2026 Intake Now Open",       subtitle:"Secure your place early. Applications open for January, May & September.", ctaLabel:"Apply Now",        ctaLink:"/apply",        active:true, image:null },
+  { id:1, eyebrow:"Welcome to Chanzeywe TVC",  headline:"Skills to Transform Livelihoods",    subtitle:"Join Chanzeywe TVC — Quality CDACC-accredited vocational training.",       ctaLabel:"Explore Courses",  ctaLink:"/courses", active:true, image:null },
+  { id:2, eyebrow:"CDACC Accredited",           headline:"Nationally Recognised Programmes",   subtitle:"Certificates, diplomas and artisan programmes across 6 departments.",       ctaLabel:"View Departments", ctaLink:"/courses", active:true, image:null },
+  { id:3, eyebrow:"Intakes Now Open",           headline:"January 2026 Intake Now Open",       subtitle:"Secure your place early. Applications open for January, May & September.", ctaLabel:"Apply Now",        ctaLink:"/courses", active:true, image:null },
 ];
 
 const INIT_PRINCIPAL = {
   name:     "Mr. Gilbert G. Mwavali",
   title:    "Principal / Secretary – B.O.G",
-  since:    "Since 2020",
   greeting: "Karibu",
   message:  "A heartfelt welcome to the digital home of Chanzeywe Institute. We are committed to academic excellence, innovation, and the development of skilled professionals ready to thrive in the modern technological world.",
   photo:    null,
+};
+
+const loadSlides = () => {
+  try {
+    const raw = localStorage.getItem(SLIDES_KEY);
+    return raw ? JSON.parse(raw) : INIT_SLIDES;
+  } catch {
+    return INIT_SLIDES;
+  }
+};
+
+const loadPrincipal = () => {
+  try {
+    const raw = localStorage.getItem(PRINCIPAL_KEY);
+    return raw ? JSON.parse(raw) : INIT_PRINCIPAL;
+  } catch {
+    return INIT_PRINCIPAL;
+  }
 };
 
 const BLANK_SLIDE = { eyebrow:"", headline:"", subtitle:"", ctaLabel:"Learn More", ctaLink:"/", active:true, image:null };
@@ -78,13 +99,20 @@ function SliderPreview({ slides }) {
   const [idx, setIdx] = useState(0);
   const timer = useRef(null);
 
-  useEffect(() => { setIdx(0); }, [active.length]);
-
-  useEffect(() => {
+  const startTimer = useCallback(() => {
+    clearInterval(timer.current);
     if (active.length < 2) return;
     timer.current = setInterval(() => setIdx(i => (i + 1) % active.length), 3000);
-    return () => clearInterval(timer.current);
   }, [active.length]);
+
+  useEffect(() => {
+    startTimer();
+    return () => clearInterval(timer.current);
+  }, [startTimer]);
+
+  /* Manual nav resets the timer so it doesn't fire again a moment
+     after the admin already just moved to a slide by hand. */
+  const goTo = (i) => { setIdx(i); startTimer(); };
 
   if (!active.length) return (
     <div className="hp-preview-empty"><FaImage /><p>No active slides — enable at least one to preview.</p></div>
@@ -107,13 +135,13 @@ function SliderPreview({ slides }) {
       {active.length > 1 && (
         <div className="hp-preview__dots">
           {active.map((_, i) => (
-            <button key={i} className={`hp-preview__dot${i===idx?" hp-preview__dot--active":""}`} onClick={() => setIdx(i)} />
+            <button key={i} className={`hp-preview__dot${i===idx?" hp-preview__dot--active":""}`} onClick={() => goTo(i)} />
           ))}
         </div>
       )}
       {active.length > 1 && <>
-        <button className="hp-preview__arrow hp-preview__arrow--l" onClick={() => setIdx(i => (i-1+active.length)%active.length)}><FaChevronLeft /></button>
-        <button className="hp-preview__arrow hp-preview__arrow--r" onClick={() => setIdx(i => (i+1)%active.length)}><FaChevronRight /></button>
+        <button className="hp-preview__arrow hp-preview__arrow--l" onClick={() => goTo((idx-1+active.length)%active.length)}><FaChevronLeft /></button>
+        <button className="hp-preview__arrow hp-preview__arrow--r" onClick={() => goTo((idx+1)%active.length)}><FaChevronRight /></button>
       </>}
       <div className="hp-preview__progress" key={idx}><div className="hp-preview__progress-bar" /></div>
       <span className="hp-preview__label">Live Preview</span>
@@ -137,7 +165,6 @@ function PrincipalPreview({ p }) {
               : <FaUserTie className="hp-prin-preview__photo-icon" />
             }
           </div>
-          <div className="hp-prin-preview__badge"><FaStar style={{fontSize:"0.6rem"}}/><span>{p.since}</span></div>
         </div>
         <div className="hp-prin-preview__msg">
           <div className="hp-prin-preview__label">
@@ -160,14 +187,20 @@ function PrincipalPreview({ p }) {
    MAIN PANEL
 ═══════════════════════════════════════════ */
 export default function HeroPanel() {
-  const [slides,    setSlides]    = useState(INIT_SLIDES);
-  const [principal, setPrincipal] = useState(INIT_PRINCIPAL);
+  const [slides,    setSlides]    = useState(loadSlides);
+  const [principal, setPrincipal] = useState(loadPrincipal);
   const [modal,     setModal]     = useState(false);
   const [editing,   setEditing]   = useState(null);
   const [form,      setForm]      = useState(BLANK_SLIDE);
   const [tab,       setTab]       = useState("slider");
   const [pSaved,    setPSaved]    = useState(false);
   const photoRef                  = useRef(null);
+
+  /* Slide changes (add/edit/delete/reorder/toggle) take effect
+     immediately in the UI, so persist them the same way. */
+  useEffect(() => {
+    try { localStorage.setItem(SLIDES_KEY, JSON.stringify(slides)); } catch { /* storage unavailable */ }
+  }, [slides]);
 
   const openSlide = (s=null) => { setEditing(s); setForm(s?{...s}:{...BLANK_SLIDE}); setModal(true); };
   const close     = () => { setModal(false); setEditing(null); };
@@ -192,7 +225,11 @@ export default function HeroPanel() {
     const r=new FileReader(); r.onload=e=>setPrincipal(p=>({...p,photo:e.target.result})); r.readAsDataURL(file);
   };
 
-  const savePrincipal = () => { setPSaved(true); setTimeout(()=>setPSaved(false),2200); };
+  const savePrincipal = () => {
+    try { localStorage.setItem(PRINCIPAL_KEY, JSON.stringify(principal)); } catch { /* storage unavailable */ }
+    setPSaved(true);
+    setTimeout(()=>setPSaved(false),2200);
+  };
   const activeCount   = slides.filter(s=>s.active).length;
 
   return (
@@ -331,11 +368,7 @@ export default function HeroPanel() {
                     </div>
                   </div>
 
-                  <div className="adm-form-grid">
-                    <div className="adm-field">
-                      <label>Since (badge text)</label>
-                      <input value={principal.since} placeholder="e.g. Since 2020" onChange={e=>setPrincipal(p=>({...p,since:e.target.value}))}/>
-                    </div>
+                  <div className="adm-form-grid--1">
                     <div className="adm-field">
                       <label>Greeting Word</label>
                       <input value={principal.greeting} placeholder="e.g. Karibu" onChange={e=>setPrincipal(p=>({...p,greeting:e.target.value}))}/>

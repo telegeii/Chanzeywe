@@ -9,7 +9,7 @@ import Level4 from "../../../assets/Level4.png";
 import Logo from "../../../assets/Logo.png";
 import "../Computing/Computing.css";
 import {
-  FaChevronRight, FaHardHat, FaCheckCircle,
+  FaChevronRight, FaHardHat,
   FaCalendarAlt, FaClock, FaBook, FaUserGraduate,
   FaMoneyBillWave, FaIdCard, FaCamera, FaFileAlt,
 } from "react-icons/fa";
@@ -17,10 +17,10 @@ import {
 const courses = [
   { code: "DBC", title: "Building Technician Level 6 (Diploma)",        level: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", department: "Building & Civil Engineering", requirement: "C – or Pass in Level 5",    duration: "9 Terms", examBody: "CDACC" },
   { code: "DCE", title: "Civil Engineering Technician Level 6 (Diploma)",level: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", department: "Building & Civil Engineering", requirement: "C – or Pass in Level 5",    duration: "9 Terms", examBody: "CDACC" },
-  { code: "CBT", title: "Building Technician Level 5 (Certificate)",     level: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", department: "Building & Civil Engineering", requirement: "Grade D",                   duration: "6 Terms", examBody: "CDACC" },
-  { code: "CP",  title: "Plumbing Level 5",                              level: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", department: "Building & Civil Engineering", requirement: "Grade D",                   duration: "6 Terms", examBody: "CDACC" },
-  { code: "AM",  title: "Masonry Level 4",                               level: "Level 4", badge: "Artisan",     color: "#d97706", bg: "rgba(217,119,6,0.07)", department: "Building & Civil Engineering", requirement: "KCSE Mean Grade D –",       duration: "3 Terms", examBody: "CDACC" },
-  { code: "AP",  title: "Plumbing Level 4",                              level: "Level 4", badge: "Artisan",     color: "#d97706", bg: "rgba(217,119,6,0.07)", department: "Building & Civil Engineering", requirement: "KCSE Mean Grade D –",       duration: "3 Terms", examBody: "CDACC" },
+  { code: "CBT", title: "Building Technician Level 5 (Certificate)",     level: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", department: "Building & Civil Engineering", requirement: "Grade D",                   duration: "6 Terms", examBody: "CDACC" },
+  { code: "CP",  title: "Plumbing Level 5",                              level: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", department: "Building & Civil Engineering", requirement: "Grade D",                   duration: "6 Terms", examBody: "CDACC" },
+  { code: "AM",  title: "Masonry Level 4",                               level: "Level 4", badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)", department: "Building & Civil Engineering", requirement: "KCSE Mean Grade D –",       duration: "3 Terms", examBody: "CDACC" },
+  { code: "AP",  title: "Plumbing Level 4",                              level: "Level 4", badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)", department: "Building & Civil Engineering", requirement: "KCSE Mean Grade D –",       duration: "3 Terms", examBody: "CDACC" },
 ];
 
 const intakes = [
@@ -39,8 +39,8 @@ const admissionDocs = [
 
 const levels = [
   { img: Level6, label: "Level 6", badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)", req: "KCSE aggregate C- (Minus) or Passed Craft Certificate or equivalent qualification.", duration: "9 Terms" },
-  { img: Level5, label: "Level 5", badge: "Certificate", color: "#059669", bg: "rgba(5,150,105,0.07)", req: "KCSE aggregate D (Plain) or equivalent qualification.", duration: "6 Terms" },
-  { img: Level4, label: "Level 4", badge: "Artisan",     color: "#d97706", bg: "rgba(217,119,6,0.07)", req: "KCPE Certificate or equivalent qualification.", duration: "3 Terms" },
+  { img: Level5, label: "Level 5", badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)", req: "KCSE aggregate D (Plain) or equivalent qualification.", duration: "6 Terms" },
+  { img: Level4, label: "Level 4", badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)", req: "KCPE Certificate or equivalent qualification.", duration: "3 Terms" },
 ];
 
 const Building = () => {
@@ -53,6 +53,8 @@ const Building = () => {
   return (
     <>
       <Navbar />
+
+      <div className="dept-page">
 
       {/* ── Hero ── */}
       <section className="cmp-hero">
@@ -208,6 +210,8 @@ const Building = () => {
           </div>
         </section>
       )}
+
+      </div>
 
       <Footer />
     </>

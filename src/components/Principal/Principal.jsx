@@ -18,11 +18,6 @@ const Principal = () => {
             <img src={PrincipalPhoto} alt="Mr. Gilbert G. Mwavali – Principal" />
           </div>
 
-          <div className="principal-badge">
-            <span className="principal-badge__icon">✦</span>
-            <span>Since 2020</span>
-          </div>
-
         </div>
 
         {/* MESSAGE */}

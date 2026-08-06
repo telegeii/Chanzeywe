@@ -9,7 +9,7 @@ import Level4 from "../../../assets/Level4.png";
 import Logo from "../../../assets/Logo.png";
 import "../Computing/Computing.css";
 import {
-  FaChevronRight, FaCheckCircle, FaCalendarAlt, FaClock,
+  FaChevronRight, FaSeedling, FaCalendarAlt, FaClock,
   FaBook, FaUserGraduate, FaMoneyBillWave, FaIdCard, FaCamera, FaFileAlt
 } from "react-icons/fa";
 
@@ -31,8 +31,8 @@ const courses = [
     title: "Agriculture Extension",
     level: "Level 5",
     badge: "Certificate",
-    color: "#059669",
-    bg: "rgba(5,150,105,0.07)",
+    color: "#1a56c4",
+    bg: "rgba(26,86,196,0.07)",
     department: "Agriculture & Environmental Studies",
     requirement: "KCSE D or Passed Level 5",
     duration: "6 Terms",
@@ -43,8 +43,8 @@ const courses = [
     title: "Agriculture Extension",
     level: "Level 4",
     badge: "Artisan",
-    color: "#d97706",
-    bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36",
+    bg: "rgba(26,31,54,0.07)",
     department: "Agriculture & Environmental Studies",
     requirement: "KCSE D- or E",
     duration: "3 Terms",
@@ -75,13 +75,13 @@ const levels = [
   },
   {
     img: Level5, label: "Level 5", badge: "Certificate",
-    color: "#059669", bg: "rgba(5,150,105,0.07)",
+    color: "#1a56c4", bg: "rgba(26,86,196,0.07)",
     req: "KCSE D or Passed Level 5",
     duration: "6 Terms",
   },
   {
     img: Level4, label: "Level 4", badge: "Artisan",
-    color: "#d97706", bg: "rgba(217,119,6,0.07)",
+    color: "#1a1f36", bg: "rgba(26,31,54,0.07)",
     req: "KCSE D- or E",
     duration: "3 Terms",
   },
@@ -98,13 +98,25 @@ const Agriculture = () => {
     <>
       <Navbar />
 
+      <div className="dept-page">
+
       {/* Hero */}
       <section className="cmp-hero">
         <img src={Photo} alt="Agriculture Department" />
         <div className="cmp-hero__overlay" />
         <div className="cmp-hero__content">
-          <span className="cmp-hero__eyebrow">Agriculture & Environmental Studies</span>
-          <h1>Promoting Sustainable Agriculture & Environmental Care</h1>
+          <span className="cmp-hero__eyebrow">
+            <FaSeedling /> Agriculture &amp; Environmental Studies
+          </span>
+          <h1>Promoting Sustainable Agriculture &amp; Environmental Care</h1>
+          <p>Practical training in agriculture and environmental stewardship for Kenya's growing food sector.</p>
+          <div className="cmp-hero__breadcrumb">
+            <Link to="/">Home</Link>
+            <FaChevronRight />
+            <Link to="/courses">Departments</Link>
+            <FaChevronRight />
+            <span>Agriculture &amp; Environmental Studies</span>
+          </div>
         </div>
       </section>
 
@@ -163,6 +175,7 @@ const Agriculture = () => {
             <div className="cmp-admission__header">
               <span className="cmp-eyebrow">How to Join</span>
               <h2>General Admission Requirements</h2>
+              <p>Please bring the following documents when reporting for registration.</p>
             </div>
             <div className="cmp-admission__grid">
               {admissionDocs.map((d, i) => (
@@ -175,6 +188,10 @@ const Agriculture = () => {
           </section>
 
           <section className="cmp-levels">
+            <div className="cmp-levels__header">
+              <span className="cmp-eyebrow">Entry Requirements</span>
+              <h2>Programme Levels</h2>
+            </div>
             <div className="cmp-levels__grid">
               {levels.map((lv, i) => (
                 <div key={i} className="cmp-level-card">
@@ -204,6 +221,11 @@ const Agriculture = () => {
       {/* Courses */}
       {activeTab === "courses" && (
         <section className="cmp-courses">
+          <div className="cmp-courses__header">
+            <span className="cmp-eyebrow">What We Offer</span>
+            <h2>Courses Offered</h2>
+            <p>CDACC-accredited programmes for sustainable agriculture and environmental care.</p>
+          </div>
           <div className="cmp-courses__grid">
             {courses.map((c, i) => (
               <div key={i} className="cmp-course-card">
@@ -230,6 +252,8 @@ const Agriculture = () => {
           </div>
         </section>
       )}
+
+      </div>
 
       <Footer />
     </>

@@ -1,6 +1,6 @@
 /* ============================================
    SLIDER — Chanzeywe TVC
-   Gold (#f0a500) + Navy (#051f4e) palette.
+   Navy (#051f4e) + white accent palette.
    Cormorant Garamond headlines · Outfit UI.
    ============================================ */
 
@@ -124,9 +124,9 @@
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #f0a500;
-  background: rgba(240, 165, 0, 0.18);
-  border: 1px solid rgba(240, 165, 0, 0.38);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.34);
   padding: 5px 16px;
   border-radius: 24px;
   margin-bottom: 14px;
@@ -171,24 +171,25 @@
   padding: 13px 34px;
   border-radius: 32px;
   border: none;
-  background: #f0a500;
-  color: #051f4e;
+  background: #ffffff;
+  color: #0a3d8f;
   font-family: 'Outfit', sans-serif;
   font-size: 0.88rem;
   font-weight: 700;
   letter-spacing: 0.05em;
+  text-decoration: none;
   cursor: pointer;
   box-shadow:
-    0 6px 24px rgba(240, 165, 0, 0.45),
+    0 6px 24px rgba(10, 61, 143, 0.4),
     0 2px 6px  rgba(0, 0, 0, 0.25);
   transition: background 0.22s, transform 0.18s, box-shadow 0.22s;
   animation: contentFadeUp 0.65s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .slide__cta:hover {
-  background: #ffc233;
+  background: #eef4ff;
   transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(240, 165, 0, 0.5);
+  box-shadow: 0 12px 36px rgba(10, 61, 143, 0.45);
 }
 
 @keyframes contentFadeUp {
@@ -227,9 +228,9 @@
 }
 
 .slider__arrow:hover {
-  background: #f0a500;
-  border-color: #f0a500;
-  color: #051f4e;
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #0a3d8f;
   transform: translateY(-50%) scale(1.08);
 }
 
@@ -260,7 +261,7 @@
 }
 
 .slider__dot--active {
-  background: #f0a500;
+  background: #ffffff;
   width: 28px;
   border-radius: 4px;
 }
@@ -278,7 +279,7 @@
 
 .slider__progress-bar {
   height: 100%;
-  background: #f0a500;
+  background: #ffffff;
   animation: sliderProgress 6s linear forwards;
 }
 

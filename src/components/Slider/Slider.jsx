@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { Link } from "react-router-dom";
 import "./Slider.css";
 
 import Image1 from "../../assets/Photo1.jpg";
@@ -8,7 +9,10 @@ import Image3 from "../../assets/Photo3.jpg";
 /* ─────────────────────────────────────────────
    Default slides — replace with data from your
    admin/backend once connected.
-   Each slide: { image, eyebrow?, text, subtitle?, cta? }
+   Each slide: { image, eyebrow?, text, subtitle?, cta?, link? }
+   "/courses" lists every department's programmes together (with a
+   per-course Apply action), so that's the shared destination for
+   all three CTAs below — same page the Navbar's own Apply link uses.
 ───────────────────────────────────────────── */
 const DEFAULT_SLIDES = [
   {
@@ -17,6 +21,7 @@ const DEFAULT_SLIDES = [
     text:     "Skills to Transform Livelihoods",
     subtitle: "Quality CDACC-accredited vocational training for Kenya's growing economy.",
     cta:      "Explore Courses",
+    link:     "/courses",
   },
   {
     image:    Image2,
@@ -24,6 +29,7 @@ const DEFAULT_SLIDES = [
     text:     "Nationally Recognised Programmes",
     subtitle: "Certificates, diplomas and artisan programmes across 6 departments.",
     cta:      "View Departments",
+    link:     "/courses",
   },
   {
     image:    Image3,
@@ -31,6 +37,7 @@ const DEFAULT_SLIDES = [
     text:     "January 2026 Intake Now Open",
     subtitle: "Apply early — intakes run in January, May, and September every year.",
     cta:      "Apply Now",
+    link:     "/courses",
   },
 ];
 
@@ -44,34 +51,40 @@ const Slider = ({ slides = DEFAULT_SLIDES }) => {
   const [prevIndex,    setPrevIndex]    = useState(null);
   const [direction,    setDirection]    = useState("next");
   const [isAnimating,  setIsAnimating]  = useState(false);
-  const intervalRef = useRef(null);
+  const intervalRef    = useRef(null);
+  const currentIndexRef = useRef(0);
+  const isAnimatingRef  = useRef(false);
 
-  const goTo = (index, dir = "next") => {
-    if (isAnimating || index === currentIndex) return;
+  useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
+  useEffect(() => { isAnimatingRef.current = isAnimating; }, [isAnimating]);
+
+  /* Reads refs (not state) so it stays callable from the autoplay
+     interval without going stale — every transition, manual or
+     automatic, now goes through the same animated path. */
+  const goTo = useCallback((index, dir = "next") => {
+    if (isAnimatingRef.current || index === currentIndexRef.current) return;
     setDirection(dir);
-    setPrevIndex(currentIndex);
+    setPrevIndex(currentIndexRef.current);
     setIsAnimating(true);
     setCurrentIndex(index);
     setTimeout(() => { setPrevIndex(null); setIsAnimating(false); }, 900);
-  };
+  }, []);
 
-  const goNext = () => {
-    const next = currentIndex === slides.length - 1 ? 0 : currentIndex + 1;
+  const goNext = useCallback(() => {
+    const next = currentIndexRef.current === slides.length - 1 ? 0 : currentIndexRef.current + 1;
     goTo(next, "next");
-  };
+  }, [goTo, slides.length]);
 
-  const goPrev = () => {
-    const prev = currentIndex === 0 ? slides.length - 1 : currentIndex - 1;
+  const goPrev = useCallback(() => {
+    const prev = currentIndexRef.current === 0 ? slides.length - 1 : currentIndexRef.current - 1;
     goTo(prev, "prev");
-  };
+  }, [goTo, slides.length]);
 
   /* Autoplay */
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCurrentIndex(prev => prev === slides.length - 1 ? 0 : prev + 1);
-    }, 6000);
+    intervalRef.current = setInterval(goNext, 6000);
     return () => clearInterval(intervalRef.current);
-  }, [slides.length]);
+  }, [goNext]);
 
   const resetInterval = () => {
     clearInterval(intervalRef.current);
@@ -104,7 +117,11 @@ const Slider = ({ slides = DEFAULT_SLIDES }) => {
               {slide.eyebrow && <span className="slide__eyebrow">{slide.eyebrow}</span>}
               <h1 className="slide__title">{slide.text}</h1>
               {slide.subtitle && <p className="slide__subtitle">{slide.subtitle}</p>}
-              {slide.cta && <button className="slide__cta">{slide.cta}</button>}
+              {slide.cta && (
+                <Link to={slide.link || "/courses"} className="slide__cta">
+                  {slide.cta}
+                </Link>
+              )}
             </div>
 
           </div>

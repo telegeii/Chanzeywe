@@ -78,7 +78,7 @@ const departments = [
       { code: "DSWCD", title: "Social Work Level 6", requirement: "C- or Pass Level 5", duration: "9 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 6" },
       { code: "CSWCD", title: "Social Work Level 5", requirement: "D (plain)", duration: "6 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 5" },
       { code: "DSCM",  title: "Supply Chain Management Level 6", requirement: "C- or Pass Level 5", duration: "9 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 6" },
-      { code: "CSCM",  title: "Supply Chain Management Level 5", requirement: "D (plain)", duration: "6 Terms", examBody: "CADAA", department: "LIBERAL STUDIES", level: "Level 5" },
+      { code: "CSCM",  title: "Supply Chain Management Level 5", requirement: "D (plain)", duration: "6 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 5" },
     ],
   },
 ];

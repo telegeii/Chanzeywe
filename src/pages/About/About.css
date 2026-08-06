@@ -6,10 +6,11 @@
 
 :root {
   --ab-blue: #0a3d8f;
+  --ab-blue-mid: #1a56c4;
   --ab-blue-dark: #072d6b;
   --ab-blue-deep: #051f4e;
-  --ab-accent: #f0a500;
-  --ab-accent-hover: #ffc233;
+  --ab-accent: #1a56c4;
+  --ab-accent-hover: #0a3d8f;
   --ab-text: #1a1f36;
   --ab-muted: #6b7280;
   --ab-bg: #f4f6fb;
@@ -98,7 +99,7 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ab-accent);
+  color: #ffffff;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -109,7 +110,7 @@
   display: inline-block;
   width: 24px;
   height: 1.5px;
-  background: var(--ab-accent);
+  background: #ffffff;
 }
 
 .about-hero__content h1 {
@@ -148,7 +149,7 @@
   transition: color 0.2s;
 }
 
-.about-hero__breadcrumb a:hover { color: var(--ab-accent); }
+.about-hero__breadcrumb a:hover { color: #ffffff; }
 
 .about-hero__breadcrumb svg {
   font-size: 0.55rem;
@@ -156,7 +157,7 @@
 }
 
 .about-hero__breadcrumb span {
-  color: var(--ab-accent);
+  color: #ffffff;
 }
 
 /* Stats bar — floats at bottom of hero */
@@ -194,7 +195,7 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.7rem;
   font-weight: 600;
-  color: var(--ab-accent);
+  color: #ffffff;
   line-height: 1;
 }
 
@@ -251,17 +252,19 @@
   font-size: 0.85rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--ab-blue-deep);
-  background: var(--ab-accent);
+  color: #ffffff;
+  background: var(--ab-blue);
   border-radius: 8px;
   text-decoration: none;
-  transition: background 0.22s, transform 0.2s, gap 0.22s;
+  box-shadow: 0 6px 20px rgba(10, 61, 143, 0.28);
+  transition: background 0.22s, transform 0.2s, gap 0.22s, box-shadow 0.22s;
 }
 
 .about-intro__cta:hover {
-  background: var(--ab-accent-hover);
+  background: var(--ab-blue-mid);
   transform: translateY(-2px);
   gap: 12px;
+  box-shadow: 0 10px 28px rgba(10, 61, 143, 0.34);
 }
 
 /* ── Mission & Vision ─────────────────────────── */
@@ -310,7 +313,7 @@
 }
 
 .about-mv__card--mission::before { background: var(--ab-blue); }
-.about-mv__card--vision::before  { background: var(--ab-accent); }
+.about-mv__card--vision::before  { background: var(--ab-text); }
 
 .about-mv__img-wrap {
   width: 68px;
@@ -325,7 +328,7 @@
 }
 
 .about-mv__card--vision .about-mv__img-wrap {
-  background: rgba(240,165,0,0.1);
+  background: rgba(26,31,54,0.08);
 }
 
 .about-mv__card:hover .about-mv__img-wrap {
@@ -357,8 +360,8 @@
 }
 
 .about-mv__tag--vision {
-  color: #92580a;
-  background: rgba(240,165,0,0.12);
+  color: var(--ab-text);
+  background: rgba(26,31,54,0.08);
 }
 
 .about-mv__body h3 {
@@ -466,6 +469,86 @@
   line-height: 1.7;
   color: var(--ab-muted);
   margin: 0;
+}
+
+/* ── Closing CTA banner ───────────────────────── */
+.about-cta {
+  background: #ffffff;
+  padding: 64px 5% 80px;
+  text-align: center;
+}
+
+.about-cta__container {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: var(--ab-bg);
+  border: 1px solid var(--ab-border);
+  border-radius: 20px;
+  padding: 48px 40px;
+}
+
+.about-cta h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+  font-weight: 600;
+  color: var(--ab-text);
+  margin: 0;
+}
+
+.about-cta p {
+  font-size: 0.98rem;
+  color: var(--ab-muted);
+  margin: 0 0 8px;
+}
+
+.about-cta__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.about-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 26px;
+  font-family: var(--ab-font);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.22s, color 0.22s, transform 0.2s, gap 0.22s;
+}
+
+.about-cta__btn--primary {
+  color: #ffffff;
+  background: var(--ab-blue);
+  box-shadow: 0 6px 18px rgba(10, 61, 143, 0.24);
+}
+
+.about-cta__btn--primary:hover {
+  background: var(--ab-blue-mid);
+  transform: translateY(-2px);
+  gap: 12px;
+}
+
+.about-cta__btn--ghost {
+  color: var(--ab-blue);
+  background: #ffffff;
+  border: 1.5px solid var(--ab-border);
+}
+
+.about-cta__btn--ghost:hover {
+  background: var(--ab-bg);
+  border-color: rgba(10, 61, 143, 0.2);
+  transform: translateY(-2px);
 }
 
 /* ── Animation ────────────────────────────────── */

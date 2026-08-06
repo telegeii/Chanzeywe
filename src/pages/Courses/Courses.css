@@ -6,10 +6,11 @@
 
 :root {
   --cs-blue: #0a3d8f;
+  --cs-blue-mid: #1a56c4;
   --cs-blue-dark: #072d6b;
   --cs-blue-deep: #051f4e;
-  --cs-accent: #f0a500;
-  --cs-accent-hover: #ffc233;
+  --cs-accent: #1a56c4;
+  --cs-accent-hover: #0a3d8f;
   --cs-text: #1a1f36;
   --cs-muted: #6b7280;
   --cs-bg: #f4f6fb;
@@ -71,7 +72,7 @@
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--cs-accent);
+  color: #ffffff;
   animation: fadeUp 0.7s 0.15s both;
 }
 
@@ -80,7 +81,7 @@
   display: inline-block;
   width: 24px;
   height: 1.5px;
-  background: var(--cs-accent);
+  background: #ffffff;
   border-radius: 2px;
 }
 
@@ -118,9 +119,9 @@
   transition: color 0.2s;
 }
 
-.hero-text-overlay__breadcrumb a:hover { color: var(--cs-accent); }
+.hero-text-overlay__breadcrumb a:hover { color: #ffffff; }
 .hero-text-overlay__breadcrumb svg { font-size: 0.52rem; opacity: 0.45; }
-.hero-text-overlay__breadcrumb span { color: var(--cs-accent); }
+.hero-text-overlay__breadcrumb span { color: #ffffff; }
 
 /* ── Page section ─────────────────────────────── */
 .courses-page {
@@ -213,7 +214,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  color: var(--cs-accent);
+  color: #ffffff;
   flex-shrink: 0;
 }
 
@@ -296,8 +297,8 @@
 }
 
 .level-badge--diploma {
-  background: rgba(240,165,0,0.12);
-  color: #92580a;
+  background: rgba(26,31,54,0.08);
+  color: var(--cs-text);
 }
 
 /* Apply button */
@@ -421,16 +422,16 @@
   font-family: var(--cs-font);
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--cs-blue-deep);
-  background: var(--cs-accent);
+  color: #ffffff;
+  background: var(--cs-blue);
   border-radius: 9px;
   text-decoration: none;
   transition: background 0.22s, transform 0.2s;
-  box-shadow: 0 3px 10px rgba(240,165,0,0.25);
+  box-shadow: 0 3px 10px rgba(10,61,143,0.25);
 }
 
 .student-forms ul li a:hover {
-  background: var(--cs-accent-hover);
+  background: var(--cs-blue-mid);
   transform: translateY(-2px);
 }
 

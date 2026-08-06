@@ -6,7 +6,7 @@ import TenderPdf from "../../assets/English.pdf";
 import Sorry from "../../assets/sorry.png";
 import "./Tender.css";
 import { Link } from "react-router-dom";
-import { FaChevronRight, FaDownload, FaFileContract } from "react-icons/fa";
+import { FaChevronRight, FaDownload } from "react-icons/fa";
 
 const tenders = [
   {
@@ -103,6 +103,11 @@ const Tender = () => {
         <div className="tender-hero-text">
           <h2>Tenders at Chanzeywe Vocational Training College</h2>
           <p>We welcome suppliers to participate in our procurement processes.</p>
+          <div className="tender-hero-text__breadcrumb">
+            <Link to="/">Home</Link>
+            <FaChevronRight />
+            <span>Tenders</span>
+          </div>
         </div>
       </section>
 

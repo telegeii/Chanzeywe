@@ -6,10 +6,11 @@
 
 :root {
   --dl-blue: #0a3d8f;
+  --dl-blue-mid: #1a56c4;
   --dl-blue-dark: #072d6b;
   --dl-blue-deep: #051f4e;
-  --dl-accent: #f0a500;
-  --dl-accent-hover: #ffc233;
+  --dl-accent: #1a56c4;
+  --dl-accent-hover: #0a3d8f;
   --dl-text: #1a1f36;
   --dl-muted: #6b7280;
   --dl-bg: #f4f6fb;
@@ -81,7 +82,7 @@
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--dl-accent);
+  color: #ffffff;
   text-shadow: 0 1px 8px rgba(0,0,0,0.8);
   animation: fadeUp 0.7s 0.15s both;
 }
@@ -91,7 +92,7 @@
   display: inline-block;
   width: 26px;
   height: 2px;
-  background: var(--dl-accent);
+  background: #ffffff;
   border-radius: 2px;
 }
 
@@ -135,9 +136,9 @@
   transition: color 0.2s;
 }
 
-.dl-hero__breadcrumb a:hover { color: var(--dl-accent); }
+.dl-hero__breadcrumb a:hover { color: #ffffff; }
 .dl-hero__breadcrumb svg    { font-size: 0.52rem; opacity: 0.5; }
-.dl-hero__breadcrumb span   { color: var(--dl-accent); }
+.dl-hero__breadcrumb span   { color: #ffffff; }
 
 /* ── Section ──────────────────────────────────── */
 .dl-section {
@@ -333,16 +334,16 @@
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--dl-blue-deep);
-  background: var(--dl-accent);
+  color: #ffffff;
+  background: var(--dl-blue);
   border-radius: 8px;
   text-decoration: none;
   transition: background 0.22s, transform 0.2s, gap 0.22s;
-  box-shadow: 0 3px 10px rgba(240,165,0,0.25);
+  box-shadow: 0 3px 10px rgba(10,61,143,0.25);
 }
 
 .dl-card__btn:hover {
-  background: var(--dl-accent-hover);
+  background: var(--dl-blue-mid);
   transform: translateY(-1px);
   gap: 12px;
 }

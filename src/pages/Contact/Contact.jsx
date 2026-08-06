@@ -183,11 +183,23 @@ const Contact = () => {
 
             {/* Map */}
             <div className="contact-map">
+              <div className="contact-map__header">
+                <span className="contact-map__title"><FaMapMarkerAlt /> Find Us on the Map</span>
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=0.024515430024676094,34.6658738152952"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contact-map__directions"
+                >
+                  Get Directions <FaChevronRight style={{ fontSize: "0.6rem" }} />
+                </a>
+              </div>
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.837082956482!2d34.6658738152952!3d0.024515430024676094!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x178007e3a81275f7%3A0x1ad962e8c43f4cc2!2sChanzeywe%20Technical%20and%20Professional%20College!5e0!3m2!1sen!2ske!4v1709090000000!5m2!1sen!2ske"
                 title="Chanzeywe TVC Location"
                 allowFullScreen
                 loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
 

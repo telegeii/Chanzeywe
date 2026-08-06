@@ -7,7 +7,7 @@
 :root {
   --pt-blue: #0a3d8f;
   --pt-blue-mid: #1a56c4;
-  --pt-accent: #f0a500;
+  --pt-accent: #0a3d8f;
   --pt-text: #1a1f36;
   --pt-muted: #6b7280;
   --pt-bg: #ffffff;
@@ -108,6 +108,7 @@
 
 .marquee-track {
   display: flex;
+  align-items: flex-start;
   width: max-content;
   animation: partners-scroll 38s linear infinite;
   will-change: transform;
@@ -135,6 +136,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
   cursor: default;
   transition: transform 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -173,12 +175,18 @@
 
 /* Name */
 .partner-card__name {
+  width: 100%;
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--pt-muted);
   text-align: center;
   line-height: 1.4;
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.1rem;
   transition: color 0.22s;
 }
 
