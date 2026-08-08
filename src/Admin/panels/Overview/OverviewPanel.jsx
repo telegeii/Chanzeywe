@@ -80,7 +80,9 @@ export default function OverviewPanel({ admin }) {
       });
   }, [isSuperAdmin, permsKey]);
 
-  const appsCount = values?.applications?.length ?? null;
+  const pendingCount = values?.applications
+    ? values.applications.filter(a => a.status === "pending").length
+    : null;
 
   const today = new Date().toLocaleDateString("en-KE", {
     weekday: "long",
@@ -119,8 +121,8 @@ export default function OverviewPanel({ admin }) {
                 <FaClipboardList />
               </div>
               <div>
-                <span className="ovp-banner__chip-val">{appsCount === null ? "…" : appsCount}</span>
-                <span className="ovp-banner__chip-label">Applications</span>
+                <span className="ovp-banner__chip-val">{pendingCount === null ? "…" : pendingCount}</span>
+                <span className="ovp-banner__chip-label">Pending Review</span>
               </div>
             </div>
           </div>

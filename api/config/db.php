@@ -5,6 +5,8 @@
  * local-dev defaults (root / no password) when no env vars are set.
  */
 
+require_once __DIR__ . '/env.php';
+
 function db(): PDO {
     static $pdo = null;
     if ($pdo === null) {

@@ -26,3 +26,10 @@ dist-ssr
 # Uploaded applicant documents contain personal data — never commit them
 api/uploads/applications/*
 !api/uploads/applications/.htaccess
+
+# Generated offer letters contain personal data — never commit them
+api/uploads/offer_letters/*
+!api/uploads/offer_letters/.htaccess
+
+# Real credentials — never commit. .env.example documents the shape.
+api/config/.env

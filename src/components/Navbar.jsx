@@ -34,6 +34,7 @@ const navItems = [
   {
     label: "Student",
     children: [
+      { label: "Admission Letter", path: "/admission-letter" },
       { label: "Student Portal", path: "/downloads" },
       { label: "Downloads", path: "/downloads" },
     ],

@@ -1,8 +1,8 @@
 /* ============================================================
    APPLICATIONS PANEL — Chanzeywe TVC Admin
    Prefix: apl-
-   Aesthetic: Clean navy authority with warm department-colour
-   accents. Precision grid, rich data density, clear hierarchy.
+   Table + pagination for the list (scales to hundreds of rows),
+   detail view as a modal popup instead of a permanent side panel.
    ============================================================ */
 
 .apl {
@@ -77,7 +77,56 @@
   color: rgba(255,255,255,0.48);
   max-width: 440px;
   line-height: 1.6;
+  margin-bottom: 16px;
 }
+
+.apl-walkin-btn {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.18s;
+}
+.apl-walkin-btn:hover { background: #fff; color: #0a3d8f; border-color: #fff; }
+
+.apl-walkin-note {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.6;
+  background: rgba(10,61,143,0.05);
+  border: 1px solid rgba(10,61,143,0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 0 0 16px;
+}
+
+.apl-walkin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 20px;
+  background: rgba(124,58,237,0.1);
+  color: #7c3aed;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.apl-hint { font-weight: 400; color: #9ca3af; font-size: 0.72rem; }
 
 /* Stats row */
 .apl-banner__stats {
@@ -118,20 +167,29 @@
   display: block;
 }
 
-/* ══ MAIN LAYOUT ════════════════════════════════════════ */
-.apl-layout {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 20px;
-  align-items: flex-start;
-}
-
-/* ══ LIST COLUMN ════════════════════════════════════════ */
-.apl-list-col {
+/* ── Filters panel ── */
+.apl-filters {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  background: #fff;
+  border: 1.5px solid rgba(10,61,143,0.08);
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 2px 8px rgba(10,61,143,0.04);
 }
+
+.apl-filters__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.apl-filters__label svg { font-size: 0.68rem; color: #0a3d8f; }
 
 /* ── Toolbar ── */
 .apl-toolbar {
@@ -256,13 +314,6 @@
   padding: 0 5px;
 }
 
-/* ── Cards ── */
-.apl-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .apl-empty {
   display: flex;
   flex-direction: column;
@@ -277,51 +328,50 @@
   border: 1.5px solid rgba(10,61,143,0.07);
 }
 
-/* Application card */
-.apl-card {
-  background: #fff;
-  border-radius: 14px;
-  border: 1.5px solid rgba(10,61,143,0.08);
-  padding: 14px 16px 12px 20px;
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.18s;
-  box-shadow: 0 2px 8px rgba(10,61,143,0.04);
+/* ══ TABLE ═══════════════════════════════════════════════
+   table-layout:auto + a min-width per column (instead of the shared
+   .adm-table's fixed/percentage layout) so columns never get squeezed
+   below a usable size — the table grows past the container and the
+   wrapper below scrolls horizontally instead of clipping the Actions
+   column off-screen. */
+.apl-table {
+  table-layout: auto;
+  min-width: 900px;
 }
+.apl-table th:nth-child(1) { min-width: 220px; }
+.apl-table th:nth-child(2) { min-width: 200px; }
+.apl-table th:nth-child(3) { min-width: 130px; }
+.apl-table th:nth-child(4) { min-width: 110px; }
+.apl-table th:nth-child(5) { min-width: 100px; }
+.apl-table th:nth-child(6) { min-width: 130px; }
 
-.apl-card:hover {
-  border-color: rgba(10,61,143,0.22);
-  box-shadow: 0 6px 22px rgba(10,61,143,0.09);
-  transform: translateY(-1px);
+/* Make the horizontal scrollbar itself obvious rather than relying on
+   the OS's default (which can be a thin overlay bar that's easy to miss). */
+.apl .adm-table-wrap {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(10,61,143,0.35) #f0f2f8;
+  padding-bottom: 4px;
 }
+.apl .adm-table-wrap::-webkit-scrollbar { height: 10px; }
+.apl .adm-table-wrap::-webkit-scrollbar-track { background: #f0f2f8; border-radius: 10px; }
+.apl .adm-table-wrap::-webkit-scrollbar-thumb { background: rgba(10,61,143,0.35); border-radius: 10px; }
+.apl .adm-table-wrap::-webkit-scrollbar-thumb:hover { background: rgba(10,61,143,0.55); }
 
-.apl-card--active {
-  border-color: #0a3d8f;
-  box-shadow: 0 6px 22px rgba(10,61,143,0.14);
-  background: #f8faff;
-}
+.apl-row { cursor: pointer; transition: background 0.15s; }
+.apl-row:hover { background: #f8faff; }
 
-/* Left dept colour bar */
-.apl-card__bar {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 4px;
-  border-radius: 14px 0 0 14px;
-}
-
-.apl-card__top {
+.apl-row__applicant {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 10px;
+  align-items: center;
+  gap: 10px;
 }
 
-.apl-card__avatar {
-  width: 42px; height: 42px;
-  border-radius: 12px;
+.apl-row__avatar {
+  width: 34px; height: 34px;
+  border-radius: 10px;
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -330,90 +380,101 @@
   letter-spacing: 0.04em;
 }
 
-.apl-card__info { flex:1; min-width:0; }
-
-.apl-card__name {
-  font-size: 0.88rem;
+.apl-row__applicant-text { min-width: 0; display: flex; flex-direction: column; }
+.apl-row__name {
+  font-size: 0.83rem;
   font-weight: 700;
   color: #1a1f36;
-  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.apl-row__email {
+  font-size: 0.7rem;
+  color: #9ca3af;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.apl-card__course {
+.apl-row__course { display: flex; flex-direction: column; min-width: 0; }
+.apl-row__course-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.apl-row__course-dept { font-size: 0.68rem; font-weight: 600; margin-top: 2px; }
+
+.apl-row__ref,
+.apl-row__date {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.02em;
+}
+
+/* ── Row action buttons — coloured at rest, not just on hover, so
+   view/accept/reject read as three distinct actions at a glance ── */
+.apl-row-actions {
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.74rem;
-  color: #374151;
-  margin-bottom: 3px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  gap: 6px;
 }
 
-.apl-card__dept {
-  font-size: 0.68rem;
-  font-weight: 600;
-}
-
-.apl-card__right {
+.apl-row-btn {
+  width: 30px;
+  height: 30px;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-size: 0.76rem;
+  transition: all 0.15s;
   flex-shrink: 0;
 }
+.apl-row-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.apl-card__id {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #9ca3af;
-  text-transform: uppercase;
-}
+.apl-row-btn--view { background:rgba(10,61,143,0.08); color:#0a3d8f; border-color:rgba(10,61,143,0.16); }
+.apl-row-btn--view:hover { background:#0a3d8f; color:#fff; border-color:#0a3d8f; }
 
-.apl-card__foot {
+.apl-row-btn--ok { background:rgba(22,163,74,0.1); color:#16a34a; border-color:rgba(22,163,74,0.22); }
+.apl-row-btn--ok:not(:disabled):hover { background:#16a34a; color:#fff; border-color:#16a34a; }
+
+.apl-row-btn--no { background:rgba(220,38,38,0.08); color:#dc2626; border-color:rgba(220,38,38,0.18); }
+.apl-row-btn--no:not(:disabled):hover { background:#dc2626; color:#fff; border-color:#dc2626; }
+
+/* ── Pagination ── */
+.apl-pagination {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--adm-border);
+  flex-wrap: wrap;
 }
 
-.apl-card__date {
+.apl-pagination__info { font-size: 0.76rem; color: #6b7280; }
+
+.apl-pagination__btns {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.67rem;
-  color: #9ca3af;
+  gap: 12px;
 }
 
-.apl-card__btns { display:flex; gap:5px; }
-
-.apl-card__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 11px;
-  border-radius: 8px;
-  border: 1.5px solid transparent;
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.72rem;
+.apl-pagination__page {
+  font-size: 0.78rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
+  color: #1a1f36;
+  white-space: nowrap;
 }
 
-.apl-card__btn--view { background:rgba(10,61,143,0.07);  color:#0a3d8f; border-color:rgba(10,61,143,0.15); }
-.apl-card__btn--ok   { background:rgba(22,163,74,0.08);  color:#16a34a; border-color:rgba(22,163,74,0.2);  padding:5px 9px; }
-.apl-card__btn--no   { background:rgba(220,38,38,0.07);  color:#dc2626; border-color:rgba(220,38,38,0.15); padding:5px 9px; }
-
-.apl-card__btn--view:hover { background:#0a3d8f; color:#fff; border-color:#0a3d8f; }
-.apl-card__btn--ok:hover   { background:#16a34a; color:#fff; border-color:#16a34a; }
-.apl-card__btn--no:hover   { background:#dc2626; color:#fff; border-color:#dc2626; }
-
-/* ── Status badges ── */
+/* ── Status badges (used in table + modal) ── */
 .apl-status {
   display: inline-flex;
   align-items: center;
@@ -430,63 +491,25 @@
 .apl-status--accepted { background:rgba(22,163,74,0.1);   color:#16a34a; border:1px solid rgba(22,163,74,0.2);  }
 .apl-status--rejected { background:rgba(220,38,38,0.08);  color:#dc2626; border:1px solid rgba(220,38,38,0.15); }
 
-/* ══ DETAIL PANEL ═══════════════════════════════════════ */
-.apl-detail {
-  background: #fff;
-  border-radius: 18px;
-  border: 1.5px solid rgba(10,61,143,0.08);
-  box-shadow: 0 4px 20px rgba(10,61,143,0.07);
-  overflow: hidden;
+/* ══ DETAIL MODAL ═══════════════════════════════════════ */
+.apl-modal { padding: 0; }
+
+.apl-modal__head {
   position: sticky;
-  top: 80px;
-  min-height: 460px;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Empty */
-.apl-detail__empty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 52px 28px;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.83rem;
-}
-
-.apl-detail__empty-icon {
-  width: 64px; height: 64px;
-  border-radius: 18px;
-  background: rgba(10,61,143,0.07);
-  color: rgba(10,61,143,0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-}
-
-/* Header */
-.apl-detail__head {
-  position: relative;
+  top: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 22px 22px 18px;
+  padding: 22px 24px 18px;
   border-bottom: 1px solid rgba(10,61,143,0.07);
+  background: #fff;
   overflow: hidden;
 }
 
-.apl-detail__head-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
+.apl-modal__head-bg { position: absolute; inset: 0; pointer-events: none; }
 
-.apl-detail__avatar {
+.apl-modal__avatar {
   width: 52px; height: 52px;
   border-radius: 15px;
   color: #fff;
@@ -502,9 +525,8 @@
   letter-spacing: 0.04em;
 }
 
-.apl-detail__title-block { flex:1; position:relative; z-index:1; min-width:0; }
-
-.apl-detail__name {
+.apl-modal__title-block { flex:1; position:relative; z-index:1; min-width:0; }
+.apl-modal__title-block h3 {
   font-size: 1.02rem;
   font-weight: 700;
   color: #1a1f36;
@@ -529,35 +551,11 @@
   color: #9ca3af;
 }
 
-.apl-detail__close {
-  position: relative;
-  z-index: 1;
-  width: 30px; height: 30px;
-  border-radius: 8px;
-  border: 1.5px solid rgba(10,61,143,0.1);
-  background: #f0f2f8;
-  color: #6b7280;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 0.73rem;
-  transition: all 0.15s;
-  flex-shrink: 0;
-}
-.apl-detail__close:hover { background:#dc2626; color:#fff; border-color:#dc2626; }
-
-/* Scrollable body */
-.apl-detail__body {
-  padding: 18px 22px 24px;
+.apl-modal__body.apl-modal__body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  flex: 1;
 }
-.apl-detail__body::-webkit-scrollbar { display:none; }
 
 /* Course block */
 .apl-detail__course-block {
@@ -694,13 +692,11 @@
   transition: all 0.15s;
 }
 .apl-detail__doc-dl:hover { background:#0a3d8f; color:#fff; border-color:#0a3d8f; }
-.apl-detail__doc-dl:disabled { opacity:0.4; cursor:not-allowed; }
-.apl-detail__doc-dl:disabled:hover { background:rgba(10,61,143,0.05); color:#0a3d8f; border-color:rgba(10,61,143,0.12); }
 
 /* Action buttons */
 .apl-detail__actions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
@@ -767,25 +763,17 @@
 .apl-footer-btn--export:disabled:hover { background:rgba(10,61,143,0.05); color:#0a3d8f; border-color:rgba(10,61,143,0.15); }
 
 /* ══ RESPONSIVE ═════════════════════════════════════════ */
-@media (max-width: 1200px) {
-  .apl-layout { grid-template-columns: 1fr 340px; }
-}
-
-@media (max-width: 1020px) {
-  .apl-layout { grid-template-columns: 1fr; }
-  .apl-detail { position:static; }
-}
-
 @media (max-width: 860px) {
   .apl-banner        { flex-direction:column; align-items:flex-start; padding:26px 24px; gap:20px; }
   .apl-banner__stats { flex-wrap:wrap; }
   .apl-detail__grid  { grid-template-columns:1fr; }
-  .apl-detail__actions { grid-template-columns:1fr 1fr 1fr; }
 }
 
 @media (max-width: 560px) {
   .apl-toolbar         { flex-direction:column; align-items:stretch; }
   .apl-banner__stats   { flex-direction:row; flex-wrap:wrap; }
-  .apl-detail__actions { grid-template-columns:1fr 1fr; }
+  .apl-detail__actions { grid-template-columns:1fr; }
   .apl-detail__footer-btns { flex-direction:column; }
+  .apl-pagination { flex-direction:column; align-items:stretch; }
+  .apl-pagination__btns { justify-content:space-between; }
 }

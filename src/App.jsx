@@ -20,6 +20,7 @@ const Electrical = lazy(() => import("./pages/Departments/Electrical/Electrical"
 const Liberal = lazy(() => import("./pages/Departments/Liberal/Liberal"));
 const Hospitality = lazy(() => import("./pages/Departments/Hospitality/Hospitality"));
 const ApplicationForm = lazy(() => import("./pages/Application/ApplicationForm"));
+const AdmissionLetter = lazy(() => import("./pages/AdmissionLetter/AdmissionLetter"));
 const Blog = lazy(() => import("./pages/Blog/Blog"));
 const BlogView = lazy(() => import("./pages/BlogView/BlogView"));
 const News = lazy(() => import("./components/News/News"));
@@ -52,6 +53,7 @@ function App() {
         <Route path="/liberal" element={<Liberal />} />
         <Route path="/hospitality" element={<Hospitality />} />
         <Route path="/applicationform" element={<ApplicationForm />} />
+        <Route path="/admission-letter" element={<AdmissionLetter />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blogview" element={<BlogView />} />
         <Route path="/News" element={<News />} />

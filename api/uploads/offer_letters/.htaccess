@@ -1,0 +1,4 @@
+# Generated offer letters contain personal applicant data and must never
+# be served directly — they only ever leave the server through the
+# authenticated download endpoint in applications.php (?offerLetter=).
+Require all denied

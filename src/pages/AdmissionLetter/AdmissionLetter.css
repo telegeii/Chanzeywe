@@ -1,0 +1,275 @@
+/* ============================================
+   ADMISSION LETTER PAGE — Chanzeywe TVC
+   Prefix: adml-
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap');
+
+:root {
+  --adml-blue: #0a3d8f;
+  --adml-blue-deep: #051f4e;
+  --adml-accent: #1a56c4;
+  --adml-text: #1a1f36;
+  --adml-muted: #6b7280;
+  --adml-bg: #f4f6fb;
+  --adml-white: #ffffff;
+  --adml-border: rgba(10, 61, 143, 0.09);
+  --adml-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 16px 40px rgba(10,61,143,0.09);
+  --adml-radius: 16px;
+  --adml-font: 'Outfit', sans-serif;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Hero ─────────────────────────────────────── */
+.adml-hero {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  overflow: hidden;
+  background: var(--adml-blue-deep);
+}
+
+.adml-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  filter: brightness(0.5);
+}
+
+.adml-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(5,31,78,0.20) 0%, rgba(5,31,78,0.62) 55%, rgba(5,31,78,0.95) 100%),
+    linear-gradient(to right, rgba(5,31,78,0.85) 0%, rgba(5,31,78,0.30) 55%, transparent 100%);
+}
+
+.adml-hero__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0 7% 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 620px;
+}
+
+.adml-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--adml-font);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+  animation: fadeUp 0.7s 0.15s both;
+}
+
+.adml-hero__content h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.1rem, 5vw, 3.2rem);
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.08;
+  margin: 0;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.9), 0 4px 24px rgba(0,0,0,0.7);
+  animation: fadeUp 0.7s 0.28s both;
+}
+
+.adml-hero__content p {
+  font-size: 0.98rem;
+  color: rgba(255,255,255,0.94);
+  text-shadow: 0 1px 10px rgba(0,0,0,0.85);
+  margin: 0;
+  line-height: 1.6;
+  max-width: 480px;
+  animation: fadeUp 0.7s 0.4s both;
+}
+
+.adml-hero__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--adml-font);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  animation: fadeUp 0.7s 0.5s both;
+}
+.adml-hero__breadcrumb a { color: rgba(255,255,255,0.68); text-decoration: none; transition: color 0.2s; }
+.adml-hero__breadcrumb a:hover { color: #ffffff; }
+.adml-hero__breadcrumb svg { font-size: 0.52rem; opacity: 0.5; }
+.adml-hero__breadcrumb span { color: #ffffff; }
+
+/* ── Section ──────────────────────────────────── */
+.adml-section {
+  background: var(--adml-bg);
+  padding: 60px 5% 88px;
+  font-family: var(--adml-font);
+  display: flex;
+  justify-content: center;
+}
+
+.adml-card {
+  width: 100%;
+  max-width: 620px;
+  background: var(--adml-white);
+  border: 1px solid var(--adml-border);
+  border-radius: var(--adml-radius);
+  box-shadow: var(--adml-shadow);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Form ─────────────────────────────────────── */
+.adml-form { display: flex; flex-direction: column; gap: 8px; }
+
+.adml-form label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--adml-text);
+}
+
+.adml-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.adml-input-row input {
+  flex: 1;
+  padding: 13px 16px;
+  font-family: var(--adml-font);
+  font-size: 0.92rem;
+  color: var(--adml-text);
+  background: var(--adml-bg);
+  border: 1.5px solid var(--adml-border);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.adml-input-row input:focus {
+  background: #fff;
+  border-color: var(--adml-blue);
+  box-shadow: 0 0 0 3px rgba(10,61,143,0.1);
+}
+
+.adml-input-row button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 22px;
+  font-family: var(--adml-font);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--adml-blue);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.2s;
+}
+.adml-input-row button:hover:not(:disabled) { background: #072d6b; transform: translateY(-1px); }
+.adml-input-row button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.adml-hint {
+  font-size: 0.76rem;
+  color: var(--adml-muted);
+  line-height: 1.5;
+}
+
+/* ── Result ───────────────────────────────────── */
+.adml-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 12px;
+}
+
+.adml-result svg { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+
+.adml-result--error {
+  background: #fff5f5;
+  border: 1px solid rgba(220,38,38,0.2);
+  color: #b91c1c;
+}
+.adml-result--error h3 { margin: 0 0 4px; font-size: 0.95rem; }
+.adml-result--error p { margin: 0; font-size: 0.85rem; line-height: 1.55; }
+
+.adml-result--success {
+  background: rgba(22,163,74,0.06);
+  border: 1px solid rgba(22,163,74,0.2);
+  color: var(--adml-text);
+}
+.adml-result--success > svg { color: #16a34a; }
+.adml-result__body { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+.adml-result__body h3 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--adml-text);
+}
+.adml-result__body p { margin: 0; font-size: 0.88rem; color: var(--adml-muted); }
+
+.adml-result__course {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--adml-border);
+  border-radius: 10px;
+}
+.adml-result__course svg { font-size: 1.1rem; color: var(--adml-blue); margin-top: 0; }
+.adml-result__course strong { display: block; font-size: 0.9rem; color: var(--adml-text); }
+.adml-result__course span { display: block; font-size: 0.76rem; color: var(--adml-muted); margin-top: 2px; }
+
+.adml-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 20px;
+  font-family: var(--adml-font);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--adml-blue);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  align-self: flex-start;
+}
+.adml-download-btn:hover { background: #072d6b; transform: translateY(-1px); }
+
+/* ── Note ─────────────────────────────────────── */
+.adml-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--adml-bg);
+  border-radius: 10px;
+}
+.adml-note__icon { color: var(--adml-blue); opacity: 0.6; margin-top: 2px; flex-shrink: 0; }
+.adml-note p { margin: 0; font-size: 0.8rem; color: var(--adml-muted); line-height: 1.6; }
+
+@media (max-width: 640px) {
+  .adml-card { padding: 24px; margin-top: -50px; }
+  .adml-input-row { flex-direction: column; }
+  .adml-input-row button { justify-content: center; padding: 12px; }
+}

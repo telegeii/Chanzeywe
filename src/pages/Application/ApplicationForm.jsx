@@ -9,6 +9,7 @@ import {
   FaUser, FaGraduationCap, FaPhone, FaUpload,
   FaCheckCircle, FaChevronRight, FaArrowLeft,
   FaFileAlt, FaBuilding, FaExclamationCircle,
+  FaEnvelopeOpenText,
 } from "react-icons/fa";
 
 /* ─── Steps (3 fill steps only — no review step) ─── */
@@ -40,6 +41,7 @@ const RULES = {
   },
   1: {
     school:       { required: true, label: "Secondary School" },
+    kcseIndex:    { required: true, label: "KCSE Index Number", pattern: /^\d{11}\/\d{4}$/, patternMsg: "Enter your index number as 11 digits / year, e.g. 29513204036/2024" },
     grade:        { required: true, label: "KCSE Mean Grade" },
     kcseYear:     { required: false, label: "KCSE Year", isNumber: true, min: 2000, max: new Date().getFullYear(), numMsg: "Enter a valid year (2000 – present)" },
   },
@@ -128,6 +130,7 @@ const ApplicationForm = () => {
   const [submitted,   setSubmitted]   = useState(false);
   const [submitting,  setSubmitting]  = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [referenceNumber, setReferenceNumber] = useState("");
 
   useSeo({
     title: "Apply Now",
@@ -164,7 +167,8 @@ const ApplicationForm = () => {
       if (files.cert)   fd.append("cert", files.cert);
       if (files.id)     fd.append("id", files.id);
 
-      await apiPostForm("/applications.php", fd);
+      const result = await apiPostForm("/applications.php", fd);
+      setReferenceNumber(result.referenceNumber || "");
       setSubmitted(true);
     } catch (err) {
       setSubmitError(err.message || "Something went wrong submitting your application. Please try again.");
@@ -229,11 +233,25 @@ const ApplicationForm = () => {
         <Navbar />
         <div className="app-success">
           <div className="app-success__icon"><FaCheckCircle /></div>
-          <h2>Application Submitted!</h2>
+          <h2>Thank You for Applying!</h2>
           <p>
-            Thank you for applying to <strong>{course.title}</strong> at
-            Chanzeywe TVC. We will review your application and contact you shortly.
+            Your application to <strong>{course.title}</strong> at
+            Chanzeywe TVC has been received and is now under review.
           </p>
+
+          {referenceNumber && (
+            <div className="app-success__reference">
+              <span>Your Reference Number</span>
+              <strong>{referenceNumber}</strong>
+            </div>
+          )}
+
+          <p className="app-success__notice">
+            <FaEnvelopeOpenText /> Keep checking your email ({form.email}) for a response —
+            we'll notify you there once your application has been reviewed, including your
+            official offer letter if accepted.
+          </p>
+
           <div className="app-success__details">
             <div className="app-success__detail-item">
               <span>Course</span><strong>{course.title}</strong>
@@ -425,12 +443,13 @@ const ApplicationForm = () => {
               </Field>
 
               <div className="app-row">
-                <Field label="KCSE Index Number">
+                <Field label="KCSE Index Number" required hint="you'll use this to download your admission letter later" error={e.kcseIndex}>
                   <input
                     type="text"
                     value={form.kcseIndex}
                     onChange={set("kcseIndex")}
-                    placeholder="e.g. 12345678901/2023"
+                    placeholder="e.g. 29513204036/2024"
+                    className={e.kcseIndex ? "input-error" : ""}
                   />
                 </Field>
                 <Field label="KCSE Year" error={e.kcseYear}>

@@ -661,6 +661,46 @@
 
 .app-success p strong { color: var(--ap-text); }
 
+.app-success__reference {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 28px;
+  background: rgba(10,61,143,0.06);
+  border: 1.5px dashed var(--ap-accent);
+  border-radius: 12px;
+}
+
+.app-success__reference span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.app-success__reference strong {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ap-accent);
+  letter-spacing: 0.03em;
+}
+
+.app-success__notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem !important;
+  color: var(--ap-text) !important;
+  background: rgba(217,119,6,0.08);
+  border: 1px solid rgba(217,119,6,0.2);
+  border-radius: 10px;
+  padding: 12px 16px;
+  max-width: 520px !important;
+}
+.app-success__notice svg { flex-shrink: 0; color: #b45309; }
+
 .app-success__details {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

@@ -219,6 +219,7 @@ CREATE TABLE applications (
   guardian_phone VARCHAR(30)  NOT NULL,
   address        VARCHAR(200) DEFAULT NULL,
   course_id      INT UNSIGNED DEFAULT NULL,
+  walk_in        TINYINT(1)   NOT NULL DEFAULT 0,
   status         ENUM('pending','reviewed','accepted','rejected') NOT NULL DEFAULT 'pending',
   offer_letter_path VARCHAR(255) NULL,
   offer_sent_at     TIMESTAMP NULL DEFAULT NULL,
