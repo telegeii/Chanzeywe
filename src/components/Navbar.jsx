@@ -11,7 +11,6 @@ const navItems = [
       { label: "About Us", path: "/about" },
       { label: "Contact Us", path: "/contact" },
       { label: "Service Charter", path: "/charter" },
-      { label: "Report Corruption", path: "/corruption" },
     ],
   },
   {
@@ -65,8 +64,11 @@ export default function Navbar() {
 
   // Close mobile menu on route change
   useEffect(() => {
-    setIsOpen(false);
-    setMobileExpanded(null);
+    const id = setTimeout(() => {
+      setIsOpen(false);
+      setMobileExpanded(null);
+    }, 0);
+    return () => clearTimeout(id);
   }, [location]);
 
   // Close dropdown on outside click

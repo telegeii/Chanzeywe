@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer/Footer";
@@ -8,49 +8,18 @@ import Level5 from "../../../assets/Level5.png";
 import Level4 from "../../../assets/Level4.png";
 import Logo from "../../../assets/Logo.png";
 import "../Computing/Computing.css";
+import { apiGet } from "../../../utils/api";
+import useSeo from "../../../utils/useSeo";
 import {
   FaChevronRight, FaSeedling, FaCalendarAlt, FaClock,
   FaBook, FaUserGraduate, FaMoneyBillWave, FaIdCard, FaCamera, FaFileAlt
 } from "react-icons/fa";
 
-const courses = [
-  {
-    code: "DGA",
-    title: "Agriculture Extension",
-    level: "Level 6",
-    badge: "Diploma",
-    color: "#0a3d8f",
-    bg: "rgba(10,61,143,0.07)",
-    department: "Agriculture & Environmental Studies",
-    requirement: "KCSE C- or Passed Level 5",
-    duration: "9 Terms",
-    examBody: "CDACC",
-  },
-  {
-    code: "CGA",
-    title: "Agriculture Extension",
-    level: "Level 5",
-    badge: "Certificate",
-    color: "#1a56c4",
-    bg: "rgba(26,86,196,0.07)",
-    department: "Agriculture & Environmental Studies",
-    requirement: "KCSE D or Passed Level 5",
-    duration: "6 Terms",
-    examBody: "CDACC",
-  },
-  {
-    code: "AGA",
-    title: "Agriculture Extension",
-    level: "Level 4",
-    badge: "Artisan",
-    color: "#1a1f36",
-    bg: "rgba(26,31,54,0.07)",
-    department: "Agriculture & Environmental Studies",
-    requirement: "KCSE D- or E",
-    duration: "3 Terms",
-    examBody: "CDACC",
-  },
-];
+const LEVEL_STYLE = {
+  "Level 6": { badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)" },
+  "Level 5": { badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)" },
+  "Level 4": { badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)" },
+};
 
 const intakes = [
   { month: "January", icon: "🌱", desc: "Best for fresh KCSE & KCPE graduates." },
@@ -89,10 +58,39 @@ const levels = [
 
 const Agriculture = () => {
   const [activeTab, setActiveTab] = useState("admission");
+  const [department, setDepartment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    apiGet("/departments.php?slug=agriculture")
+      .then(setDepartment)
+      .catch(() => setError("Unable to load this department right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
+
   const handleApply = (course) =>
-    navigate("/ApplicationForm", { state: course });
+    navigate("/ApplicationForm", { state: { ...course, department: department?.name } });
+
+  useSeo({
+    title: department ? `${department.name} Department` : "Agriculture Department",
+    description: department?.tagline || "Agriculture courses at Chanzeywe Vocational Training College, Vihiga, Kenya — CDACC-accredited agricultural extension diploma, certificate and artisan programmes.",
+  });
+
+  if (loading || error || !department) {
+    return (
+      <>
+        <Navbar />
+        <div className="dept-page">
+          <p className="dept-page__status" style={error ? { color: "#b91c1c" } : undefined}>
+            {error || "Loading department…"}
+          </p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -102,20 +100,20 @@ const Agriculture = () => {
 
       {/* Hero */}
       <section className="cmp-hero">
-        <img src={Photo} alt="Agriculture Department" />
+        <img src={Photo} alt={`${department.name} Department`} />
         <div className="cmp-hero__overlay" />
         <div className="cmp-hero__content">
           <span className="cmp-hero__eyebrow">
-            <FaSeedling /> Agriculture &amp; Environmental Studies
+            <FaSeedling /> {department.name}
           </span>
-          <h1>Promoting Sustainable Agriculture &amp; Environmental Care</h1>
-          <p>Practical training in agriculture and environmental stewardship for Kenya's growing food sector.</p>
+          <h1>{department.heroHeadline}</h1>
+          <p>{department.tagline}</p>
           <div className="cmp-hero__breadcrumb">
             <Link to="/">Home</Link>
             <FaChevronRight />
             <Link to="/courses">Departments</Link>
             <FaChevronRight />
-            <span>Agriculture &amp; Environmental Studies</span>
+            <span>{department.name}</span>
           </div>
         </div>
       </section>
@@ -127,9 +125,9 @@ const Agriculture = () => {
         </div>
         <div className="cmp-dept__text">
           <span className="cmp-eyebrow">Our Department</span>
-          <h2>Agriculture & Environmental Studies Department</h2>
+          <h2>{department.name} Department</h2>
           <p className="cmp-dept__hod">
-            Head of Department: <strong>Telegei Edward</strong>
+            Head of Department: <strong>{department.hod || "TBD"}</strong>
           </p>
           <p className="cmp-dept__tagline">
             Chanzeywe Vocational Training College — Skills to Transform Livelihoods
@@ -227,28 +225,34 @@ const Agriculture = () => {
             <p>CDACC-accredited programmes for sustainable agriculture and environmental care.</p>
           </div>
           <div className="cmp-courses__grid">
-            {courses.map((c, i) => (
-              <div key={i} className="cmp-course-card">
-                <div className="cmp-course-card__bar" style={{ background: c.color }} />
-                <div className="cmp-course-card__body">
-                  <div className="cmp-course-card__top">
-                    <span className="cmp-course-card__code" style={{ background: c.bg, color: c.color }}>{c.code}</span>
-                    <span className="cmp-course-card__badge" style={{ background: c.bg, color: c.color }}>{c.badge}</span>
-                  </div>
-                  <h3>{c.title}</h3>
-                  <ul className="cmp-course-card__meta">
-                    <li><FaUserGraduate /> {c.requirement}</li>
-                    <li><FaClock /> {c.duration}</li>
-                    <li><FaBook /> {c.examBody}</li>
-                  </ul>
-                  <div className="cmp-course-card__footer">
-                    <button onClick={() => handleApply(c)} className="cmp-course-card__btn" style={{ "--btn-color": c.color }}>
-                      Apply Now <FaChevronRight style={{ fontSize: "0.65rem" }} />
-                    </button>
+            {department.courses.length === 0 && (
+              <p className="dept-page__status">No courses listed yet for this department.</p>
+            )}
+            {department.courses.map((c) => {
+              const style = LEVEL_STYLE[c.level] || { badge: c.level, color: "#0a3d8f", bg: "rgba(10,61,143,0.07)" };
+              return (
+                <div key={c.id} className="cmp-course-card">
+                  <div className="cmp-course-card__bar" style={{ background: style.color }} />
+                  <div className="cmp-course-card__body">
+                    <div className="cmp-course-card__top">
+                      <span className="cmp-course-card__code" style={{ background: style.bg, color: style.color }}>{c.code}</span>
+                      <span className="cmp-course-card__badge" style={{ background: style.bg, color: style.color }}>{style.badge}</span>
+                    </div>
+                    <h3>{c.title}</h3>
+                    <ul className="cmp-course-card__meta">
+                      <li><FaUserGraduate /> {c.requirement}</li>
+                      <li><FaClock /> {c.duration}</li>
+                      <li><FaBook /> {c.examBody}</li>
+                    </ul>
+                    <div className="cmp-course-card__footer">
+                      <button onClick={() => handleApply(c)} className="cmp-course-card__btn" style={{ "--btn-color": style.color }}>
+                        Apply Now <FaChevronRight style={{ fontSize: "0.65rem" }} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

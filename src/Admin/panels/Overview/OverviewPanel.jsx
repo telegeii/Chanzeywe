@@ -1,91 +1,87 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../../AdminDashboard.css";
 import "./OverviewPanel.css";
+import { apiGet } from "../../../utils/api";
 
 import {
-  FaBook, FaFileContract, FaBriefcase, FaDownload,
-  FaNewspaper, FaBuilding, FaArrowUp, FaClipboardList,
-  FaClock, FaShieldAlt,
+  FaFileContract, FaBriefcase,
+  FaNewspaper, FaClipboardList,
+  FaClock,
 } from "react-icons/fa";
 
-/* ── Stat data ────────────────────────── */
-const STATS = [
+const isOpen = (d) => new Date(d) >= new Date();
+
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+};
+
+const displayName = (username) =>
+  username ? username.charAt(0).toUpperCase() + username.slice(1) : "Administrator";
+
+/* Every module this panel can show a stat card for, and how to compute it.
+   Only shown to admins who actually hold that permission — a staff login
+   scoped to just "blog" has no business seeing tender/vacancy counts. */
+const STAT_DEFS = [
   {
-    label: "Total Courses",
-    value: 18,
-    icon:  <FaBook />,
-    color: "#0a3d8f",
-    bg:    "rgba(10,61,143,0.1)",
-    trend: "+2 this month",
-    up:    true,
+    module: "tenders", label: "Active Tenders", icon: <FaFileContract />,
+    color: "#16a34a", bg: "rgba(22,163,74,0.1)", trend: "Currently open",
+    load: (data) => data.filter(t => isOpen(t.closeDate)).length,
   },
   {
-    label: "Active Tenders",
-    value: 2,
-    icon:  <FaFileContract />,
-    color: "#16a34a",
-    bg:    "rgba(22,163,74,0.1)",
-    trend: "Newly posted",
-    up:    true,
+    module: "careers", label: "Open Vacancies", icon: <FaBriefcase />,
+    color: "#d97706", bg: "rgba(217,119,6,0.1)", trend: "Currently open",
+    load: (data) => data.filter(c => isOpen(c.closeDate)).length,
   },
   {
-    label: "Open Vacancies",
-    value: 2,
-    icon:  <FaBriefcase />,
-    color: "#d97706",
-    bg:    "rgba(217,119,6,0.1)",
-    trend: "No change",
-    up:    null,
+    module: "blog", label: "Blog Posts", icon: <FaNewspaper />,
+    color: "#0891b2", bg: "rgba(8,145,178,0.1)",
+    load: (data) => data.length,
+    trendFor: (data) => `${data.filter(p => p.published).length} published`,
   },
   {
-    label: "Downloads",
-    value: 9,
-    icon:  <FaDownload />,
-    color: "#7c3aed",
-    bg:    "rgba(124,58,237,0.1)",
-    trend: "+3 this week",
-    up:    true,
-  },
-  {
-    label: "Blog Posts",
-    value: 6,
-    icon:  <FaNewspaper />,
-    color: "#0891b2",
-    bg:    "rgba(8,145,178,0.1)",
-    trend: "+1 published",
-    up:    true,
-  },
-  {
-    label: "Departments",
-    value: 5,
-    icon:  <FaBuilding />,
-    color: "#dc2626",
-    bg:    "rgba(220,38,38,0.1)",
-    trend: "Stable",
-    up:    null,
-  },
-  {
-    label: "Applications",
-    value: 8,
-    icon:  <FaClipboardList />,
-    color: "#db2777",
-    bg:    "rgba(219,39,119,0.1)",
-    trend: "3 pending",
-    up:    true,
-  },
-  {
-    label: "Corruption Reports",
-    value: 2,
-    icon:  <FaShieldAlt />,
-    color: "#7c3aed",
-    bg:    "rgba(124,58,237,0.1)",
-    trend: "Under review",
-    up:    null,
+    module: "applications", label: "Applications", icon: <FaClipboardList />,
+    color: "#db2777", bg: "rgba(219,39,119,0.1)",
+    load: (data) => data.length,
+    trendFor: (data) => `${data.filter(a => a.status === "pending").length} pending`,
   },
 ];
 
+const ENDPOINT = {
+  tenders: "/tenders.php",
+  careers: "/careers.php",
+  blog: "/blog.php?all=1",
+  applications: "/applications.php",
+};
+
 /* ══ OVERVIEW PANEL ════════════════════ */
-export default function OverviewPanel() {
+export default function OverviewPanel({ admin }) {
+  const [values, setValues] = useState(null);
+
+  const isSuperAdmin = admin?.role === "super_admin";
+  const perms = admin?.permissions || [];
+  const permsKey = perms.join(",");
+  const stats = STAT_DEFS.filter(s => isSuperAdmin || perms.includes(s.module));
+
+  useEffect(() => {
+    const mods = STAT_DEFS.filter(s => isSuperAdmin || permsKey.split(",").includes(s.module)).map(s => s.module);
+
+    // allSettled, not all — one module the admin can't see (or a transient
+    // error) shouldn't blank out every other stat card. Resolves to []
+    // immediately (still async) when mods is empty, so this stays a
+    // single code path instead of an early synchronous setState.
+    Promise.allSettled(mods.map(m => apiGet(ENDPOINT[m])))
+      .then(results => {
+        const next = {};
+        results.forEach((r, i) => { next[mods[i]] = r.status === "fulfilled" ? r.value : []; });
+        setValues(next);
+      });
+  }, [isSuperAdmin, permsKey]);
+
+  const appsCount = values?.applications?.length ?? null;
+
   const today = new Date().toLocaleDateString("en-KE", {
     weekday: "long",
     year:    "numeric",
@@ -106,66 +102,59 @@ export default function OverviewPanel() {
         <div className="ovp-banner__left">
           <div className="ovp-banner__eyebrow">
             <span className="ovp-banner__pulse" />
-            Chanzeywe TVC — Admin Portal
+            Chanzeywe TVC — Staff Portal
           </div>
-          <h1 className="ovp-banner__title">Good morning, Administrator 👋</h1>
+          <h1 className="ovp-banner__title">{getGreeting()}, {displayName(admin?.username)} 👋</h1>
           <p className="ovp-banner__date">
             <FaClock style={{ opacity: 0.55, fontSize: "0.75rem" }} />
             {today}
           </p>
         </div>
 
-        {/* Quick-count chips */}
-        <div className="ovp-banner__chips">
-          <div className="ovp-banner__chip">
-            <div className="ovp-banner__chip-icon">
-              <FaClipboardList />
-            </div>
-            <div>
-              <span className="ovp-banner__chip-val">8</span>
-              <span className="ovp-banner__chip-label">Applications</span>
-            </div>
-          </div>
-          <div className="ovp-banner__chip ovp-banner__chip--purple">
-            <div className="ovp-banner__chip-icon ovp-banner__chip-icon--purple">
-              <FaShieldAlt />
-            </div>
-            <div>
-              <span className="ovp-banner__chip-val">2</span>
-              <span className="ovp-banner__chip-label">Reports</span>
+        {/* Quick-count chip — only for admins who can see applications */}
+        {(isSuperAdmin || perms.includes("applications")) && (
+          <div className="ovp-banner__chips">
+            <div className="ovp-banner__chip">
+              <div className="ovp-banner__chip-icon">
+                <FaClipboardList />
+              </div>
+              <div>
+                <span className="ovp-banner__chip-val">{appsCount === null ? "…" : appsCount}</span>
+                <span className="ovp-banner__chip-label">Applications</span>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* ── Stat cards ── */}
-      <div className="ovp-stat-grid">
-        {STATS.map((s, i) => (
-          <div
-            key={i}
-            className="ovp-stat"
-            style={{ "--sc": s.color, "--sb": s.bg }}
-          >
-            {/* Top colour accent bar */}
-            <div className="ovp-stat__top-bar" />
-
-            <div className="ovp-stat__row">
-              <div className="ovp-stat__icon">{s.icon}</div>
-              {s.up && (
-                <span className="ovp-stat__badge">
-                  <FaArrowUp style={{ fontSize: "0.48rem" }} />
-                  {s.trend.split(" ")[0]}
-                </span>
-              )}
-            </div>
-
-            <div className="ovp-stat__value">{s.value}</div>
-            <div className="ovp-stat__label">{s.label}</div>
-            <div className="ovp-stat__hint">{s.trend}</div>
-          </div>
-        ))}
-      </div>
+      {stats.length === 0 ? (
+        <div className="ovp-empty">
+          <p>You don't have access to any section stats yet — ask your super admin to assign you a section.</p>
+        </div>
+      ) : (
+        <div className="ovp-stat-grid">
+          {stats.map((s, i) => {
+            const data = values?.[s.module];
+            const value = data ? s.load(data) : null;
+            const trend = data ? (s.trendFor ? s.trendFor(data) : s.trend) : " ";
+            return (
+              <div
+                key={i}
+                className="ovp-stat"
+                style={{ "--sc": s.color, "--sb": s.bg }}
+              >
+                <div className="ovp-stat__top-bar" />
+                <div className="ovp-stat__icon">{s.icon}</div>
+                <div className="ovp-stat__value">{value === null ? "…" : value}</div>
+                <div className="ovp-stat__label">{s.label}</div>
+                <div className="ovp-stat__hint">{trend}</div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
     </div>
   );
-} 
+}

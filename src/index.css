@@ -1,0 +1,18 @@
+/* Global reset — the app previously had no baseline stylesheet, so the
+   browser's default `body { margin: 8px }` showed up as a white gutter
+   around every page. */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+}

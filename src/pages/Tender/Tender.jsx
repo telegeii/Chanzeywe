@@ -1,39 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Photo from "../../assets/Photo1.jpg";
-import TenderPdf from "../../assets/English.pdf";
 import Sorry from "../../assets/sorry.png";
 import "./Tender.css";
 import { Link } from "react-router-dom";
 import { FaChevronRight, FaDownload } from "react-icons/fa";
-
-const tenders = [
-  {
-    id: 1,
-    number: "CHANZEYWE/OT/01/2023-2024",
-    title: "Provision of Printing Papers",
-    method: "Open Tender",
-    postedDate: "2025-12-14",
-    closeDate: "2024-12-29",
-  },
-  {
-    id: 2,
-    number: "CHANZEYWE/OT/02/2025-2026",
-    title: "Provision of Security Services",
-    method: "Restricted Tender",
-    postedDate: "2025-12-14",
-    closeDate: "2025-12-29",
-  },
-  {
-    id: 3,
-    number: "CHANZEYWE/OT/03/2025-2026",
-    title: "Provision of Washing Soap",
-    method: "Open Tender",
-    postedDate: "2025-12-14",
-    closeDate: "2024-12-01",
-  },
-];
+import { apiGet } from "../../utils/api";
+import useSeo from "../../utils/useSeo";
 
 const isOpen = (closeDate) => new Date(closeDate) >= new Date();
 
@@ -76,9 +50,13 @@ const TenderTable = ({ rows, showAction }) => (
               </td>
               {showAction && (
                 <td>
-                  <a href={TenderPdf} download className="apply-btn">
-                    <FaDownload style={{ fontSize: "0.72rem" }} /> Download
-                  </a>
+                  {tender.fileUrl ? (
+                    <a href={tender.fileUrl} download className="apply-btn">
+                      <FaDownload style={{ fontSize: "0.72rem" }} /> Download
+                    </a>
+                  ) : (
+                    <span style={{ color: "#9ca3af", fontSize: "0.8rem" }}>No file</span>
+                  )}
                 </td>
               )}
             </tr>
@@ -90,6 +68,22 @@ const TenderTable = ({ rows, showAction }) => (
 );
 
 const Tender = () => {
+  useSeo({
+    title: "Tenders",
+    description: "Current and past procurement tenders at Chanzeywe Vocational Training College, Vihiga County, Kenya. Subject to PPRA regulations.",
+  });
+
+  const [tenders, setTenders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiGet("/tenders.php")
+      .then(setTenders)
+      .catch(() => setError("Unable to load tenders right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
+
   const openTenders   = tenders.filter((t) => isOpen(t.closeDate));
   const closedTenders = tenders.filter((t) => !isOpen(t.closeDate));
 
@@ -114,45 +108,54 @@ const Tender = () => {
       {/* ── Body ── */}
       <div className="tender-body">
 
-        {/* Open Tenders */}
-        <section className="tender-section">
-          <div className="tender-section__header">
-            <span className="tender-section__dot tender-section__dot--open" />
-            <h3>Open Tender Opportunities</h3>
-            <span className="tender-section__count tender-section__count--open">
-              {openTenders.length} Active
-            </span>
-          </div>
+        {loading && <p style={{ textAlign: "center", padding: "40px 0", fontFamily: "var(--td-font)" }}>Loading tenders…</p>}
+        {!loading && error && (
+          <p style={{ textAlign: "center", padding: "40px 0", fontFamily: "var(--td-font)", color: "#b91c1c" }}>{error}</p>
+        )}
 
-          {openTenders.length === 0 ? (
-            <div className="no-tenders-container">
-              <img src={Sorry} alt="No open tenders" />
-              <p>No open tenders at the moment.</p>
-              <span>Check back soon for upcoming procurement opportunities.</span>
-            </div>
-          ) : (
-            <TenderTable rows={openTenders} showAction={true} />
-          )}
-        </section>
+        {!loading && !error && (
+          <>
+            {/* Open Tenders */}
+            <section className="tender-section">
+              <div className="tender-section__header">
+                <span className="tender-section__dot tender-section__dot--open" />
+                <h3>Open Tender Opportunities</h3>
+                <span className="tender-section__count tender-section__count--open">
+                  {openTenders.length} Active
+                </span>
+              </div>
 
-        {/* Closed Tenders */}
-        <section className="tender-section">
-          <div className="tender-section__header">
-            <span className="tender-section__dot tender-section__dot--closed" />
-            <h3>Closed Tenders</h3>
-            <span className="tender-section__count tender-section__count--closed">
-              {closedTenders.length} Closed
-            </span>
-          </div>
+              {openTenders.length === 0 ? (
+                <div className="no-tenders-container">
+                  <img src={Sorry} alt="No open tenders" />
+                  <p>No open tenders at the moment.</p>
+                  <span>Check back soon for upcoming procurement opportunities.</span>
+                </div>
+              ) : (
+                <TenderTable rows={openTenders} showAction={true} />
+              )}
+            </section>
 
-          {closedTenders.length === 0 ? (
-            <p style={{ color: "var(--td-muted)", fontFamily: "var(--td-font)", fontSize: "0.9rem" }}>
-              No closed tenders on record.
-            </p>
-          ) : (
-            <TenderTable rows={closedTenders} showAction={false} />
-          )}
-        </section>
+            {/* Closed Tenders */}
+            <section className="tender-section">
+              <div className="tender-section__header">
+                <span className="tender-section__dot tender-section__dot--closed" />
+                <h3>Closed Tenders</h3>
+                <span className="tender-section__count tender-section__count--closed">
+                  {closedTenders.length} Closed
+                </span>
+              </div>
+
+              {closedTenders.length === 0 ? (
+                <p style={{ color: "var(--td-muted)", fontFamily: "var(--td-font)", fontSize: "0.9rem" }}>
+                  No closed tenders on record.
+                </p>
+              ) : (
+                <TenderTable rows={closedTenders} showAction={false} />
+              )}
+            </section>
+          </>
+        )}
 
       </div>
 

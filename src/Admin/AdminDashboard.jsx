@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
+import { apiGet, apiPost } from "../utils/api";
+import useSeo from "../utils/useSeo";
 import CoursesPanel      from "../Admin/panels/Course/CoursesPanel";
 import TendersPanel      from "./panels/Tender/TendersPanel";
 import CareersPanel      from "./panels/Career/CareersPanel";
@@ -8,14 +11,16 @@ import BlogPanel         from "./panels/Blog/BlogPanel";
 import DepartmentsPanel  from "./panels/Department/DepartmentsPanel";
 import HeroPanel         from "./panels/Hero/HeroPanel";
 import OverviewPanel     from "./panels/Overview/OverviewPanel";
-import CorruptionPanel   from "./panels/Corruption/CorruptionPanel";
 import ApplicationsPanel from "./panels/Application/ApplicationPanel";
+import UsersPanel        from "./panels/Users/UsersPanel";
+import AccountPanel      from "./panels/Account/AccountPanel";
 
 import {
   FaTachometerAlt, FaBook, FaFileContract, FaBriefcase,
   FaDownload, FaNewspaper, FaBuilding, FaImage,
   FaBars, FaTimes, FaSignOutAlt,
-  FaChevronRight, FaClipboardList, FaShieldAlt,
+  FaChevronRight, FaClipboardList, FaUsersCog, FaUserCog,
+  FaUserShield, FaUser,
 } from "react-icons/fa";
 
 /* ─────────────────────────────────────────
@@ -34,56 +39,95 @@ const NAV = [
   { id:"tenders",      label:"Tenders",            icon:<FaFileContract />  },
   { id:"careers",      label:"Careers",            icon:<FaBriefcase />     },
   { id:"downloads",    label:"Downloads",          icon:<FaDownload />      },
-  { id:"corruption",   label:"Corruption Reports", icon:<FaShieldAlt />     },
-  
+
+  { id:"__s3", label:"Account" },
+  { id:"users",        label:"Admin Users",        icon:<FaUsersCog />      },
+  { id:"account",      label:"My Account",         icon:<FaUserCog />       },
 ];
-
-
-/* ─────────────────────────────────────────
-   PLACEHOLDER — for panels not built yet
-───────────────────────────────────────── */
-function PlaceholderPanel({ title, icon, color }) {
-  return (
-    <div className="adm-placeholder">
-      <div className="adm-placeholder__icon" style={{ background:`${color}12`, color }}>
-        {icon}
-      </div>
-      <h2 className="adm-placeholder__title">{title}</h2>
-      <p className="adm-placeholder__hint">
-        Create{" "}
-        <code className="adm-placeholder__code">
-          {title.replace(/ /g,"")}Panel.jsx
-        </code>{" "}
-        and import it here to replace this placeholder.
-      </p>
-    </div>
-  );
-}
 
 /* ─────────────────────────────────────────
    PANEL MAP
 ───────────────────────────────────────── */
-const PANEL = {
-  overview:     <OverviewPanel />,
-  hero:         <HeroPanel />,
-  courses:      <CoursesPanel />,
-  departments:  <DepartmentsPanel />,
-  tenders:      <TendersPanel />,
-  careers:      <CareersPanel />,
-  downloads:    <DownloadsPanel />,
-  blog:         <BlogPanel />,
-  applications: <ApplicationsPanel />,
-  corruption:   <CorruptionPanel />,
-};
+/* Built as a function (not a static object) because OverviewPanel needs
+   the logged-in admin's username/permissions to scope its greeting and
+   stat cards. */
+function panelFor(id, admin) {
+  switch (id) {
+    case "overview":     return <OverviewPanel admin={admin} />;
+    case "hero":         return <HeroPanel />;
+    case "courses":      return <CoursesPanel />;
+    case "departments":  return <DepartmentsPanel />;
+    case "tenders":      return <TendersPanel />;
+    case "careers":      return <CareersPanel />;
+    case "downloads":    return <DownloadsPanel />;
+    case "blog":         return <BlogPanel />;
+    case "applications": return <ApplicationsPanel />;
+    case "users":        return <UsersPanel />;
+    case "account":      return <AccountPanel />;
+    default:              return null;
+  }
+}
+
+/**
+ * `overview` and `account` are open to any logged-in admin; `users` is
+ * super_admin only; every other id must be in the admin's permissions —
+ * the server enforces the real boundary (require_permission per endpoint),
+ * this just keeps the nav from showing sections a staff login can't use.
+ */
+function visibleNav(admin) {
+  const perms = admin.permissions || [];
+  const isSuperAdmin = admin.role === "super_admin";
+  const allowed = (id) =>
+    id === "overview" || id === "account" || (id === "users" && isSuperAdmin) || perms.includes(id);
+
+  const kept = NAV.filter(n => n.id.startsWith("__s") || allowed(n.id));
+
+  // Drop section headers left with nothing visible under them.
+  return kept.filter((n, i) => {
+    if (!n.id.startsWith("__s")) return true;
+    const next = kept[i + 1];
+    return next && !next.id.startsWith("__s");
+  });
+}
 
 /* ═══════════════════════════════════════════
    ADMIN DASHBOARD
 ═══════════════════════════════════════════ */
 export default function AdminDashboard() {
+  useSeo({ title: "Staff Portal", noIndex: true });
+
+  const navigate  = useNavigate();
+  const [admin,    setAdmin]    = useState(null);
+  const [checking, setChecking] = useState(true);
   const [active,   setActive]   = useState("overview");
   const [sideOpen, setSideOpen] = useState(true);
 
-  const current = NAV.find(n => n.id === active);
+  useEffect(() => {
+    apiGet("/auth/me.php")
+      .then(setAdmin)
+      .catch(() => navigate("/admin/login", { replace: true }))
+      .finally(() => setChecking(false));
+  }, [navigate]);
+
+  const logout = async () => {
+    try { await apiPost("/auth/logout.php", {}); } catch { /* session already gone */ }
+    navigate("/admin/login", { replace: true });
+  };
+
+  if (checking) {
+    return (
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", minHeight:"100vh", fontFamily:"'Outfit',sans-serif", color:"#6b7280" }}>
+        Loading admin portal…
+      </div>
+    );
+  }
+  if (!admin) return null; // redirecting to login
+
+  const nav = visibleNav(admin);
+  const current = nav.find(n => n.id === active);
+  // If the current tab isn't in this admin's nav (e.g. a staff login that
+  // never had "hero"), fall back to Overview instead of a blank panel.
+  const activeSafe = current ? active : "overview";
 
   return (
     <div className={`adm-root${sideOpen ? "" : " adm-root--collapsed"}`}>
@@ -96,13 +140,13 @@ export default function AdminDashboard() {
           <div className="adm-sidebar__logo">C</div>
           <div className="adm-sidebar__brand-text">
             <span className="adm-sidebar__brand-name">Chanzeywe TVC</span>
-            <span className="adm-sidebar__brand-sub">Admin Portal</span>
+            <span className="adm-sidebar__brand-sub">Staff Portal</span>
           </div>
         </div>
 
         {/* Navigation — completely static, no scroll */}
         <nav className="adm-sidebar__nav">
-          {NAV.map(n => {
+          {nav.map(n => {
 
             /* Section label row */
             if (n.id.startsWith("__s")) {
@@ -115,7 +159,7 @@ export default function AdminDashboard() {
             }
 
             /* Nav button */
-            const isActive = active === n.id;
+            const isActive = activeSafe === n.id;
             return (
               <button
                 key={n.id}
@@ -133,7 +177,7 @@ export default function AdminDashboard() {
         </nav>
 
         {/* Logout */}
-        <button className="adm-sidebar__logout">
+        <button className="adm-sidebar__logout" onClick={logout}>
           <FaSignOutAlt />
           <span className="adm-sidebar__logout-label">Logout</span>
         </button>
@@ -156,21 +200,26 @@ export default function AdminDashboard() {
             <div className="adm-topbar__breadcrumb">
               <span className="adm-topbar__breadcrumb-root">Admin</span>
               <FaChevronRight className="adm-topbar__sep" />
-              <span className="adm-topbar__page">{current?.label}</span>
+              <span className="adm-topbar__page">{nav.find(n => n.id === activeSafe)?.label}</span>
             </div>
           </div>
 
           <div className="adm-topbar__right">
             <div className="adm-topbar__user">
-              <div className="adm-topbar__user-avatar">A</div>
-              <span className="adm-topbar__user-name">Administrator</span>
+              <div className="adm-topbar__user-avatar">{admin.username.charAt(0).toUpperCase()}</div>
+              <div style={{ display: "flex", flexDirection: "column", lineHeight: 1.25 }}>
+                <span className="adm-topbar__user-name">{admin.username}</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.66rem", fontWeight: 600, color: admin.role === "super_admin" ? "#6d28d9" : "#0a3d8f" }}>
+                  {admin.role === "super_admin" ? <><FaUserShield style={{ fontSize: "0.6rem" }} /> Super Admin</> : <><FaUser style={{ fontSize: "0.6rem" }} /> Staff</>}
+                </span>
+              </div>
             </div>
           </div>
         </header>
 
         {/* Page content */}
         <main className="adm-content">
-          {PANEL[active]}
+          {panelFor(activeSafe, admin)}
         </main>
 
       </div>

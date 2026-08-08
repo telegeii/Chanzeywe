@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Courses.css";
 import Photo from "../../assets/Photo1.jpg";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import PDF from "../../assets/English.pdf";
 import { useNavigate, Link } from "react-router-dom";
+import { apiGet } from "../../utils/api";
+import useSeo from "../../utils/useSeo";
 import {
   FaChevronRight,
   FaChevronLeft,
@@ -17,71 +19,14 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
-const deptIcons = {
-  "BUILDING & CIVIL ENGINEERING DEPARTMENT": <FaBuilding />,
-  "ELECTRICAL ENGINEERING DEPARTMENT": <FaBolt />,
-  "HOSPITALITY DEPARTMENT": <FaUtensils />,
-  "COMPUTING AND INFORMATICS": <FaLaptop />,
-  "AGRICULTURE AND ENVIRONMENTAL STUDIES DEPARTMENT": <FaSeedling />,
-  "LIBERAL STUDIES DEPARTMENT": <FaUsers />,
+const DEPT_ICONS = {
+  computing:   <FaLaptop />,
+  building:    <FaBuilding />,
+  electrical:  <FaBolt />,
+  liberal:     <FaUsers />,
+  hospitality: <FaUtensils />,
+  agriculture: <FaSeedling />,
 };
-
-const departments = [
-  {
-    name: "BUILDING & CIVIL ENGINEERING DEPARTMENT",
-    courses: [
-      { code: "DBC", title: "Building Technician level 9 (Diploma)", requirement: "C – or Pass in Level 5", duration: "9 Terms", examBody: "CDACC", department: "BUILDING & CIVIL ENGINEERING", level: "Level 6" },
-      { code: "DCE", title: "Civil Engineering Technician Level 6 (Diploma)", requirement: "C – or Pass in Level 5", duration: "9 Terms", examBody: "CDACC", department: "BUILDING & CIVIL ENGINEERING", level: "Level 6 " },
-      { code: "CBT", title: "Building Technician Level 5 (Certificate)", requirement: "Grade D", duration: "6 Terms", examBody: "CDACC", department: "BUILDING & CIVIL ENGINEERING", level: "Level 5" },
-      { code: "CP",  title: "Plumbing Level 5", requirement: "Grade D", duration: "6 Terms", examBody: "CDACC", department: "BUILDING & CIVIL ENGINEERING", level: "Level 5" },
-      { code: "AM",  title: "Masonry Level 4", requirement: "KCSE Mean Grade D –", duration: "3 Terms", examBody: "CDACC", department: "BUILDING & CIVIL ENGINEERING", level: "Level 4" },
-      { code: "AP",  title: "Plumbing Level 4", requirement: "KCSE Mean Grade D –", duration: "3 Terms", examBody: "CDACC", department: "BUILDING & CIVIL ENGINEERING", level: "Level 4" },
-    ],
-  },
-  {
-    name: "ELECTRICAL ENGINEERING DEPARTMENT",
-    courses: [
-      { code: "DEEP", title: "Electrical Engineering (power option) Level 6", requirement: "C- or Pass in Level 5", duration: "9 Terms", examBody: "CDACC", department: "ELECTRICAL ENGINEERING", level: "Level 6" },
-      { code: "CEEP", title: "Electrical Engineering (power option) Level 5", requirement: "D- or Pass in Level 4", duration: "6 Terms", examBody: "CDACC", department: "ELECTRICAL ENGINEERING", level: "Level 5" },
-      { code: "AIE",  title: "Electrical Installation", requirement: "Grade D – and E", duration: "3 Terms", examBody: "CDACC", department: "ELECTRICAL ENGINEERING", level: "Level 4" },
-    ],
-  },
-  {
-    name: "HOSPITALITY DEPARTMENT",
-    courses: [
-      { code: "DFB", title: "Food and Beverage Level 6", requirement: "C- or Pass in Level 5", duration: "9 Terms", examBody: "CDACC", department: "HOSPITALITY", level: "Level 6" },
-      { code: "CFB", title: "Food and Beverage Level 5", requirement: "D or Pass in Level 4", duration: "6 Terms", examBody: "CDACC", department: "HOSPITALITY", level: "Level 5" },
-      { code: "AFB", title: "Food and Beverage Level 4", requirement: "D- and E", duration: "3 Terms", examBody: "CDACC", department: "HOSPITALITY", level: "Level 4" },
-      { code: "FD",  title: "Fashion and Design Level 4", requirement: "D- and E", duration: "3 Terms", examBody: "CDACC", department: "HOSPITALITY", level: "Level 4" },
-      { code: "AHD", title: "Hairdressing and Beauty Therapy Level 4", requirement: "D- and E", duration: "3 Terms", examBody: "CDACC", department: "HOSPITALITY", level: "Level 4" },
-    ],
-  },
-  {
-    name: "COMPUTING AND INFORMATICS",
-    courses: [
-      { code: "DICT", title: "ICT Technician Level 6", requirement: "C- or Pass Level 6", duration: "9 Terms", examBody: "CDACC", department: "COMPUTING AND INFORMATICS", level: "Level 6" },
-      { code: "CICT", title: "ICT Technician Level 5", requirement: "D plain", duration: "6 Terms", examBody: "CDACC", department: "COMPUTING AND INFORMATICS", level: "Level 5" },
-      { code: "CP",   title: "Computer Packages", requirement: "KCPE and KCSE", duration: "6 Weeks", examBody: "CTVC", department: "COMPUTING AND INFORMATICS", level: "Level 4" },
-    ],
-  },
-  {
-    name: "AGRICULTURE AND ENVIRONMENTAL STUDIES DEPARTMENT",
-    courses: [
-      { code: "DGA", title: "Agriculture Extension Level 6", requirement: "C- or Pass level 5", duration: "9 Terms", examBody: "CDACC", department: "AGRICULTURE AND ENVIRONMENTAL STUDIES", level: "Level 6" },
-      { code: "CGA", title: "Agriculture Extension Level 5", requirement: "D or Pass Level 5", duration: "6 Terms", examBody: "CDACC", department: "AGRICULTURE AND ENVIRONMENTAL STUDIES", level: "Level 5" },
-      { code: "AGA", title: "Agriculture Extension Level 4", requirement: "D- and E", duration: "3 Terms", examBody: "CDACC", department: "AGRICULTURE AND ENVIRONMENTAL STUDIES", level: "Level 4" },
-    ],
-  },
-  {
-    name: "LIBERAL STUDIES DEPARTMENT",
-    courses: [
-      { code: "DSWCD", title: "Social Work Level 6", requirement: "C- or Pass Level 5", duration: "9 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 6" },
-      { code: "CSWCD", title: "Social Work Level 5", requirement: "D (plain)", duration: "6 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 5" },
-      { code: "DSCM",  title: "Supply Chain Management Level 6", requirement: "C- or Pass Level 5", duration: "9 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 6" },
-      { code: "CSCM",  title: "Supply Chain Management Level 5", requirement: "D (plain)", duration: "6 Terms", examBody: "CDACC", department: "LIBERAL STUDIES", level: "Level 5" },
-    ],
-  },
-];
 
 const forms = [
   { label: "Admission Form", file: PDF },
@@ -91,22 +36,40 @@ const forms = [
 ];
 
 const getLevelVariant = (level = "") => {
-  if (level.toLowerCase().includes("diploma")) return "level-badge level-badge--diploma";
+  if (level.includes("Level 6")) return "level-badge level-badge--diploma";
   return "level-badge";
 };
 
 const Courses = () => {
+  useSeo({
+    title: "Courses & Programmes",
+    description: "Explore CDACC-accredited diploma, certificate and artisan courses at Chanzeywe Vocational Training College across Computing, Building, Electrical, Hospitality, Agriculture and Liberal Studies departments.",
+  });
+
   const itemsPerPage = 2;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(departments.length / itemsPerPage);
+  const [departments, setDepartments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    apiGet("/departments.php?with_courses=1")
+      .then((data) => setDepartments(data.filter((d) => d.active)))
+      .catch(() => setError("Unable to load courses right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const totalPages = Math.max(1, Math.ceil(departments.length / itemsPerPage));
+  const safePage = Math.min(currentPage, totalPages);
+
   const paginatedDepts = departments.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    (safePage - 1) * itemsPerPage,
+    safePage * itemsPerPage
   );
 
-  const handleApply = (course) => navigate("/ApplicationForm", { state: course });
+  const handleApply = (course, dept) =>
+    navigate("/ApplicationForm", { state: { ...course, department: dept.name } });
 
   return (
     <>
@@ -140,12 +103,18 @@ const Courses = () => {
           </p>
         </div>
 
+        {loading && <p className="courses-status">Loading courses…</p>}
+        {!loading && error && <p className="courses-status courses-status--error">{error}</p>}
+        {!loading && !error && departments.length === 0 && (
+          <p className="courses-status">No courses are available right now.</p>
+        )}
+
         {/* Dept tables */}
-        {paginatedDepts.map((dept, i) => (
-          <div key={i} className="department-section card">
+        {!loading && !error && paginatedDepts.map((dept) => (
+          <div key={dept.id} className="department-section card">
             <div className="dept-header">
               <div className="dept-header__icon">
-                {deptIcons[dept.name] || <FaBuilding />}
+                {DEPT_ICONS[dept.slug] || <FaBuilding />}
               </div>
               <h2>{dept.name}</h2>
             </div>
@@ -164,8 +133,8 @@ const Courses = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {dept.courses.map((course, idx) => (
-                    <tr key={idx}>
+                  {dept.courses.map((course) => (
+                    <tr key={course.id}>
                       <td>{course.code}</td>
                       <td>{course.title}</td>
                       <td>{course.requirement}</td>
@@ -177,7 +146,7 @@ const Courses = () => {
                         </span>
                       </td>
                       <td>
-                        <button onClick={() => handleApply(course)} className="apply-btn">
+                        <button onClick={() => handleApply(course, dept)} className="apply-btn">
                           Apply <FaChevronRight style={{ fontSize: "0.6rem" }} />
                         </button>
                       </td>
@@ -190,15 +159,17 @@ const Courses = () => {
         ))}
 
         {/* Pagination */}
-        <div className="pagination">
-          <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>
-            <FaChevronLeft style={{ fontSize: "0.7rem" }} /> Previous
-          </button>
-          <span className="pagination__info">Page {currentPage} of {totalPages}</span>
-          <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>
-            Next <FaChevronRight style={{ fontSize: "0.7rem" }} />
-          </button>
-        </div>
+        {!loading && !error && departments.length > 0 && (
+          <div className="pagination">
+            <button onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={safePage === 1}>
+              <FaChevronLeft style={{ fontSize: "0.7rem" }} /> Previous
+            </button>
+            <span className="pagination__info">Page {safePage} of {totalPages}</span>
+            <button onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={safePage === totalPages}>
+              Next <FaChevronRight style={{ fontSize: "0.7rem" }} />
+            </button>
+          </div>
+        )}
 
         {/* Student Forms */}
         <div className="student-forms card">

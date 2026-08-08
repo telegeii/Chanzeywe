@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import "./Downloads.css";
 import Photo from "../../assets/Photo1.jpg";
-import PDF from "../../assets/English.pdf";
 import { Link } from "react-router-dom";
 import {
   FaDownload,
@@ -15,46 +14,35 @@ import {
   FaFileSignature,
   FaBook,
 } from "react-icons/fa";
+import { apiGet } from "../../utils/api";
+import useSeo from "../../utils/useSeo";
 
-const downloads = [
-  {
-    icon: <FaFileInvoice />,
-    title: "Current Fee Structure",
-    desc: "View tuition, levies, and payment schedules for all programmes.",
-    file: PDF,
-    tag: "Finance",
-  },
-  {
-    icon: <FaFileAlt />,
-    title: "Admission Form",
-    desc: "Official application form for new and returning students.",
-    file: PDF,
-    tag: "Admissions",
-  },
-  {
-    icon: <FaFileMedical />,
-    title: "Medical Form",
-    desc: "Student health declaration required before registration.",
-    file: PDF,
-    tag: "Health",
-  },
-  {
-    icon: <FaFileSignature />,
-    title: "Student Registration Form",
-    desc: "Complete your enrolment with the official registration document.",
-    file: PDF,
-    tag: "Registration",
-  },
-  {
-    icon: <FaBook />,
-    title: "College Brochure",
-    desc: "An overview of all departments, courses, and facilities.",
-    file: PDF,
-    tag: "General",
-  },
-];
+const TAG_ICON = {
+  Finance:      <FaFileInvoice />,
+  Admissions:   <FaFileAlt />,
+  Health:       <FaFileMedical />,
+  Registration: <FaFileSignature />,
+  General:      <FaBook />,
+  Academic:     <FaFilePdf />,
+};
 
 const Downloads = () => {
+  useSeo({
+    title: "Downloads",
+    description: "Download official forms and documents from Chanzeywe Vocational Training College — fee structure, admission form, medical form, registration form and more.",
+  });
+
+  const [downloads, setDownloads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiGet("/downloads.php")
+      .then(setDownloads)
+      .catch(() => setError("Unable to load documents right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -83,27 +71,41 @@ const Downloads = () => {
           <p>Download official forms and documents needed for your academic journey at Chanzeywe TVC.</p>
         </div>
 
-        <div className="dl-grid">
-          {downloads.map((item, i) => (
-            <div key={i} className="dl-card">
-              <div className="dl-card__top">
-                <div className="dl-card__icon">{item.icon}</div>
-                <span className="dl-card__tag">{item.tag}</span>
+        {loading && <p style={{ textAlign: "center", padding: "20px 0" }}>Loading documents…</p>}
+        {!loading && error && <p style={{ textAlign: "center", padding: "20px 0", color: "#b91c1c" }}>{error}</p>}
+        {!loading && !error && downloads.length === 0 && (
+          <p style={{ textAlign: "center", padding: "20px 0" }}>No documents are available right now.</p>
+        )}
+
+        {!loading && !error && downloads.length > 0 && (
+          <div className="dl-grid">
+            {downloads.map((item) => (
+              <div key={item.id} className="dl-card">
+                <div className="dl-card__top">
+                  <div className="dl-card__icon">{TAG_ICON[item.tag] || <FaFileAlt />}</div>
+                  <span className="dl-card__tag">{item.tag}</span>
+                </div>
+                <div className="dl-card__body">
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
+                <div className="dl-card__footer">
+                  <div className="dl-card__divider" />
+                  {item.fileUrl ? (
+                    <a href={item.fileUrl} download className="dl-card__btn">
+                      <FaDownload className="dl-card__btn-icon" />
+                      Download PDF
+                    </a>
+                  ) : (
+                    <span className="dl-card__btn" style={{ opacity: 0.5, cursor: "default" }}>
+                      No file uploaded yet
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="dl-card__body">
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-              </div>
-              <div className="dl-card__footer">
-                <div className="dl-card__divider" />
-                <a href={item.file} download className="dl-card__btn">
-                  <FaDownload className="dl-card__btn-icon" />
-                  Download PDF
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Info note */}
         <div className="dl-note">

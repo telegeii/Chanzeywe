@@ -3,6 +3,8 @@ import { useLocation, useNavigate, Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import "./Application.css";
+import { apiPostForm } from "../../utils/api";
+import useSeo from "../../utils/useSeo";
 import {
   FaUser, FaGraduationCap, FaPhone, FaUpload,
   FaCheckCircle, FaChevronRight, FaArrowLeft,
@@ -48,6 +50,24 @@ const RULES = {
 };
 
 const phoneRx = /^(\+?254|0)[17]\d{8}$/;
+
+const MAX_FILE_MB = 5;
+const ALLOWED_EXT = [".pdf", ".jpg", ".jpeg", ".png"];
+const isAllowedFile = (file) => {
+  const name = file.name.toLowerCase();
+  return ALLOWED_EXT.some(ext => name.endsWith(ext));
+};
+
+const UPLOADS = [
+  { key: "result", label: "KCSE Result Slip",                required: true,  hint: "PDF or image of your result slip" },
+  { key: "cert",   label: "KCSE Certificate (if available)", required: false, hint: "PDF or image" },
+  { key: "id",     label: "ID / Birth Certificate",          required: true,  hint: "PDF or image" },
+];
+
+/* Computed once at module load rather than inline during render —
+   `new Date()` there is an impure call the render function shouldn't
+   perform on every re-render. */
+const MAX_DOB = new Date(Date.now() - 15 * 365.25 * 86400000).toISOString().split("T")[0];
 
 function validate(step, data) {
   const errors = {};
@@ -99,30 +119,81 @@ const ApplicationForm = () => {
   const navigate = useNavigate();
   const course   = location.state;
 
-  const [step,      setStep]      = useState(0);
-  const [form,      setForm]      = useState(INIT);
-  const [errors,    setErrors]    = useState({});
-  const [files,     setFiles]     = useState({ result: null, cert: null, id: null });
-  const [submitted, setSubmitted] = useState(false);
+  const [step,        setStep]        = useState(0);
+  const [form,        setForm]        = useState(INIT);
+  const [errors,      setErrors]      = useState({});
+  const [files,       setFiles]       = useState({ result: null, cert: null, id: null });
+  const [fileErrors,  setFileErrors]  = useState({});
+  const [declared,    setDeclared]    = useState(false);
+  const [submitted,   setSubmitted]   = useState(false);
+  const [submitting,  setSubmitting]  = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  useSeo({
+    title: "Apply Now",
+    description: "Apply online for a diploma, certificate or artisan course at Chanzeywe Vocational Training College, Vihiga, Kenya.",
+    noIndex: true,
+  });
 
   const set = (key) => (e) =>
     setForm(prev => ({ ...prev, [key]: e.target.value }));
 
   const handleFile = (key) => (e) => {
     const f = e.target.files[0];
-    if (f) setFiles(prev => ({ ...prev, [key]: f }));
+    if (!f) return;
+    if (!isAllowedFile(f)) {
+      setFileErrors(prev => ({ ...prev, [key]: "Only PDF, JPG or PNG files are allowed" }));
+      return;
+    }
+    if (f.size > MAX_FILE_MB * 1024 * 1024) {
+      setFileErrors(prev => ({ ...prev, [key]: `File is too large — max ${MAX_FILE_MB}MB` }));
+      return;
+    }
+    setFileErrors(prev => ({ ...prev, [key]: null }));
+    setFiles(prev => ({ ...prev, [key]: f }));
+  };
+
+  const submit = async () => {
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const fd = new FormData();
+      Object.entries(form).forEach(([k, v]) => fd.append(k, v));
+      fd.append("courseId", course.id);
+      if (files.result) fd.append("result", files.result);
+      if (files.cert)   fd.append("cert", files.cert);
+      if (files.id)     fd.append("id", files.id);
+
+      await apiPostForm("/applications.php", fd);
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err.message || "Something went wrong submitting your application. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const next = () => {
     const errs = validate(step, form);
+
+    /* Last step also gates on required documents + the honesty
+       declaration — previously unenforced, since there was no
+       <form> wrapper and the button was type="button", so the
+       checkbox's `required` attribute never actually fired. */
+    if (step === STEPS.length - 1) {
+      UPLOADS.forEach(u => {
+        if (u.required && !files[u.key]) errs[u.key] = `${u.label} is required`;
+      });
+      if (!declared) errs.declaration = "Please confirm the declaration to continue";
+    }
+
     if (Object.keys(errs).length) {
       setErrors(errs);
       return;
     }
     setErrors({});
     if (step === STEPS.length - 1) {
-      // Last step → submit directly
-      setSubmitted(true);
+      submit();
     } else {
       setStep(s => s + 1);
     }
@@ -305,7 +376,7 @@ const ApplicationForm = () => {
                     type="date"
                     value={form.dob}
                     onChange={set("dob")}
-                    max={new Date(Date.now() - 15 * 365.25 * 86400000).toISOString().split("T")[0]}
+                    max={MAX_DOB}
                     className={e.dob ? "input-error" : ""}
                   />
                 </Field>
@@ -453,63 +524,87 @@ const ApplicationForm = () => {
               {/* File uploads */}
               <div className="app-uploads">
                 <p className="app-uploads__title">Required Documents</p>
-                <p className="app-uploads__sub">Upload PDF, JPG or PNG. Max 5MB each.</p>
+                <p className="app-uploads__sub">Upload PDF, JPG or PNG. Max {MAX_FILE_MB}MB each.</p>
 
-                {[
-                  { key: "result", label: "KCSE Result Slip",              hint: "PDF or image of your result slip" },
-                  { key: "cert",   label: "KCSE Certificate (if available)", hint: "PDF or image" },
-                  { key: "id",     label: "ID / Birth Certificate",          hint: "PDF or image" },
-                ].map((u) => (
-                  <label
-                    key={u.key}
-                    className={`app-upload-zone${files[u.key] ? " app-upload-zone--done" : ""}`}
-                  >
-                    <input
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      style={{ display: "none" }}
-                      onChange={handleFile(u.key)}
-                    />
-                    <div className="app-upload-zone__icon">
-                      {files[u.key]
-                        ? <FaCheckCircle style={{ color: "#16a34a" }} />
-                        : <FaUpload />}
+                {UPLOADS.map((u) => {
+                  const err = fileErrors[u.key] || e[u.key];
+                  return (
+                    <div key={u.key}>
+                      <label
+                        className={`app-upload-zone${files[u.key] ? " app-upload-zone--done" : ""}${err ? " app-upload-zone--error" : ""}`}
+                      >
+                        <input
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          style={{ display: "none" }}
+                          onChange={handleFile(u.key)}
+                        />
+                        <div className="app-upload-zone__icon">
+                          {files[u.key]
+                            ? <FaCheckCircle style={{ color: "#16a34a" }} />
+                            : <FaUpload />}
+                        </div>
+                        <div className="app-upload-zone__text">
+                          <strong>{u.label}{u.required && <span className="app-req"> *</span>}</strong>
+                          <span>{files[u.key] ? files[u.key].name : u.hint}</span>
+                        </div>
+                        <span className="app-upload-zone__btn">
+                          {files[u.key] ? "Change" : "Browse"}
+                        </span>
+                      </label>
+                      {err && (
+                        <span className="app-error-msg">
+                          <FaExclamationCircle /> {err}
+                        </span>
+                      )}
                     </div>
-                    <div className="app-upload-zone__text">
-                      <strong>{u.label}</strong>
-                      <span>{files[u.key] ? files[u.key].name : u.hint}</span>
-                    </div>
-                    <span className="app-upload-zone__btn">
-                      {files[u.key] ? "Change" : "Browse"}
-                    </span>
-                  </label>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Declaration */}
-              <label className="app-declaration">
-                <input type="checkbox" required />
-                <span>
-                  I confirm that all information provided in this application is
-                  accurate and complete to the best of my knowledge.
-                </span>
-              </label>
+              <div>
+                <label className={`app-declaration${e.declaration ? " app-declaration--error" : ""}`}>
+                  <input
+                    type="checkbox"
+                    checked={declared}
+                    onChange={ev => setDeclared(ev.target.checked)}
+                  />
+                  <span>
+                    I confirm that all information provided in this application is
+                    accurate and complete to the best of my knowledge.
+                  </span>
+                </label>
+                {e.declaration && (
+                  <span className="app-error-msg">
+                    <FaExclamationCircle /> {e.declaration}
+                  </span>
+                )}
+              </div>
+
+              {submitError && (
+                <div className="app-submit-error">
+                  <FaExclamationCircle /> {submitError}
+                </div>
+              )}
             </div>
           )}
 
           {/* ── Navigation ── */}
           <div className="app-nav">
             {step > 0 ? (
-              <button type="button" className="app-nav__back" onClick={back}>
+              <button type="button" className="app-nav__back" onClick={back} disabled={submitting}>
                 <FaArrowLeft /> Previous
               </button>
             ) : (
               <div />
             )}
 
-            <button type="button" className="app-nav__next" onClick={next}>
+            <button type="button" className="app-nav__next" onClick={next} disabled={submitting}>
               {step === STEPS.length - 1
-                ? <><FaCheckCircle style={{ fontSize: "0.85rem" }} /> Submit Application</>
+                ? (submitting
+                    ? <>Submitting…</>
+                    : <><FaCheckCircle style={{ fontSize: "0.85rem" }} /> Submit Application</>)
                 : <>Next <FaChevronRight style={{ fontSize: "0.68rem" }} /></>
               }
             </button>

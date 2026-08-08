@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../AdminDashboard.css";
 import "./TenderPanel.css";
+import { apiGet, apiPostForm, apiDelete } from "../../../utils/api";
 import {
   FaPlus, FaEdit, FaTrash, FaTimes, FaSave,
   FaUpload, FaSearch, FaFileContract, FaCalendarAlt,
   FaHashtag, FaFilePdf, FaClock, FaDownload,
-  FaCheckCircle, FaTimesCircle, FaTag,
+  FaCheckCircle, FaTimesCircle, FaTag, FaExclamationCircle,
 } from "react-icons/fa";
 
 const isOpen  = d => new Date(d) >= new Date();
@@ -22,38 +23,67 @@ const METHOD_COLOR = {
   "Framework Agreement":  "tp-method--green",
 };
 
-const INIT = [
-  { id:1, number:"CHANZEYWE/OT/01/2023-2024", title:"Provision of Printing Papers",   method:"Open Tender",       postedDate:"2025-12-14", closeDate:"2024-12-29", file:null, fileName:"Tender_Printing_Papers.pdf"  },
-  { id:2, number:"CHANZEYWE/OT/02/2025-2026", title:"Provision of Security Services",  method:"Restricted Tender", postedDate:"2025-12-14", closeDate:"2026-06-30", file:null, fileName:"Tender_Security_Services.pdf" },
-  { id:3, number:"CHANZEYWE/OT/03/2025-2026", title:"Provision of Washing Soap",       method:"Open Tender",       postedDate:"2025-12-14", closeDate:"2024-12-01", file:null, fileName:"Tender_Washing_Soap.pdf"      },
-  { id:4, number:"CHANZEYWE/PROC/004/2026",   title:"Supply of Laboratory Equipment",  method:"Open Tender",       postedDate:"2026-01-10", closeDate:"2026-07-15", file:null, fileName:"Tender_Lab_Equipment.pdf"     },
-];
-
 const BLANK = {
   number:"", title:"", method:"Open Tender",
   closeDate:"", postedDate: new Date().toISOString().split("T")[0],
-  file:null, fileName:"",
+  fileUrl:null, fileName:"", file:null,
 };
 
 export default function TendersPanel() {
-  const [tenders, setTenders] = useState(INIT);
-  const [modal,   setModal]   = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [form,    setForm]    = useState(BLANK);
-  const [search,  setSearch]  = useState("");
-  const [tab,     setTab]     = useState("open"); // "open" | "closed" | "all"
+  const [tenders,   setTenders]   = useState([]);
+  const [loading,   setLoading]   = useState(true);
+  const [listError, setListError] = useState("");
+  const [modal,     setModal]     = useState(false);
+  const [editing,   setEditing]   = useState(null);
+  const [form,      setForm]      = useState(BLANK);
+  const [formError, setFormError] = useState("");
+  const [saving,    setSaving]    = useState(false);
+  const [search,    setSearch]    = useState("");
+  const [tab,       setTab]       = useState("open"); // "open" | "closed" | "all"
 
-  const openModal  = (t = null) => { setEditing(t); setForm(t ? { ...t } : { ...BLANK }); setModal(true); };
+  useEffect(() => {
+    apiGet("/tenders.php")
+      .then(setTenders)
+      .catch(err => setListError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const openModal  = (t = null) => { setEditing(t); setForm(t ? { ...t, file: null } : { ...BLANK }); setFormError(""); setModal(true); };
   const close      = () => { setModal(false); setEditing(null); };
 
-  const save = () => {
-    if (!form.number || !form.title || !form.closeDate) return;
-    if (editing) setTenders(ts => ts.map(t => t.id === editing.id ? { ...form, id: editing.id } : t));
-    else         setTenders(ts => [{ ...form, id: Date.now() }, ...ts]);
-    close();
+  const save = async () => {
+    if (!form.number || !form.title || !form.closeDate) { setFormError("Number, title and closing date are required"); return; }
+    setSaving(true);
+    setFormError("");
+    try {
+      const fd = new FormData();
+      if (editing) fd.append("id", editing.id);
+      fd.append("number", form.number);
+      fd.append("title", form.title);
+      fd.append("method", form.method);
+      fd.append("postedDate", form.postedDate);
+      fd.append("closeDate", form.closeDate);
+      if (form.file) fd.append("file", form.file);
+
+      const saved = await apiPostForm("/tenders.php", fd);
+      setTenders(ts => editing ? ts.map(t => t.id === saved.id ? saved : t) : [saved, ...ts]);
+      close();
+    } catch (err) {
+      setFormError(err.message || "Could not save this tender.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const del = id => setTenders(ts => ts.filter(t => t.id !== id));
+  const del = async (id) => {
+    if (!window.confirm("Delete this tender? This can't be undone.")) return;
+    try {
+      await apiDelete("/tenders.php", id);
+      setTenders(ts => ts.filter(t => t.id !== id));
+    } catch (err) {
+      setListError(err.message);
+    }
+  };
 
   const handleFile = e => {
     const file = e.target.files[0];
@@ -88,6 +118,10 @@ export default function TendersPanel() {
           <FaPlus style={{ fontSize:"0.72rem" }} /> Post Tender
         </button>
       </div>
+
+      {listError && (
+        <div className="tp-empty" style={{ color: "#b91c1c" }}><FaExclamationCircle /><p>{listError}</p></div>
+      )}
 
       {/* ── Stat cards ── */}
       <div className="tp-stats">
@@ -148,7 +182,9 @@ export default function TendersPanel() {
       )}
 
       {/* ── Table ── */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="tp-empty"><FaFileContract /><p>Loading tenders…</p></div>
+      ) : filtered.length === 0 ? (
         <div className="tp-empty">
           <FaFileContract />
           <p>No tenders found{tab === "open" ? " — no open procurement notices at the moment." : "."}</p>
@@ -203,10 +239,16 @@ export default function TendersPanel() {
                       </td>
                       <td>
                         {t.fileName ? (
-                          <div className="tp-pdf-chip">
+                          <a
+                            className="tp-pdf-chip"
+                            href={t.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ textDecoration: "none" }}
+                          >
                             <FaFilePdf className="tp-pdf-chip__icon" />
                             <span>{t.fileName}</span>
-                          </div>
+                          </a>
                         ) : (
                           <span className="tp-no-pdf">— no file</span>
                         )}
@@ -254,6 +296,12 @@ export default function TendersPanel() {
             </div>
 
             <div className="adm-modal__body">
+
+              {formError && (
+                <div className="tp-empty" style={{ color: "#b91c1c", padding: "10px 14px" }}>
+                  <FaExclamationCircle /><p style={{ margin: 0 }}>{formError}</p>
+                </div>
+              )}
 
               {/* Live status banner */}
               {form.closeDate && (
@@ -326,7 +374,7 @@ export default function TendersPanel() {
                       <span className="tp-file-chip__name">{form.fileName}</span>
                       <button
                         className="tp-file-chip__remove"
-                        onClick={() => setForm(p => ({ ...p, file:null, fileName:"" }))}
+                        onClick={() => setForm(p => ({ ...p, file:null, fileName:"", fileUrl:null }))}
                       ><FaTimes /></button>
                     </div>
                   ) : (
@@ -344,8 +392,8 @@ export default function TendersPanel() {
 
             <div className="adm-modal__footer">
               <button className="adm-btn adm-btn--ghost" onClick={close}>Cancel</button>
-              <button className="adm-btn adm-btn--primary" onClick={save}>
-                <FaSave /> {editing ? "Save Changes" : "Post Tender"}
+              <button className="adm-btn adm-btn--primary" onClick={save} disabled={saving}>
+                <FaSave /> {saving ? "Saving…" : editing ? "Save Changes" : "Post Tender"}
               </button>
             </div>
           </div>

@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../AdminDashboard.css";
 import "./DownloadPanel.css";
+import { apiGet, apiPostForm, apiDelete } from "../../../utils/api";
 import {
   FaPlus, FaEdit, FaTrash, FaTimes, FaSave,
   FaUpload, FaSearch, FaThLarge, FaList,
-  FaDownload, FaFilePdf, FaFileAlt, FaFileInvoice,
+  FaFilePdf, FaFileAlt, FaFileInvoice,
   FaFileMedical, FaFileSignature, FaBook, FaEye,
-  FaEyeSlash,
+  FaEyeSlash, FaExclamationCircle,
 } from "react-icons/fa";
 
 /* ── Tag config ─────────────────────────── */
@@ -40,39 +41,76 @@ const ICONS = {
   Academic:     <FaFilePdf />,
 };
 
-/* ── Seed data ──────────────────────────── */
-const INIT = [
-  { id:1, title:"Current Fee Structure",      tag:"Finance",      desc:"View tuition, levies, and payment schedules for all programmes.",          file:null, fileName:"Fee_Structure_2025.pdf",       visible:true  },
-  { id:2, title:"Admission Form",             tag:"Admissions",   desc:"Official application form for new and returning students.",                 file:null, fileName:"Admission_Form.pdf",            visible:true  },
-  { id:3, title:"Medical Form",               tag:"Health",       desc:"Student health declaration required before registration.",                  file:null, fileName:"Medical_Form.pdf",              visible:true  },
-  { id:4, title:"Student Registration Form",  tag:"Registration", desc:"Complete your enrolment with the official registration document.",          file:null, fileName:"Registration_Form.pdf",         visible:true  },
-  { id:5, title:"College Brochure",           tag:"General",      desc:"An overview of all departments, courses, and facilities at Chanzeywe TVC.", file:null, fileName:"College_Brochure_2025.pdf",     visible:true  },
-  { id:6, title:"CDACC Examination Guidelines",tag:"Academic",    desc:"Guidelines and instructions for CDACC national examinations.",              file:null, fileName:"CDACC_Exam_Guidelines.pdf",     visible:false },
-];
-
-const BLANK = { title:"", tag:"General", desc:"", file:null, fileName:"", visible:true };
+const BLANK = { title:"", tag:"General", desc:"", fileUrl:null, fileName:"", file:null, visible:true };
 
 export default function DownloadsPanel() {
-  const [docs,      setDocs]      = useState(INIT);
-  const [modal,     setModal]     = useState(false);
-  const [editing,   setEditing]   = useState(null);
-  const [form,      setForm]      = useState(BLANK);
-  const [view,      setView]      = useState("grid");
-  const [search,    setSearch]    = useState("");
-  const [tagFilter, setTagFilter] = useState("");
+  const [docs,       setDocs]       = useState([]);
+  const [loading,    setLoading]    = useState(true);
+  const [listError,  setListError]  = useState("");
+  const [modal,      setModal]      = useState(false);
+  const [editing,    setEditing]    = useState(null);
+  const [form,       setForm]       = useState(BLANK);
+  const [formError,  setFormError]  = useState("");
+  const [saving,     setSaving]     = useState(false);
+  const [view,       setView]       = useState("grid");
+  const [search,     setSearch]     = useState("");
+  const [tagFilter,  setTagFilter]  = useState("");
 
-  const open  = (d = null) => { setEditing(d); setForm(d ? { ...d } : { ...BLANK }); setModal(true); };
+  useEffect(() => {
+    apiGet("/downloads.php?all=1")
+      .then(setDocs)
+      .catch(err => setListError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const open  = (d = null) => { setEditing(d); setForm(d ? { ...d, file: null } : { ...BLANK }); setFormError(""); setModal(true); };
   const close = () => { setModal(false); setEditing(null); };
 
-  const save = () => {
-    if (!form.title || !form.tag) return;
-    if (editing) setDocs(ds => ds.map(d => d.id === editing.id ? { ...form, id: editing.id } : d));
-    else         setDocs(ds => [{ ...form, id: Date.now() }, ...ds]);
-    close();
+  const save = async () => {
+    if (!form.title || !form.tag) { setFormError("Title and category are required"); return; }
+    setSaving(true);
+    setFormError("");
+    try {
+      const fd = new FormData();
+      if (editing) fd.append("id", editing.id);
+      fd.append("title", form.title);
+      fd.append("tag", form.tag);
+      fd.append("desc", form.desc || "");
+      fd.append("visible", form.visible ? "1" : "0");
+      if (form.file) fd.append("file", form.file);
+
+      const saved = await apiPostForm("/downloads.php", fd);
+      setDocs(ds => editing ? ds.map(d => d.id === saved.id ? saved : d) : [saved, ...ds]);
+      close();
+    } catch (err) {
+      setFormError(err.message || "Could not save this document.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const del    = id => setDocs(ds => ds.filter(d => d.id !== id));
-  const toggle = id => setDocs(ds => ds.map(d => d.id === id ? { ...d, visible: !d.visible } : d));
+  const del = async (id) => {
+    if (!window.confirm("Delete this document? This can't be undone.")) return;
+    try {
+      await apiDelete("/downloads.php", id);
+      setDocs(ds => ds.filter(d => d.id !== id));
+    } catch (err) {
+      setListError(err.message);
+    }
+  };
+
+  const toggle = async (id) => {
+    const d = docs.find(x => x.id === id);
+    try {
+      const fd = new FormData();
+      fd.append("id", id);
+      fd.append("visible", d.visible ? "0" : "1");
+      const updated = await apiPostForm("/downloads.php", fd);
+      setDocs(ds => ds.map(x => x.id === id ? updated : x));
+    } catch (err) {
+      setListError(err.message);
+    }
+  };
 
   const handleFile = e => {
     const file = e.target.files[0];
@@ -102,6 +140,10 @@ export default function DownloadsPanel() {
           <FaPlus style={{ fontSize: "0.72rem" }} /> Add Document
         </button>
       </div>
+
+      {listError && (
+        <div className="dp-empty" style={{ color: "#b91c1c" }}><FaExclamationCircle /><p>{listError}</p></div>
+      )}
 
       {/* ── Tag chips ── */}
       <div className="dp-chips">
@@ -138,8 +180,10 @@ export default function DownloadsPanel() {
         </div>
       </div>
 
+      {loading && <div className="dp-empty"><FaFilePdf /><p>Loading documents…</p></div>}
+
       {/* ══ GRID VIEW ══ */}
-      {view === "grid" && (
+      {!loading && view === "grid" && (
         <div className="dp-grid">
           {filtered.length === 0 && (
             <div className="dp-empty"><FaFilePdf /><p>No documents found.</p></div>
@@ -201,7 +245,7 @@ export default function DownloadsPanel() {
       )}
 
       {/* ══ LIST VIEW ══ */}
-      {view === "list" && (
+      {!loading && view === "list" && (
         <div className="adm-card">
           <div className="adm-card__header">
             <span className="adm-card__title">All Documents ({filtered.length})</span>
@@ -279,6 +323,12 @@ export default function DownloadsPanel() {
 
             <div className="adm-modal__body">
 
+              {formError && (
+                <div className="dp-empty" style={{ color: "#b91c1c", padding: "10px 14px" }}>
+                  <FaExclamationCircle /><p style={{ margin: 0 }}>{formError}</p>
+                </div>
+              )}
+
               {/* Tag selector — visual row */}
               <div className="dp-tag-picker">
                 <label className="dp-tag-picker__label">Category / Tag</label>
@@ -318,7 +368,7 @@ export default function DownloadsPanel() {
                       <span className="dp-file-chip__name">{form.fileName}</span>
                       <button
                         className="dp-file-chip__remove"
-                        onClick={() => setForm(p => ({ ...p, file: null, fileName: "" }))}
+                        onClick={() => setForm(p => ({ ...p, file: null, fileName: "", fileUrl: null }))}
                       ><FaTimes /></button>
                     </div>
                   ) : (
@@ -348,8 +398,8 @@ export default function DownloadsPanel() {
 
             <div className="adm-modal__footer">
               <button className="adm-btn adm-btn--ghost" onClick={close}>Cancel</button>
-              <button className="adm-btn adm-btn--primary" onClick={save}>
-                <FaSave /> {editing ? "Save Changes" : "Add Document"}
+              <button className="adm-btn adm-btn--primary" onClick={save} disabled={saving}>
+                <FaSave /> {saving ? "Saving…" : editing ? "Save Changes" : "Add Document"}
               </button>
             </div>
           </div>

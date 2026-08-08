@@ -1,0 +1,143 @@
+/* ============================================================
+   USERS PANEL — Admin account & permission management
+   Prefix: up-
+   Dense table layout by design: a handful of fields per user
+   (username, role, permissions, status) doesn't need card-sized
+   whitespace, so everything sits in one compact row.
+   ============================================================ */
+
+.up-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: var(--adm-font);
+}
+
+.up-empty {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: var(--adm-muted);
+  font-size: 0.85rem;
+  background: var(--adm-white);
+  border-radius: var(--adm-radius);
+  border: 1px solid var(--adm-border);
+}
+.up-empty svg { font-size: 1.4rem; opacity: 0.35; flex-shrink: 0; }
+.up-empty p { margin: 0; }
+
+/* ── Table cells ── */
+.up-table th:nth-child(3) { min-width: 220px; }
+
+.up-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.up-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--adm-blue);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.up-you {
+  color: var(--adm-muted);
+  font-weight: 500;
+  font-size: 0.78rem;
+}
+
+.up-attempts {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.66rem;
+  color: #b91c1c;
+}
+
+/* Permission chips — tight, wraps in place, no wasted row height */
+.up-perm-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 320px;
+}
+
+.up-perm-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  background: rgba(10,61,143,0.07);
+  color: var(--adm-blue);
+  white-space: nowrap;
+}
+.up-perm-chip--all  { background: rgba(124,58,237,0.1); color: #6d28d9; }
+.up-perm-chip--none { background: rgba(107,114,128,0.1); color: var(--adm-muted); }
+
+/* ── Modal: role toggle ── */
+.up-hint { font-weight: 400; color: var(--adm-muted); font-size: 0.72rem; }
+
+.up-role-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.up-role-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 9px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-white);
+  color: var(--adm-muted);
+  font-family: var(--adm-font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--adm-trans);
+}
+.up-role-btn:hover { border-color: var(--adm-blue); color: var(--adm-blue); }
+.up-role-btn--active {
+  border-color: var(--adm-blue);
+  background: rgba(10,61,143,0.06);
+  color: var(--adm-blue);
+}
+
+/* ── Modal: permission picker — compact toggle chips, not checkboxes ── */
+.up-perm-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.up-perm-btn {
+  padding: 7px 13px;
+  border-radius: 100px;
+  border: 1.5px solid var(--adm-border);
+  background: var(--adm-white);
+  color: var(--adm-text);
+  font-family: var(--adm-font);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--adm-trans);
+}
+.up-perm-btn:hover { border-color: var(--adm-blue); }
+.up-perm-btn--active {
+  border-color: var(--adm-blue);
+  background: var(--adm-blue);
+  color: #fff;
+}

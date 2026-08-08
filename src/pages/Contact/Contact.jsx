@@ -11,6 +11,7 @@ import {
   FaChevronRight,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useSeo from "../../utils/useSeo";
 
 const contactDetails = [
   {
@@ -40,6 +41,11 @@ const contactDetails = [
 ];
 
 const Contact = () => {
+  useSeo({
+    title: "Contact Us",
+    description: "Get in touch with Chanzeywe Vocational Training College — located near Mahanga Market, Vihiga County, Kenya. Call +254 740 932 743 or email chanzeywetvc@gmail.com.",
+  });
+
   const [focused, setFocused] = useState(null);
   const [submitted, setSubmitted] = useState(false);
 

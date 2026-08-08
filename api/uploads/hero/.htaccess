@@ -1,0 +1,3 @@
+# Public assets — individual files stay directly linkable, but the
+# directory listing itself is not browsable.
+Options -Indexes

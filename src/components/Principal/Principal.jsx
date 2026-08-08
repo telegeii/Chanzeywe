@@ -2,7 +2,19 @@ import React from "react";
 import "./Principal.css";
 import PrincipalPhoto from "../../assets/Photo4.jpg";
 
-const Principal = () => {
+const DEFAULTS = {
+  name: "Mr. Gilbert G. Mwavali",
+  title: "Principal / Secretary – B.O.G",
+  greeting: "Karibu",
+  message:
+    "A heartfelt welcome to the digital home of Chanzeywe Institute. We are committed to academic excellence, innovation, and the development of skilled professionals ready to thrive in the modern technological world.",
+  photo: null,
+};
+
+/** `data` — optional, fetched by Home.jsx from /api/principal.php. Falls back to the current copy while loading or if the fetch fails. */
+const Principal = ({ data }) => {
+  const p = data || DEFAULTS;
+
   return (
     <section className="principal-section">
 
@@ -15,7 +27,7 @@ const Principal = () => {
         <div className="principal-image-wrap">
 
           <div className="principal-image-frame">
-            <img src={PrincipalPhoto} alt="Mr. Gilbert G. Mwavali – Principal" />
+            <img src={p.photo || PrincipalPhoto} alt={`${p.name} – Principal`} />
           </div>
 
         </div>
@@ -29,18 +41,15 @@ const Principal = () => {
           </div>
 
           <blockquote className="principal-quote">
-            A heartfelt welcome to the digital home of Chanzeywe Institute.
-            We are committed to academic excellence, innovation, and the
-            development of skilled professionals ready to thrive in the
-            modern technological world.
+            {p.message}
           </blockquote>
 
           <div className="principal-divider" />
 
           <div className="principal-signature">
-            <p className="principal-karibu">~ Karibu</p>
-            <h3 className="principal-name">Mr. Gilbert G. Mwavali</h3>
-            <span className="principal-title">Principal / Secretary – B.O.G</span>
+            <p className="principal-karibu">~ {p.greeting}</p>
+            <h3 className="principal-name">{p.name}</h3>
+            <span className="principal-title">{p.title}</span>
           </div>
 
         </div>

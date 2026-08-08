@@ -7,6 +7,7 @@ import Level5 from "../../assets/Level5.png";
 import Level4 from "../../assets/Level4.png";
 import "./Instruction.css";
 import { Link } from "react-router-dom";
+import useSeo from "../../utils/useSeo";
 import {
   FaChevronRight,
   FaCheckCircle,
@@ -66,6 +67,11 @@ const levels = [
 ];
 
 const Instruction = () => {
+  useSeo({
+    title: "Admission Instructions",
+    description: "How to apply and enroll at Chanzeywe Vocational Training College — admission requirements, documents needed, and entry levels for TVET programmes in Vihiga, Kenya.",
+  });
+
   return (
     <>
       <Navbar />

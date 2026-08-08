@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Blog.css";
 import { useNavigate } from "react-router-dom";
-import Moe from "../../assets/Moe.png";
-import Chanzeywe from "../../assets/Chanzeywe.jpg";
-import Safaricom from "../../assets/Safaricom.jpg";
-import Vibrant from "../../assets/Vibrant.jpeg";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
+import { apiGet } from "../../utils/api";
+import useSeo from "../../utils/useSeo";
+
+import Chanzeywe from "../../assets/Chanzeywe.jpg";
 
 import {
   FaArrowRight,
@@ -17,63 +17,38 @@ import {
 } from "react-icons/fa";
 
 const Blog = () => {
+  useSeo({
+    title: "News & Blog",
+    description: "Latest news, announcements and achievements from Chanzeywe Vocational Training College, Vihiga County, Kenya.",
+  });
+
   const navigate = useNavigate();
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const blogs = [
-    {
-      image: Moe,
-      title: "Ministry of Education Certification",
-      content:
-        "Chanzeywe Vocational College is officially certified by the Ministry of Education under the State Department for Vocational and Technical Training.",
-      date: "2026-02-28",
-      location: "Chanzeywe",
-    },
-    {
-      image: Chanzeywe,
-      title: "About Chanzeywe Vocational College",
-      content:
-        "Founded in 2020 and located in Vihiga County near Mahanga Market, the college offers quality, practical and industry-focused training.",
-      date: "2026-02-20",
-      location: "Chanzeywe",
-    },
-    {
-      image: Safaricom,
-      title: "Safaricom Foundation ICT Support",
-      content:
-        "Safaricom Foundation donated computers to enhance digital literacy and hands-on ICT training at the college.",
-      date: "2026-02-10",
-      location: "Chanzeywe",
-    },
-    {
-      image: Vibrant,
-      title: "Vibrant Youth Skills Empowerment",
-      content:
-        "Through partnerships, the college empowers youth with employable skills and entrepreneurship training.",
-      date: "2026-01-30",
-      location: "Chanzeywe",
-    },
-    {
-      image: Moe,
-      title: "Competency Based Training (CBT)",
-      content:
-        "Competency Based Training ensures learners gain real-world skills aligned with industry standards.",
-      date: "2026-01-15",
-      location: "Chanzeywe",
-    },
-  ];
-
-  const sortedBlogs = [...blogs].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
-  );
+  useEffect(() => {
+    apiGet("/blog.php")
+      .then((posts) =>
+        setBlogs(
+          posts.map((p) => ({
+            image: p.image || Chanzeywe,
+            title: p.title,
+            content: p.excerpt || p.body || "",
+            date: p.date,
+            location: p.location,
+          }))
+        )
+      )
+      .catch(() => setError("Unable to load news right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
 
   const blogsPerPage = 3;
   const [page, setPage] = useState(0);
 
   const startIndex = page * blogsPerPage;
-  const visibleBlogs = sortedBlogs.slice(
-    startIndex,
-    startIndex + blogsPerPage
-  );
+  const visibleBlogs = blogs.slice(startIndex, startIndex + blogsPerPage);
 
   return (
     <>
@@ -89,60 +64,70 @@ const Blog = () => {
           </p>
         </div>
 
-        <div className="blog-grid">
-          {visibleBlogs.map((blog, index) => (
-            <div className="blog-card" key={index}>
-              <div className="blog-img">
-                <img src={blog.image} alt={blog.title} />
-              </div>
+        {loading && <p className="blog-status">Loading news…</p>}
+        {!loading && error && <p className="blog-status blog-status--error">{error}</p>}
+        {!loading && !error && blogs.length === 0 && (
+          <p className="blog-status">No news posts have been published yet.</p>
+        )}
 
-              <div className="blog-body">
-                <div className="blog-meta">
-                  <span>
-                    <FaCalendarAlt /> {new Date(blog.date).toDateString()}
-                  </span>
-                  <span>
-                    <FaMapMarkerAlt /> {blog.location}
-                  </span>
+        {!loading && !error && blogs.length > 0 && (
+          <>
+            <div className="blog-grid">
+              {visibleBlogs.map((blog, index) => (
+                <div className="blog-card" key={index}>
+                  <div className="blog-img">
+                    <img src={blog.image} alt={blog.title} />
+                  </div>
+
+                  <div className="blog-body">
+                    <div className="blog-meta">
+                      <span>
+                        <FaCalendarAlt /> {new Date(blog.date).toDateString()}
+                      </span>
+                      <span>
+                        <FaMapMarkerAlt /> {blog.location}
+                      </span>
+                    </div>
+
+                    <h3>{blog.title}</h3>
+                    <p>
+                      {blog.content.length > 120
+                        ? `${blog.content.slice(0, 120)}...`
+                        : blog.content}
+                    </p>
+
+                    <button
+                      className="read-more"
+                      onClick={() =>
+                        navigate("/blogview", {
+                          state: { blog, allBlogs: blogs },
+                        })
+                      }
+                    >
+                      Read More <FaArrowRight />
+                    </button>
+                  </div>
                 </div>
-
-                <h3>{blog.title}</h3>
-                <p>
-                  {blog.content.length > 120
-                    ? `${blog.content.slice(0, 120)}...`
-                    : blog.content}
-                </p>
-
-                <button
-                  className="read-more"
-                  onClick={() =>
-                    navigate("/blogview", {
-                      state: { blog, allBlogs: sortedBlogs },
-                    })
-                  }
-                >
-                  Read More <FaArrowRight />
-                </button>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="blog-pagination">
-          <button
-            onClick={() => setPage(page - 1)}
-            disabled={page === 0}
-          >
-            <FaChevronLeft /> Previous
-          </button>
+            <div className="blog-pagination">
+              <button
+                onClick={() => setPage(page - 1)}
+                disabled={page === 0}
+              >
+                <FaChevronLeft /> Previous
+              </button>
 
-          <button
-            onClick={() => setPage(page + 1)}
-            disabled={startIndex + blogsPerPage >= sortedBlogs.length}
-          >
-            Next <FaChevronRight />
-          </button>
-        </div>
+              <button
+                onClick={() => setPage(page + 1)}
+                disabled={startIndex + blogsPerPage >= blogs.length}
+              >
+                Next <FaChevronRight />
+              </button>
+            </div>
+          </>
+        )}
       </section>
 
       <Footer />

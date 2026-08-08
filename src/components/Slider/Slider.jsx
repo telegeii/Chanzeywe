@@ -107,7 +107,12 @@ const Slider = ({ slides = DEFAULT_SLIDES }) => {
           <div key={i} className={cls}>
 
             {/* BG image */}
-            <div className="slide__bg" style={{ backgroundImage:`url(${slide.image})` }} />
+            <div
+              className="slide__bg"
+              style={{ backgroundImage:`url(${slide.image})` }}
+              role="img"
+              aria-label={slide.text || "Chanzeywe Vocational Training College"}
+            />
 
             {/* Gradient overlay */}
             <div className="slide__overlay" />

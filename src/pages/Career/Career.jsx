@@ -1,36 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Photo from "../../assets/Photo1.jpg";
-import JobPdf from "../../assets/English.pdf";
 import Sorry from "../../assets/sorry.png";
 import "./Career.css";
 import { Link } from "react-router-dom";
 import { FaDownload, FaChevronRight } from "react-icons/fa";
-
-const jobs = [
-  {
-    id: 1,
-    number: "CHANZEYWE/TRAINERS/ADVERT/9/25",
-    title: "Advertisement for BOG Trainer Positions",
-    closeDate: "2025-12-29",
-    postedDate: "2025-12-14",
-  },
-  {
-    id: 2,
-    number: "CHANZEYWE/HR/ADVERT/10/25",
-    title: "Advertisement for Human Resource Positions",
-    closeDate: "2025-12-29",
-    postedDate: "2025-12-14",
-  },
-  {
-    id: 3,
-    number: "CHANZEYWE/ADMIN/ADVERT/11/25",
-    title: "Advertisement for Administrator Positions",
-    closeDate: "2027-12-01",
-    postedDate: "2024-11-14",
-  },
-];
+import { apiGet } from "../../utils/api";
+import useSeo from "../../utils/useSeo";
 
 const isOpen = (closeDate) => new Date(closeDate) >= new Date();
 
@@ -71,9 +48,13 @@ const JobTable = ({ rows, showAction }) => (
               </td>
               {showAction && (
                 <td>
-                  <a href={JobPdf} download className="apply-btn">
-                    <FaDownload style={{ fontSize: "0.72rem" }} /> Download
-                  </a>
+                  {job.fileUrl ? (
+                    <a href={job.fileUrl} download className="apply-btn">
+                      <FaDownload style={{ fontSize: "0.72rem" }} /> Download
+                    </a>
+                  ) : (
+                    <span style={{ color: "#9ca3af", fontSize: "0.8rem" }}>No file</span>
+                  )}
                 </td>
               )}
             </tr>
@@ -85,6 +66,22 @@ const JobTable = ({ rows, showAction }) => (
 );
 
 const Career = () => {
+  useSeo({
+    title: "Careers",
+    description: "Current job vacancies at Chanzeywe Vocational Training College, Vihiga County, Kenya. We are an equal opportunity employer.",
+  });
+
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    apiGet("/careers.php")
+      .then(setJobs)
+      .catch(() => setError("Unable to load vacancies right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
+
   const openJobs   = jobs.filter((j) => isOpen(j.closeDate));
   const closedJobs = jobs.filter((j) => !isOpen(j.closeDate));
 
@@ -109,45 +106,54 @@ const Career = () => {
       {/* ── Body ── */}
       <div className="career-body">
 
-        {/* Open Vacancies */}
-        <section className="career-section">
-          <div className="career-section__header">
-            <span className="career-section__dot career-section__dot--open" />
-            <h3>Open Career Opportunities</h3>
-            <span className="career-section__count career-section__count--open">
-              {openJobs.length} Active
-            </span>
-          </div>
+        {loading && <p style={{ textAlign: "center", padding: "40px 0", fontFamily: "var(--cr-font)" }}>Loading vacancies…</p>}
+        {!loading && error && (
+          <p style={{ textAlign: "center", padding: "40px 0", fontFamily: "var(--cr-font)", color: "#b91c1c" }}>{error}</p>
+        )}
 
-          {openJobs.length === 0 ? (
-            <div className="no-jobs-container">
-              <img src={Sorry} alt="No vacancies" />
-              <p>No open vacancies at the moment.</p>
-              <span>Check back soon for new opportunities.</span>
-            </div>
-          ) : (
-            <JobTable rows={openJobs} showAction={true} />
-          )}
-        </section>
+        {!loading && !error && (
+          <>
+            {/* Open Vacancies */}
+            <section className="career-section">
+              <div className="career-section__header">
+                <span className="career-section__dot career-section__dot--open" />
+                <h3>Open Career Opportunities</h3>
+                <span className="career-section__count career-section__count--open">
+                  {openJobs.length} Active
+                </span>
+              </div>
 
-        {/* Closed Vacancies */}
-        <section className="career-section">
-          <div className="career-section__header">
-            <span className="career-section__dot career-section__dot--closed" />
-            <h3>Closed Vacancies</h3>
-            <span className="career-section__count career-section__count--closed">
-              {closedJobs.length} Closed
-            </span>
-          </div>
+              {openJobs.length === 0 ? (
+                <div className="no-jobs-container">
+                  <img src={Sorry} alt="No vacancies" />
+                  <p>No open vacancies at the moment.</p>
+                  <span>Check back soon for new opportunities.</span>
+                </div>
+              ) : (
+                <JobTable rows={openJobs} showAction={true} />
+              )}
+            </section>
 
-          {closedJobs.length === 0 ? (
-            <p style={{ color: "var(--cr-muted)", fontFamily: "var(--cr-font)", fontSize: "0.9rem" }}>
-              No closed vacancies on record.
-            </p>
-          ) : (
-            <JobTable rows={closedJobs} showAction={false} />
-          )}
-        </section>
+            {/* Closed Vacancies */}
+            <section className="career-section">
+              <div className="career-section__header">
+                <span className="career-section__dot career-section__dot--closed" />
+                <h3>Closed Vacancies</h3>
+                <span className="career-section__count career-section__count--closed">
+                  {closedJobs.length} Closed
+                </span>
+              </div>
+
+              {closedJobs.length === 0 ? (
+                <p style={{ color: "var(--cr-muted)", fontFamily: "var(--cr-font)", fontSize: "0.9rem" }}>
+                  No closed vacancies on record.
+                </p>
+              ) : (
+                <JobTable rows={closedJobs} showAction={false} />
+              )}
+            </section>
+          </>
+        )}
 
       </div>
 

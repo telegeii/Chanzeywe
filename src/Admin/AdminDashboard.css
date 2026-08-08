@@ -139,19 +139,31 @@ body { font-family: var(--adm-font); background: var(--adm-bg); }
 /* ── Navigation ───────────────────────── */
 .adm-sidebar__nav {
   flex: 1;
-  padding: 12px 10px;
+  padding: 10px 10px;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  overflow: hidden;          /* STATIC — no scroll ever */
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.18) transparent;
 }
+
+.adm-sidebar__nav::-webkit-scrollbar { width: 5px; }
+.adm-sidebar__nav::-webkit-scrollbar-track { background: transparent; }
+.adm-sidebar__nav::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.18);
+  border-radius: 10px;
+}
+.adm-sidebar__nav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.32); }
 
 /* Section divider label */
 .adm-nav-section {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 14px 8px 5px;
+  padding: 10px 8px 4px;
   white-space: nowrap;
   overflow: hidden;
   flex-shrink: 0;
@@ -183,7 +195,7 @@ body { font-family: var(--adm-font); background: var(--adm-bg); }
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 9px 11px;
+  padding: 7px 11px;
   border-radius: 9px;
   border: none;
   background: transparent;
@@ -723,10 +735,12 @@ body { font-family: var(--adm-font); background: var(--adm-bg); }
   text-transform: uppercase;
 }
 
-.adm-pill--blue  { background: rgba(10,61,143,0.1);  color: #0a3d8f; }
-.adm-pill--green { background: rgba(22,163,74,0.1);  color: #15803d; }
-.adm-pill--red   { background: rgba(220,38,38,0.08); color: #b91c1c; }
-.adm-pill--amber { background: rgba(217,119,6,0.1);  color: #b45309; }
+.adm-pill--blue   { background: rgba(10,61,143,0.1);   color: #0a3d8f; }
+.adm-pill--green  { background: rgba(22,163,74,0.1);   color: #15803d; }
+.adm-pill--red    { background: rgba(220,38,38,0.08);  color: #b91c1c; }
+.adm-pill--amber  { background: rgba(217,119,6,0.1);   color: #b45309; }
+.adm-pill--purple { background: rgba(124,58,237,0.1);  color: #6d28d9; }
+.adm-pill--teal   { background: rgba(8,145,178,0.1);   color: #0e7490; }
 
 /* Divider */
 .adm-divider { height: 1px; background: var(--adm-border); margin: 20px 0; }

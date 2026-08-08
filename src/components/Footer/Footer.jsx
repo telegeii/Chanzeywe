@@ -24,7 +24,6 @@ const Footer = () => {
     { label: "Student Portal", to: "/downloads" },
     { label: "News & Updates", to: "/blog" },
     { label: "Contact Us", to: "/contact" },
-    { label: "Report Corruption", to: "/corruption" },
   ];
 
   const accreditors = [

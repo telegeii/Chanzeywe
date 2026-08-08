@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer/Footer";
 import { useNavigate, Link } from "react-router-dom";
@@ -8,73 +8,18 @@ import Level5 from "../../../assets/Level5.png";
 import Level4 from "../../../assets/Level4.png";
 import Logo from "../../../assets/Logo.png";
 import "../Computing/Computing.css";
+import { apiGet } from "../../../utils/api";
+import useSeo from "../../../utils/useSeo";
 import {
   FaChevronRight, FaUtensils, FaCalendarAlt, FaClock,
   FaBook, FaUserGraduate, FaMoneyBillWave, FaIdCard, FaCamera, FaFileAlt
 } from "react-icons/fa";
 
-const courses = [
-  {
-    code: "DFB",
-    title: "Food and Beverage Level 6",
-    level: "Level 6",
-    badge: "Diploma",
-    color: "#0a3d8f",
-    bg: "rgba(10,61,143,0.07)",
-    department: "Hospitality",
-    requirement: "C- or Pass in Level 5",
-    duration: "9 Terms",
-    examBody: "CDACC",
-  },
-  {
-    code: "CFB",
-    title: "Food and Beverage Level 5",
-    level: "Level 5",
-    badge: "Certificate",
-    color: "#1a56c4",
-    bg: "rgba(26,86,196,0.07)",
-    department: "Hospitality",
-    requirement: "D or Pass in Level 4",
-    duration: "6 Terms",
-    examBody: "CDACC",
-  },
-  {
-    code: "AFB",
-    title: "Food and Beverage Level 4",
-    level: "Level 4",
-    badge: "Artisan",
-    color: "#1a1f36",
-    bg: "rgba(26,31,54,0.07)",
-    department: "Hospitality",
-    requirement: "D- or E",
-    duration: "3 Terms",
-    examBody: "CDACC",
-  },
-  {
-    code: "FD",
-    title: "Fashion and Design Level 4",
-    level: "Level 4",
-    badge: "Artisan",
-    color: "#1a1f36",
-    bg: "rgba(26,31,54,0.07)",
-    department: "Hospitality",
-    requirement: "D- or E",
-    duration: "3 Terms",
-    examBody: "CDACC",
-  },
-  {
-    code: "AHD",
-    title: "Hairdressing & Beauty Therapy Level 4",
-    level: "Level 4",
-    badge: "Artisan",
-    color: "#1a1f36",
-    bg: "rgba(26,31,54,0.07)",
-    department: "Hospitality",
-    requirement: "D- or E",
-    duration: "3 Terms",
-    examBody: "CDACC",
-  },
-];
+const LEVEL_STYLE = {
+  "Level 6": { badge: "Diploma",     color: "#0a3d8f", bg: "rgba(10,61,143,0.07)" },
+  "Level 5": { badge: "Certificate", color: "#1a56c4", bg: "rgba(26,86,196,0.07)" },
+  "Level 4": { badge: "Artisan",     color: "#1a1f36", bg: "rgba(26,31,54,0.07)" },
+};
 
 const intakes = [
   { month: "January", icon: "🌱", desc: "Best for fresh KCSE & KCPE graduates." },
@@ -113,10 +58,39 @@ const levels = [
 
 const Hospitality = () => {
   const [activeTab, setActiveTab] = useState("admission");
+  const [department, setDepartment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    apiGet("/departments.php?slug=hospitality")
+      .then(setDepartment)
+      .catch(() => setError("Unable to load this department right now. Please try again shortly."))
+      .finally(() => setLoading(false));
+  }, []);
+
   const handleApply = (course) =>
-    navigate("/ApplicationForm", { state: course });
+    navigate("/ApplicationForm", { state: { ...course, department: department?.name } });
+
+  useSeo({
+    title: department ? `${department.name} Department` : "Hospitality Department",
+    description: department?.tagline || "Hospitality courses at Chanzeywe Vocational Training College, Vihiga, Kenya — CDACC-accredited food & beverage, fashion and beauty therapy programmes.",
+  });
+
+  if (loading || error || !department) {
+    return (
+      <>
+        <Navbar />
+        <div className="dept-page">
+          <p className="dept-page__status" style={error ? { color: "#b91c1c" } : undefined}>
+            {error || "Loading department…"}
+          </p>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -126,20 +100,20 @@ const Hospitality = () => {
 
       {/* Hero */}
       <section className="cmp-hero">
-        <img src={Photo} alt="Hospitality Department" />
+        <img src={Photo} alt={`${department.name} Department`} />
         <div className="cmp-hero__overlay" />
         <div className="cmp-hero__content">
           <span className="cmp-hero__eyebrow">
-            <FaUtensils /> Hospitality &amp; Creative Arts
+            <FaUtensils /> {department.name}
           </span>
-          <h1>Training Skilled Professionals in Hospitality</h1>
-          <p>Excellence in Food, Fashion, and Beauty Therapy.</p>
+          <h1>{department.heroHeadline}</h1>
+          <p>{department.tagline}</p>
           <div className="cmp-hero__breadcrumb">
             <Link to="/">Home</Link>
             <FaChevronRight />
             <Link to="/courses">Departments</Link>
             <FaChevronRight />
-            <span>Hospitality</span>
+            <span>{department.name}</span>
           </div>
         </div>
       </section>
@@ -151,9 +125,9 @@ const Hospitality = () => {
         </div>
         <div className="cmp-dept__text">
           <span className="cmp-eyebrow">Our Department</span>
-          <h2>Hospitality Department</h2>
+          <h2>{department.name} Department</h2>
           <p className="cmp-dept__hod">
-            Head of Department: <strong>Telegei Edward</strong>
+            Head of Department: <strong>{department.hod || "TBD"}</strong>
           </p>
           <p className="cmp-dept__tagline">
             Chanzeywe Vocational Training College — Skills to Transform Livelihoods
@@ -251,28 +225,34 @@ const Hospitality = () => {
             <p>CDACC-accredited programmes in food, fashion, and beauty therapy.</p>
           </div>
           <div className="cmp-courses__grid">
-            {courses.map((c, i) => (
-              <div key={i} className="cmp-course-card">
-                <div className="cmp-course-card__bar" style={{ background: c.color }} />
-                <div className="cmp-course-card__body">
-                  <div className="cmp-course-card__top">
-                    <span className="cmp-course-card__code" style={{ background: c.bg, color: c.color }}>{c.code}</span>
-                    <span className="cmp-course-card__badge" style={{ background: c.bg, color: c.color }}>{c.badge}</span>
-                  </div>
-                  <h3>{c.title}</h3>
-                  <ul className="cmp-course-card__meta">
-                    <li><FaUserGraduate /> {c.requirement}</li>
-                    <li><FaClock /> {c.duration}</li>
-                    <li><FaBook /> {c.examBody}</li>
-                  </ul>
-                  <div className="cmp-course-card__footer">
-                    <button onClick={() => handleApply(c)} className="cmp-course-card__btn" style={{ "--btn-color": c.color }}>
-                      Apply Now <FaChevronRight style={{ fontSize: "0.65rem" }} />
-                    </button>
+            {department.courses.length === 0 && (
+              <p className="dept-page__status">No courses listed yet for this department.</p>
+            )}
+            {department.courses.map((c) => {
+              const style = LEVEL_STYLE[c.level] || { badge: c.level, color: "#0a3d8f", bg: "rgba(10,61,143,0.07)" };
+              return (
+                <div key={c.id} className="cmp-course-card">
+                  <div className="cmp-course-card__bar" style={{ background: style.color }} />
+                  <div className="cmp-course-card__body">
+                    <div className="cmp-course-card__top">
+                      <span className="cmp-course-card__code" style={{ background: style.bg, color: style.color }}>{c.code}</span>
+                      <span className="cmp-course-card__badge" style={{ background: style.bg, color: style.color }}>{style.badge}</span>
+                    </div>
+                    <h3>{c.title}</h3>
+                    <ul className="cmp-course-card__meta">
+                      <li><FaUserGraduate /> {c.requirement}</li>
+                      <li><FaClock /> {c.duration}</li>
+                      <li><FaBook /> {c.examBody}</li>
+                    </ul>
+                    <div className="cmp-course-card__footer">
+                      <button onClick={() => handleApply(c)} className="cmp-course-card__btn" style={{ "--btn-color": style.color }}>
+                        Apply Now <FaChevronRight style={{ fontSize: "0.65rem" }} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

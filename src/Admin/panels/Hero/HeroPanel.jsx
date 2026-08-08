@@ -1,64 +1,27 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "../../AdminDashboard.css";
 import "./HeroPanel.css";
+import { apiGet, apiPostForm, apiDelete } from "../../../utils/api";
 import {
   FaEdit, FaTimes, FaSave, FaImage,
   FaArrowUp, FaArrowDown, FaEye, FaEyeSlash,
   FaPlus, FaUserTie, FaQuoteLeft,
   FaLink, FaChevronLeft, FaChevronRight,
-  FaUpload, FaTrash, FaCamera,
+  FaUpload, FaTrash, FaCamera, FaExclamationCircle,
 } from "react-icons/fa";
 
-/* ── Persistence ───────────────────────── */
-const SLIDES_KEY    = "chanzeywe_admin_slides";
-const PRINCIPAL_KEY = "chanzeywe_admin_principal";
-
-/* ── Seed data ─────────────────────────── */
-const INIT_SLIDES = [
-  { id:1, eyebrow:"Welcome to Chanzeywe TVC",  headline:"Skills to Transform Livelihoods",    subtitle:"Join Chanzeywe TVC — Quality CDACC-accredited vocational training.",       ctaLabel:"Explore Courses",  ctaLink:"/courses", active:true, image:null },
-  { id:2, eyebrow:"CDACC Accredited",           headline:"Nationally Recognised Programmes",   subtitle:"Certificates, diplomas and artisan programmes across 6 departments.",       ctaLabel:"View Departments", ctaLink:"/courses", active:true, image:null },
-  { id:3, eyebrow:"Intakes Now Open",           headline:"January 2026 Intake Now Open",       subtitle:"Secure your place early. Applications open for January, May & September.", ctaLabel:"Apply Now",        ctaLink:"/courses", active:true, image:null },
-];
-
-const INIT_PRINCIPAL = {
-  name:     "Mr. Gilbert G. Mwavali",
-  title:    "Principal / Secretary – B.O.G",
-  greeting: "Karibu",
-  message:  "A heartfelt welcome to the digital home of Chanzeywe Institute. We are committed to academic excellence, innovation, and the development of skilled professionals ready to thrive in the modern technological world.",
-  photo:    null,
-};
-
-const loadSlides = () => {
-  try {
-    const raw = localStorage.getItem(SLIDES_KEY);
-    return raw ? JSON.parse(raw) : INIT_SLIDES;
-  } catch {
-    return INIT_SLIDES;
-  }
-};
-
-const loadPrincipal = () => {
-  try {
-    const raw = localStorage.getItem(PRINCIPAL_KEY);
-    return raw ? JSON.parse(raw) : INIT_PRINCIPAL;
-  } catch {
-    return INIT_PRINCIPAL;
-  }
-};
-
-const BLANK_SLIDE = { eyebrow:"", headline:"", subtitle:"", ctaLabel:"Learn More", ctaLink:"/", active:true, image:null };
+const BLANK_SLIDE = { eyebrow:"", headline:"", subtitle:"", ctaLabel:"Learn More", ctaLink:"/", active:true, image:null, imageFile:null };
+const BLANK_PRINCIPAL = { name:"", title:"", greeting:"Karibu", message:"", photo:null, photoFile:null };
 
 /* ─────────────────────────────────────────
    IMAGE UPLOAD ZONE (reusable)
 ───────────────────────────────────────── */
-function ImageUploadZone({ value, onChange, label, hint }) {
+function ImageUploadZone({ value, onPick, onRemove, label, hint }) {
   const ref = useRef(null);
 
   const handleFile = (file) => {
     if (!file || !file.type.startsWith("image/")) return;
-    const reader = new FileReader();
-    reader.onload = e => onChange(e.target.result);
-    reader.readAsDataURL(file);
+    onPick(file);
   };
 
   return (
@@ -67,7 +30,7 @@ function ImageUploadZone({ value, onChange, label, hint }) {
       {value ? (
         <div className="hp-img-preview-wrap">
           <img src={value} alt="Uploaded" className="hp-img-preview" />
-          <button className="hp-img-remove" onClick={() => onChange(null)} title="Remove image">
+          <button className="hp-img-remove" onClick={onRemove} title="Remove image">
             <FaTrash />
           </button>
           <button className="hp-img-change" onClick={() => ref.current?.click()} title="Change image">
@@ -110,8 +73,6 @@ function SliderPreview({ slides }) {
     return () => clearInterval(timer.current);
   }, [startTimer]);
 
-  /* Manual nav resets the timer so it doesn't fire again a moment
-     after the admin already just moved to a slide by hand. */
   const goTo = (i) => { setIdx(i); startTimer(); };
 
   if (!active.length) return (
@@ -187,50 +148,133 @@ function PrincipalPreview({ p }) {
    MAIN PANEL
 ═══════════════════════════════════════════ */
 export default function HeroPanel() {
-  const [slides,    setSlides]    = useState(loadSlides);
-  const [principal, setPrincipal] = useState(loadPrincipal);
+  const [slides,       setSlides]       = useState([]);
+  const [slidesLoading,setSlidesLoading]= useState(true);
+  const [slidesError,  setSlidesError]  = useState("");
+
+  const [principal,        setPrincipal]        = useState(BLANK_PRINCIPAL);
+  const [principalLoading, setPrincipalLoading] = useState(true);
+
   const [modal,     setModal]     = useState(false);
   const [editing,   setEditing]   = useState(null);
   const [form,      setForm]      = useState(BLANK_SLIDE);
+  const [formError, setFormError] = useState("");
+  const [saving,    setSaving]    = useState(false);
+
   const [tab,       setTab]       = useState("slider");
   const [pSaved,    setPSaved]    = useState(false);
+  const [pSaving,   setPSaving]   = useState(false);
+  const [pError,    setPError]    = useState("");
   const photoRef                  = useRef(null);
 
-  /* Slide changes (add/edit/delete/reorder/toggle) take effect
-     immediately in the UI, so persist them the same way. */
   useEffect(() => {
-    try { localStorage.setItem(SLIDES_KEY, JSON.stringify(slides)); } catch { /* storage unavailable */ }
-  }, [slides]);
+    apiGet("/hero.php")
+      .then(setSlides)
+      .catch(err => setSlidesError(err.message))
+      .finally(() => setSlidesLoading(false));
+    apiGet("/principal.php")
+      .then(p => setPrincipal({ ...p, photoFile: null }))
+      .catch(() => {})
+      .finally(() => setPrincipalLoading(false));
+  }, []);
 
-  const openSlide = (s=null) => { setEditing(s); setForm(s?{...s}:{...BLANK_SLIDE}); setModal(true); };
+  const openSlide = (s=null) => { setEditing(s); setForm(s?{...s,imageFile:null}:{...BLANK_SLIDE}); setFormError(""); setModal(true); };
   const close     = () => { setModal(false); setEditing(null); };
 
-  const saveSlide = () => {
-    if (!form.headline) return;
-    if (editing) setSlides(ss => ss.map(s => s.id===editing.id ? {...form,id:editing.id} : s));
-    else         setSlides(ss => [...ss, {...form, id:Date.now()}]);
-    close();
+  const saveSlide = async () => {
+    if (!form.headline) { setFormError("Headline is required"); return; }
+    setSaving(true);
+    setFormError("");
+    try {
+      const fd = new FormData();
+      if (editing) fd.append("id", editing.id);
+      fd.append("eyebrow", form.eyebrow || "");
+      fd.append("headline", form.headline);
+      fd.append("subtitle", form.subtitle || "");
+      fd.append("ctaLabel", form.ctaLabel || "");
+      fd.append("ctaLink", form.ctaLink || "");
+      fd.append("active", form.active ? "1" : "0");
+      if (form.imageFile) fd.append("image", form.imageFile);
+      else if (editing && !form.image) fd.append("removeImage", "1");
+
+      const saved = await apiPostForm("/hero.php", fd);
+      setSlides(ss => editing
+        ? ss.map(s => s.id === saved.id ? saved : s)
+        : [...ss, saved]);
+      close();
+    } catch (err) {
+      setFormError(err.message || "Could not save this slide.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const delSlide    = id  => setSlides(ss => ss.filter(s => s.id!==id));
-  const toggleSlide = id  => setSlides(ss => ss.map(s => s.id===id ? {...s,active:!s.active} : s));
-  const moveSlide   = (id, dir) => {
-    const i = slides.findIndex(s => s.id===id);
+  const delSlide = async (id) => {
+    if (!window.confirm("Delete this slide? This can't be undone.")) return;
+    try {
+      await apiDelete("/hero.php", id);
+      setSlides(ss => ss.filter(s => s.id !== id));
+    } catch (err) {
+      setSlidesError(err.message);
+    }
+  };
+
+  const toggleSlide = async (id) => {
+    const s = slides.find(x => x.id === id);
+    const fd = new FormData();
+    fd.append("id", id);
+    fd.append("active", s.active ? "0" : "1");
+    try {
+      const updated = await apiPostForm("/hero.php", fd);
+      setSlides(ss => ss.map(x => x.id === id ? updated : x));
+    } catch (err) {
+      setSlidesError(err.message);
+    }
+  };
+
+  const moveSlide = async (id, dir) => {
+    const i = slides.findIndex(s => s.id === id);
     if ((dir===-1&&i===0)||(dir===1&&i===slides.length-1)) return;
-    const ns=[...slides]; [ns[i],ns[i+dir]]=[ns[i+dir],ns[i]]; setSlides(ns);
+    const a = slides[i], b = slides[i+dir];
+    const fdA = new FormData(); fdA.append("id", a.id); fdA.append("sortOrder", b.sortOrder);
+    const fdB = new FormData(); fdB.append("id", b.id); fdB.append("sortOrder", a.sortOrder);
+    try {
+      const [ua, ub] = await Promise.all([apiPostForm("/hero.php", fdA), apiPostForm("/hero.php", fdB)]);
+      setSlides(ss => ss.map(x => x.id === ua.id ? ua : x.id === ub.id ? ub : x).sort((p,q)=>p.sortOrder-q.sortOrder));
+    } catch (err) {
+      setSlidesError(err.message);
+    }
   };
 
   const handlePrincipalPhoto = (file) => {
-    if (!file||!file.type.startsWith("image/")) return;
-    const r=new FileReader(); r.onload=e=>setPrincipal(p=>({...p,photo:e.target.result})); r.readAsDataURL(file);
+    if (!file || !file.type.startsWith("image/")) return;
+    setPrincipal(p => ({ ...p, photo: URL.createObjectURL(file), photoFile: file }));
   };
 
-  const savePrincipal = () => {
-    try { localStorage.setItem(PRINCIPAL_KEY, JSON.stringify(principal)); } catch { /* storage unavailable */ }
-    setPSaved(true);
-    setTimeout(()=>setPSaved(false),2200);
+  const savePrincipal = async () => {
+    setPSaving(true);
+    setPError("");
+    try {
+      const fd = new FormData();
+      fd.append("name", principal.name || "");
+      fd.append("title", principal.title || "");
+      fd.append("greeting", principal.greeting || "");
+      fd.append("message", principal.message || "");
+      if (principal.photoFile) fd.append("photo", principal.photoFile);
+      else if (!principal.photo) fd.append("removePhoto", "1");
+
+      const saved = await apiPostForm("/principal.php", fd);
+      setPrincipal({ ...saved, photoFile: null });
+      setPSaved(true);
+      setTimeout(()=>setPSaved(false),2200);
+    } catch (err) {
+      setPError(err.message || "Could not save the principal's section.");
+    } finally {
+      setPSaving(false);
+    }
   };
-  const activeCount   = slides.filter(s=>s.active).length;
+
+  const activeCount = slides.filter(s=>s.active).length;
 
   return (
     <div className="hp-root">
@@ -265,7 +309,10 @@ export default function HeroPanel() {
               </button>
             </div>
 
-            {slides.map((s,i) => (
+            {slidesLoading && <div className="hp-empty"><FaImage/><p>Loading slides…</p></div>}
+            {slidesError && <div className="hp-empty" style={{color:"#b91c1c"}}><FaExclamationCircle/><p>{slidesError}</p></div>}
+
+            {!slidesLoading && !slidesError && slides.map((s,i) => (
               <div key={s.id} className={`hp-slide-card${!s.active?" hp-slide-card--inactive":""}`}>
                 {/* Thumbnail */}
                 <div className="hp-slide-card__thumb">
@@ -300,7 +347,7 @@ export default function HeroPanel() {
               </div>
             ))}
 
-            {slides.length===0 && (
+            {!slidesLoading && !slidesError && slides.length===0 && (
               <div className="hp-empty"><FaImage/><p>No slides yet. Click "Add Slide" to get started.</p></div>
             )}
           </div>
@@ -321,12 +368,18 @@ export default function HeroPanel() {
             <div className="adm-card">
               <div className="adm-card__header">
                 <span className="adm-card__title">Principal's Section</span>
-                <button className="adm-btn adm-btn--primary" onClick={savePrincipal}>
-                  <FaSave/> {pSaved?"Saved ✓":"Save Changes"}
+                <button className="adm-btn adm-btn--primary" onClick={savePrincipal} disabled={pSaving || principalLoading}>
+                  <FaSave/> {pSaving ? "Saving…" : pSaved?"Saved ✓":"Save Changes"}
                 </button>
               </div>
               <div className="adm-card__body">
                 <div style={{display:"flex",flexDirection:"column",gap:16}}>
+
+                  {pError && (
+                    <div className="hp-empty" style={{color:"#b91c1c", padding:"10px 14px"}}>
+                      <FaExclamationCircle/><p style={{margin:0}}>{pError}</p>
+                    </div>
+                  )}
 
                   {/* Photo upload */}
                   <div className="hp-principal-photo-section">
@@ -345,7 +398,7 @@ export default function HeroPanel() {
                           <FaUpload/> {principal.photo?"Change Photo":"Upload Photo"}
                         </button>
                         {principal.photo && (
-                          <button className="adm-btn adm-btn--danger adm-btn--sm" onClick={()=>setPrincipal(p=>({...p,photo:null}))}>
+                          <button className="adm-btn adm-btn--danger adm-btn--sm" onClick={()=>setPrincipal(p=>({...p,photo:null,photoFile:null}))}>
                             <FaTrash/> Remove
                           </button>
                         )}
@@ -416,10 +469,17 @@ export default function HeroPanel() {
             <div className="adm-modal__body">
               <div style={{display:"flex",flexDirection:"column",gap:14}}>
 
+                {formError && (
+                  <div className="hp-empty" style={{color:"#b91c1c", padding:"10px 14px"}}>
+                    <FaExclamationCircle/><p style={{margin:0}}>{formError}</p>
+                  </div>
+                )}
+
                 {/* Image upload */}
                 <ImageUploadZone
                   value={form.image}
-                  onChange={img=>setForm(p=>({...p,image:img}))}
+                  onPick={file=>setForm(p=>({...p,image:URL.createObjectURL(file),imageFile:file}))}
+                  onRemove={()=>setForm(p=>({...p,image:null,imageFile:null}))}
                   label="Slide Background Image"
                   hint="Recommended 1920×1080px JPG or PNG — used as full-width slide background."
                 />
@@ -468,8 +528,8 @@ export default function HeroPanel() {
 
             <div className="adm-modal__footer">
               <button className="adm-btn adm-btn--ghost" onClick={close}>Cancel</button>
-              <button className="adm-btn adm-btn--primary" onClick={saveSlide}>
-                <FaSave/> {editing?"Save Changes":"Add Slide"}
+              <button className="adm-btn adm-btn--primary" onClick={saveSlide} disabled={saving}>
+                <FaSave/> {saving ? "Saving…" : editing?"Save Changes":"Add Slide"}
               </button>
             </div>
           </div>

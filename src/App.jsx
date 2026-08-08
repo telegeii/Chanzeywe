@@ -1,52 +1,65 @@
+import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About/About";
-import Contact from "./pages/Contact/Contact";
-import Charter from "./pages/Charter/Charter";
-import Career from "./pages/Career/Career";
-import Tender from "./pages/Tender/Tender";
-import Courses from "./pages/Courses/Courses";
-import Instruction from "./pages/Instruction/Instruction";
-import Downloads from "./pages/Downloads/Downloads";
-import Computing from "./pages/Departments/Computing/Computing";
-import Agriculture from "./pages/Departments/Agriculture/Agriculture";
-import Building from "./pages/Departments/Building/Building";
-import Electrical from "./pages/Departments/Electrical/Electrical";
-import Liberal from "./pages/Departments/Liberal/Liberal";
-import Hospitality from "./pages/Departments/Hospitality/Hospitality";
-import ApplicationForm from "./pages/Application/ApplicationForm";
-import Blog from "./pages/Blog/Blog";
-import BlogView from "./pages/BlogView/BlogView"; 
-import News from "./components/News/News";
-import Corruption from "./pages/Corruption/Corruption";
-import AdminDashboard from "./Admin/AdminDashboard";
+
+// Route-level code splitting — keeps the initial bundle small so the
+// homepage isn't paying for admin-panel and every department page's JS
+// on first load (Core Web Vitals / SEO ranking factor).
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About/About"));
+const Contact = lazy(() => import("./pages/Contact/Contact"));
+const Charter = lazy(() => import("./pages/Charter/Charter"));
+const Career = lazy(() => import("./pages/Career/Career"));
+const Tender = lazy(() => import("./pages/Tender/Tender"));
+const Courses = lazy(() => import("./pages/Courses/Courses"));
+const Instruction = lazy(() => import("./pages/Instruction/Instruction"));
+const Downloads = lazy(() => import("./pages/Downloads/Downloads"));
+const Computing = lazy(() => import("./pages/Departments/Computing/Computing"));
+const Agriculture = lazy(() => import("./pages/Departments/Agriculture/Agriculture"));
+const Building = lazy(() => import("./pages/Departments/Building/Building"));
+const Electrical = lazy(() => import("./pages/Departments/Electrical/Electrical"));
+const Liberal = lazy(() => import("./pages/Departments/Liberal/Liberal"));
+const Hospitality = lazy(() => import("./pages/Departments/Hospitality/Hospitality"));
+const ApplicationForm = lazy(() => import("./pages/Application/ApplicationForm"));
+const Blog = lazy(() => import("./pages/Blog/Blog"));
+const BlogView = lazy(() => import("./pages/BlogView/BlogView"));
+const News = lazy(() => import("./components/News/News"));
+const AdminDashboard = lazy(() => import("./Admin/AdminDashboard"));
+const AdminLogin = lazy(() => import("./Admin/AdminLogin"));
+
+const PageLoader = () => (
+  <div style={{ minHeight: "60vh", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Outfit', sans-serif", color: "#6b7280" }}>
+    Loading…
+  </div>
+);
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/charter" element={<Charter />} />
-      <Route path="/career" element={<Career />} />
-      <Route path="/tender" element={<Tender />} />
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/instruction" element={<Instruction />} />
-      <Route path="/downloads" element={<Downloads />} />
-      <Route path="/computing" element={<Computing />} />
-      <Route path="/agriculture" element={<Agriculture />} />
-      <Route path="/building" element={<Building />} />
-      <Route path="/electrical" element={<Electrical />} />
-      <Route path="/liberal" element={<Liberal />} />
-      <Route path="/hospitality" element={<Hospitality />} />
-      <Route path="/applicationform" element={<ApplicationForm />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blogview" element={<BlogView />} /> 
-      <Route path="/News" element={<News />} /> 
-      <Route path="/Corruption" element={<Corruption />} /> 
-      <Route path="/admin" element={<AdminDashboard />} />
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/charter" element={<Charter />} />
+        <Route path="/career" element={<Career />} />
+        <Route path="/tender" element={<Tender />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/instruction" element={<Instruction />} />
+        <Route path="/downloads" element={<Downloads />} />
+        <Route path="/computing" element={<Computing />} />
+        <Route path="/agriculture" element={<Agriculture />} />
+        <Route path="/building" element={<Building />} />
+        <Route path="/electrical" element={<Electrical />} />
+        <Route path="/liberal" element={<Liberal />} />
+        <Route path="/hospitality" element={<Hospitality />} />
+        <Route path="/applicationform" element={<ApplicationForm />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blogview" element={<BlogView />} />
+        <Route path="/News" element={<News />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<AdminDashboard />} />
 
-    </Routes>
+      </Routes>
+    </Suspense>
   );
 }
 

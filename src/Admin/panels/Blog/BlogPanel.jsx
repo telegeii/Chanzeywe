@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../AdminDashboard.css"
 import "./BlogPanel.css";
+import { apiGet, apiPostForm, apiDelete } from "../../../utils/api";
 import {
   FaPlus, FaEdit, FaTrash, FaTimes, FaSave,
   FaEye, FaEyeSlash, FaUpload, FaCalendarAlt,
   FaMapMarkerAlt, FaNewspaper, FaThLarge, FaList,
-  FaSearch,
+  FaSearch, FaExclamationCircle,
 } from "react-icons/fa";
 
 const fmt = d =>
@@ -22,71 +23,95 @@ const CAT_COLOR = {
   Academic:      "blue",
 };
 
-const INIT = [
-
-  {
-    id: 2, title: "January 2026 Intake Now Open",
-    category: "Admissions", author: "Admin", date: "2025-11-20",
-    location: "Vihiga, Kenya", published: true, image: null,
-    imagePreview: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=600&q=80",
-    excerpt: "Applications are now open for January 2026 intake. Students are encouraged to apply early to secure their place.",
-    body: "Applications are now open for January 2026 intake. Students are encouraged to apply early to secure their place.",
-  },
-  {
-    id: 3, title: "Students Excel in CDACC Examinations",
-    category: "News", author: "Admin", date: "2025-10-15",
-    location: "Vihiga, Kenya", published: true, image: null,
-    imagePreview: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&q=80",
-    excerpt: "Chanzeywe TVC students recorded an impressive pass rate in the latest CDACC examinations across all departments.",
-    body: "Chanzeywe TVC students recorded an impressive pass rate in the latest CDACC examinations across all departments.",
-  },
-  {
-    id: 4, title: "New Computer Lab Commissioned",
-    category: "Infrastructure", author: "Admin", date: "2025-09-05",
-    location: "Vihiga, Kenya", published: false, image: null,
-    imagePreview: "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?w=600&q=80",
-    excerpt: "The college has commissioned a state-of-the-art computer lab equipped with 40 high-performance computers.",
-    body: "The college has commissioned a state-of-the-art computer lab equipped with 40 high-performance computers.",
-  },
-];
-
 const BLANK = {
   title: "", category: "News", author: "Admin",
   date: new Date().toISOString().split("T")[0],
   location: "Vihiga, Kenya",
   published: false,
-  image: null, imagePreview: null,
+  image: null, imageFile: null,
   excerpt: "", body: "",
 };
 
 export default function BlogPanel() {
-  const [posts,     setPosts]     = useState(INIT);
-  const [modal,     setModal]     = useState(false);
-  const [editing,   setEditing]   = useState(null);
-  const [form,      setForm]      = useState(BLANK);
-  const [view,      setView]      = useState("grid");
-  const [search,    setSearch]    = useState("");
-  const [catFilter, setCatFilter] = useState("");
+  const [posts,      setPosts]      = useState([]);
+  const [loading,    setLoading]    = useState(true);
+  const [listError,  setListError]  = useState("");
+  const [modal,      setModal]      = useState(false);
+  const [editing,    setEditing]    = useState(null);
+  const [form,       setForm]       = useState(BLANK);
+  const [formError,  setFormError]  = useState("");
+  const [saving,     setSaving]     = useState(false);
+  const [view,       setView]       = useState("grid");
+  const [search,     setSearch]     = useState("");
+  const [catFilter,  setCatFilter]  = useState("");
 
-  const open  = (p = null) => { setEditing(p); setForm(p ? { ...p } : { ...BLANK }); setModal(true); };
+  useEffect(() => {
+    apiGet("/blog.php?all=1")
+      .then(setPosts)
+      .catch(err => setListError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const open  = (p = null) => { setEditing(p); setForm(p ? { ...p, imageFile: null } : { ...BLANK }); setFormError(""); setModal(true); };
   const close = () => { setModal(false); setEditing(null); };
 
-  const save = () => {
-    if (!form.title) return;
-    if (editing) setPosts(ps => ps.map(p => p.id === editing.id ? { ...form, id: editing.id } : p));
-    else         setPosts(ps => [{ ...form, id: Date.now() }, ...ps]);
-    close();
+  const save = async () => {
+    if (!form.title) { setFormError("Post title is required"); return; }
+    setSaving(true);
+    setFormError("");
+    try {
+      const fd = new FormData();
+      if (editing) fd.append("id", editing.id);
+      fd.append("title", form.title);
+      fd.append("category", form.category);
+      fd.append("author", form.author || "");
+      fd.append("date", form.date);
+      fd.append("location", form.location || "");
+      fd.append("excerpt", form.excerpt || "");
+      fd.append("body", form.body || "");
+      fd.append("published", form.published ? "1" : "0");
+      if (form.imageFile) fd.append("image", form.imageFile);
+      else if (editing && !form.image) fd.append("removeImage", "1");
+
+      const saved = await apiPostForm("/blog.php", fd);
+      setPosts(ps => editing ? ps.map(p => p.id === saved.id ? saved : p) : [saved, ...ps]);
+      close();
+    } catch (err) {
+      setFormError(err.message || "Could not save this post.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const del    = id => setPosts(ps => ps.filter(p => p.id !== id));
-  const toggle = id => setPosts(ps => ps.map(p => p.id === id ? { ...p, published: !p.published } : p));
+  const del = async (id) => {
+    if (!window.confirm("Delete this post? This can't be undone.")) return;
+    try {
+      await apiDelete("/blog.php", id);
+      setPosts(ps => ps.filter(p => p.id !== id));
+    } catch (err) {
+      setListError(err.message);
+    }
+  };
+
+  const toggle = async (id) => {
+    const p = posts.find(x => x.id === id);
+    try {
+      const updated = await apiPostForm("/blog.php", (() => {
+        const fd = new FormData();
+        fd.append("id", id);
+        fd.append("published", p.published ? "0" : "1");
+        return fd;
+      })());
+      setPosts(ps => ps.map(x => x.id === id ? updated : x));
+    } catch (err) {
+      setListError(err.message);
+    }
+  };
 
   const handleImage = e => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => setForm(p => ({ ...p, image: file, imagePreview: ev.target.result }));
-    reader.readAsDataURL(file);
+    setForm(p => ({ ...p, image: URL.createObjectURL(file), imageFile: file }));
   };
 
   const filtered = posts.filter(p =>
@@ -112,6 +137,10 @@ export default function BlogPanel() {
           <FaPlus style={{ fontSize: "0.72rem" }} /> New Post
         </button>
       </div>
+
+      {listError && (
+        <div className="bp-empty" style={{ color: "#b91c1c" }}><FaExclamationCircle /><p>{listError}</p></div>
+      )}
 
       {/* ── Category chips ── */}
       <div className="bp-chips">
@@ -148,8 +177,10 @@ export default function BlogPanel() {
         </div>
       </div>
 
+      {loading && <div className="bp-empty"><FaNewspaper /><p>Loading posts…</p></div>}
+
       {/* ── GRID ── */}
-      {view === "grid" && (
+      {!loading && view === "grid" && (
         <div className="bp-grid">
           {filtered.length === 0 && (
             <div className="bp-empty"><FaNewspaper /><p>No posts found.</p></div>
@@ -157,8 +188,8 @@ export default function BlogPanel() {
           {filtered.map(p => (
             <div key={p.id} className={`bp-card${!p.published ? " bp-card--draft" : ""}`}>
               <div className="bp-card__img">
-                {p.imagePreview
-                  ? <img src={p.imagePreview} alt={p.title} />
+                {p.image
+                  ? <img src={p.image} alt={p.title} />
                   : <div className="bp-card__no-img"><FaNewspaper /></div>
                 }
                 <span className={`bp-card__cat bp-cat--${CAT_COLOR[p.category]}`}>{p.category}</span>
@@ -190,7 +221,7 @@ export default function BlogPanel() {
       )}
 
       {/* ── LIST ── */}
-      {view === "list" && (
+      {!loading && view === "list" && (
         <div className="adm-card">
           <div className="adm-card__header">
             <span className="adm-card__title">All Posts ({filtered.length})</span>
@@ -208,14 +239,14 @@ export default function BlogPanel() {
                   <tr key={p.id}>
                     <td>
                       <div className="bp-thumb">
-                        {p.imagePreview
-                          ? <img src={p.imagePreview} alt="" />
+                        {p.image
+                          ? <img src={p.image} alt="" />
                           : <div className="bp-thumb__empty"><FaNewspaper /></div>
                         }
                       </div>
                     </td>
                     <td style={{ fontWeight: 600, maxWidth: 220 }}>{p.title}</td>
-                    <td><span className={`adm-pill adm-pill--${CAT_COLOR[p.category] === "amber" ? "amber" : CAT_COLOR[p.category] === "green" ? "green" : "blue"}`}>{p.category}</span></td>
+                    <td><span className={`adm-pill adm-pill--${CAT_COLOR[p.category]}`}>{p.category}</span></td>
                     <td style={{ color: "var(--adm-muted)", fontSize: "0.8rem" }}>{p.location}</td>
                     <td style={{ color: "var(--adm-muted)", fontSize: "0.8rem" }}>{p.author}</td>
                     <td style={{ color: "var(--adm-muted)", fontSize: "0.8rem" }}>{fmt(p.date)}</td>
@@ -246,12 +277,18 @@ export default function BlogPanel() {
 
             <div className="adm-modal__body">
 
+              {formError && (
+                <div className="bp-empty" style={{ color: "#b91c1c", padding: "10px 14px" }}>
+                  <FaExclamationCircle /><p style={{ margin: 0 }}>{formError}</p>
+                </div>
+              )}
+
               {/* Image upload */}
               <div className="bp-upload">
-                {form.imagePreview ? (
+                {form.image ? (
                   <div className="bp-upload__preview">
-                    <img src={form.imagePreview} alt="Cover preview" />
-                    <button className="bp-upload__remove" onClick={() => setForm(p => ({ ...p, image: null, imagePreview: null }))}><FaTimes /></button>
+                    <img src={form.image} alt="Cover preview" />
+                    <button className="bp-upload__remove" onClick={() => setForm(p => ({ ...p, image: null, imageFile: null }))}><FaTimes /></button>
                     <label className="bp-upload__change">
                       <FaUpload /> Change Image
                       <input type="file" accept="image/*" style={{ display: "none" }} onChange={handleImage} />
@@ -324,8 +361,8 @@ export default function BlogPanel() {
 
             <div className="adm-modal__footer">
               <button className="adm-btn adm-btn--ghost" onClick={close}>Cancel</button>
-              <button className="adm-btn adm-btn--primary" onClick={save}>
-                <FaSave /> {form.published ? "Publish Post" : "Save Draft"}
+              <button className="adm-btn adm-btn--primary" onClick={save} disabled={saving}>
+                <FaSave /> {saving ? "Saving…" : form.published ? "Publish Post" : "Save Draft"}
               </button>
             </div>
           </div>

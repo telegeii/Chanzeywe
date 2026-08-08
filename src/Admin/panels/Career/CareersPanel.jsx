@@ -1,53 +1,82 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../AdminDashboard.css";
 import "./CareerPanel.css";
+import { apiGet, apiPostForm, apiDelete } from "../../../utils/api";
 import {
   FaPlus, FaEdit, FaTrash, FaTimes, FaSave,
   FaUpload, FaSearch, FaBriefcase, FaCalendarAlt,
-  FaHashtag, FaDownload, FaFilePdf, FaClock,
-  FaCheckCircle, FaTimesCircle,
+  FaHashtag, FaFilePdf, FaClock,
+  FaCheckCircle, FaTimesCircle, FaExclamationCircle,
 } from "react-icons/fa";
 
 const isOpen = d => new Date(d) >= new Date();
 const fmt    = d => new Date(d).toLocaleDateString("en-KE", { day:"2-digit", month:"short", year:"numeric" });
 
-/* Days remaining helper */
 const daysLeft = d => {
   const diff = new Date(d) - new Date();
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
 };
 
-const INIT = [
-  { id:1, number:"CHANZEYWE/TRAINERS/ADVERT/9/25",  title:"Advertisement for BOG Trainer Positions",    closeDate:"2025-12-29", postedDate:"2025-12-14", file:null, fileName:"Trainer_Advert_9_25.pdf"   },
-  { id:2, number:"CHANZEYWE/HR/ADVERT/10/25",        title:"Advertisement for Human Resource Positions", closeDate:"2025-12-29", postedDate:"2025-12-14", file:null, fileName:"HR_Advert_10_25.pdf"       },
-  { id:3, number:"CHANZEYWE/ADMIN/ADVERT/11/25",     title:"Advertisement for Administrator Positions",  closeDate:"2027-12-01", postedDate:"2024-11-14", file:null, fileName:"Admin_Advert_11_25.pdf"    },
-];
-
 const BLANK = {
   number:"", title:"",
   closeDate:"", postedDate: new Date().toISOString().split("T")[0],
-  file:null, fileName:"",
+  fileUrl:null, fileName:"", file:null,
 };
 
 export default function CareersPanel() {
-  const [jobs,    setJobs]    = useState(INIT);
-  const [modal,   setModal]   = useState(false);
-  const [editing, setEditing] = useState(null);
-  const [form,    setForm]    = useState(BLANK);
-  const [search,  setSearch]  = useState("");
-  const [tab,     setTab]     = useState("open"); // "open" | "closed" | "all"
+  const [jobs,      setJobs]      = useState([]);
+  const [loading,   setLoading]   = useState(true);
+  const [listError, setListError] = useState("");
+  const [modal,     setModal]     = useState(false);
+  const [editing,   setEditing]   = useState(null);
+  const [form,      setForm]      = useState(BLANK);
+  const [formError, setFormError] = useState("");
+  const [saving,    setSaving]    = useState(false);
+  const [search,    setSearch]    = useState("");
+  const [tab,       setTab]       = useState("open"); // "open" | "closed" | "all"
 
-  const open  = (j = null) => { setEditing(j); setForm(j ? { ...j } : { ...BLANK }); setModal(true); };
+  useEffect(() => {
+    apiGet("/careers.php")
+      .then(setJobs)
+      .catch(err => setListError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const open  = (j = null) => { setEditing(j); setForm(j ? { ...j, file: null } : { ...BLANK }); setFormError(""); setModal(true); };
   const close = () => { setModal(false); setEditing(null); };
 
-  const save = () => {
-    if (!form.number || !form.title || !form.closeDate) return;
-    if (editing) setJobs(js => js.map(j => j.id === editing.id ? { ...form, id: editing.id } : j));
-    else         setJobs(js => [{ ...form, id: Date.now() }, ...js]);
-    close();
+  const save = async () => {
+    if (!form.number || !form.title || !form.closeDate) { setFormError("Number, title and closing date are required"); return; }
+    setSaving(true);
+    setFormError("");
+    try {
+      const fd = new FormData();
+      if (editing) fd.append("id", editing.id);
+      fd.append("number", form.number);
+      fd.append("title", form.title);
+      fd.append("postedDate", form.postedDate);
+      fd.append("closeDate", form.closeDate);
+      if (form.file) fd.append("file", form.file);
+
+      const saved = await apiPostForm("/careers.php", fd);
+      setJobs(js => editing ? js.map(j => j.id === saved.id ? saved : j) : [saved, ...js]);
+      close();
+    } catch (err) {
+      setFormError(err.message || "Could not save this vacancy.");
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const del = id => setJobs(js => js.filter(j => j.id !== id));
+  const del = async (id) => {
+    if (!window.confirm("Delete this vacancy? This can't be undone.")) return;
+    try {
+      await apiDelete("/careers.php", id);
+      setJobs(js => js.filter(j => j.id !== id));
+    } catch (err) {
+      setListError(err.message);
+    }
+  };
 
   const handleFile = e => {
     const file = e.target.files[0];
@@ -76,6 +105,10 @@ export default function CareersPanel() {
           <FaPlus style={{ fontSize: "0.72rem" }} /> Post Vacancy
         </button>
       </div>
+
+      {listError && (
+        <div className="cp-empty" style={{ color: "#b91c1c" }}><FaExclamationCircle /><p>{listError}</p></div>
+      )}
 
       {/* ── Stat cards ── */}
       <div className="cp-stats">
@@ -136,7 +169,9 @@ export default function CareersPanel() {
       )}
 
       {/* ── Table ── */}
-      {filtered.length === 0 ? (
+      {loading ? (
+        <div className="cp-empty"><FaBriefcase /><p>Loading vacancies…</p></div>
+      ) : filtered.length === 0 ? (
         <div className="cp-empty">
           <FaBriefcase />
           <p>No vacancies found{tab === "open" ? " — no open positions at the moment." : "."}</p>
@@ -189,10 +224,16 @@ export default function CareersPanel() {
                       </td>
                       <td>
                         {j.fileName ? (
-                          <div className="cp-pdf-chip">
+                          <a
+                            className="cp-pdf-chip"
+                            href={j.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ textDecoration: "none" }}
+                          >
                             <FaFilePdf className="cp-pdf-chip__icon" />
                             <span>{j.fileName}</span>
-                          </div>
+                          </a>
                         ) : (
                           <span className="cp-no-pdf">— no file</span>
                         )}
@@ -240,6 +281,12 @@ export default function CareersPanel() {
             </div>
 
             <div className="adm-modal__body">
+
+              {formError && (
+                <div className="cp-empty" style={{ color: "#b91c1c", padding: "10px 14px" }}>
+                  <FaExclamationCircle /><p style={{ margin: 0 }}>{formError}</p>
+                </div>
+              )}
 
               {/* Status preview banner */}
               {form.closeDate && (
@@ -295,7 +342,7 @@ export default function CareersPanel() {
                       <span className="cp-file-chip__name">{form.fileName}</span>
                       <button
                         className="cp-file-chip__remove"
-                        onClick={() => setForm(p => ({ ...p, file:null, fileName:"" }))}
+                        onClick={() => setForm(p => ({ ...p, file:null, fileName:"", fileUrl:null }))}
                       ><FaTimes /></button>
                     </div>
                   ) : (
@@ -313,8 +360,8 @@ export default function CareersPanel() {
 
             <div className="adm-modal__footer">
               <button className="adm-btn adm-btn--ghost" onClick={close}>Cancel</button>
-              <button className="adm-btn adm-btn--primary" onClick={save}>
-                <FaSave /> {editing ? "Save Changes" : "Post Vacancy"}
+              <button className="adm-btn adm-btn--primary" onClick={save} disabled={saving}>
+                <FaSave /> {saving ? "Saving…" : editing ? "Save Changes" : "Post Vacancy"}
               </button>
             </div>
           </div>

@@ -15,8 +15,14 @@ import {
   FaHandPaper,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useSeo from "../../utils/useSeo";
 
 const Charter = () => {
+  useSeo({
+    title: "Service Charter",
+    description: "Chanzeywe Vocational Training College's Service Charter — our commitment to students, in English and Kiswahili, available as text, audio and video.",
+  });
+
   const [activeTab, setActiveTab] = useState("english");
 
   const pdfs = [

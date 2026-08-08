@@ -1,0 +1,162 @@
+/* ============================================
+   ADMIN LOGIN — Chanzeywe TVC
+   ============================================ */
+
+.adl-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #051f4e 0%, #0a3d8f 60%, #1254b0 100%);
+  font-family: 'Outfit', sans-serif;
+  padding: 20px;
+}
+
+.adl-card {
+  width: 100%;
+  max-width: 380px;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 40px 32px 32px;
+  box-shadow: 0 24px 64px rgba(5,31,78,0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.adl-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  background: rgba(10,61,143,0.08);
+  color: #0a3d8f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 14px;
+}
+
+.adl-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1a1f36;
+  margin: 0 0 4px;
+}
+
+.adl-sub {
+  font-size: 0.82rem;
+  color: #6b7280;
+  margin: 0 0 22px;
+}
+
+.adl-error {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(220,38,38,0.08);
+  border: 1px solid rgba(220,38,38,0.2);
+  border-radius: 9px;
+  color: #b91c1c;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.adl-field {
+  width: 100%;
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.adl-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1a1f36;
+  margin-bottom: 6px;
+}
+
+.adl-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.adl-input-icon {
+  position: absolute;
+  left: 14px;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.adl-input-wrap input {
+  width: 100%;
+  padding: 11px 14px 11px 38px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  color: #1a1f36;
+  background: #f4f6fb;
+  border: 1.5px solid rgba(10,61,143,0.1);
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.adl-input-wrap:has(.adl-pw-toggle) input {
+  padding-right: 38px;
+}
+
+.adl-pw-toggle {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.adl-pw-toggle:hover { color: #0a3d8f; }
+
+.adl-input-wrap input:focus {
+  background: #ffffff;
+  border-color: #0a3d8f;
+  box-shadow: 0 0 0 3px rgba(10,61,143,0.1);
+}
+
+.adl-submit {
+  width: 100%;
+  margin-top: 6px;
+  padding: 13px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: #0a3d8f;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.adl-submit:hover:not(:disabled) {
+  background: #072d6b;
+  transform: translateY(-1px);
+}
+
+.adl-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

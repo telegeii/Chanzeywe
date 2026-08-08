@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Uploaded applicant documents contain personal data — never commit them
+api/uploads/applications/*
+!api/uploads/applications/.htaccess

@@ -1,0 +1,59 @@
+.acp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: var(--adm-font);
+  max-width: 560px;
+}
+
+.acp-card { padding: 24px; }
+
+.acp-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.acp-identity__avatar {
+  font-size: 2.2rem;
+  color: var(--adm-blue);
+  opacity: 0.85;
+  line-height: 1;
+}
+
+.acp-identity__name {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--adm-text);
+  margin-bottom: 4px;
+}
+
+.acp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.acp-divider {
+  height: 1px;
+  background: var(--adm-border);
+  margin: 2px 0;
+}
+
+.acp-hint { font-weight: 400; color: var(--adm-muted); font-size: 0.72rem; }
+
+.acp-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 9px;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+.acp-msg--error { background: #fff5f5; color: #b91c1c; border: 1px solid rgba(220,38,38,0.2); }
+.acp-msg--ok    { background: rgba(22,163,74,0.08); color: #15803d; border: 1px solid rgba(22,163,74,0.2); }

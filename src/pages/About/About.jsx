@@ -7,6 +7,7 @@ import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar";
 import { FaChevronRight, FaAward, FaUsers, FaBookOpen, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useSeo from "../../utils/useSeo";
 
 const stats = [
   { num: "2020", label: "Est. Year" },
@@ -39,6 +40,11 @@ const values = [
 ];
 
 const About = () => {
+  useSeo({
+    title: "About Us",
+    description: "Learn about Chanzeywe Vocational Training College — founded in 2020 in Vihiga County, Kenya, serving the community with quality, accessible technical and vocational education.",
+  });
+
   return (
     <div className="about-page">
       <Navbar />

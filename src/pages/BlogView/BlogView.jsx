@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import "./BlogView.css";
+import useSeo from "../../utils/useSeo";
 
 import { FaCalendarAlt, FaMapMarkerAlt } from "react-icons/fa";
 
@@ -11,6 +12,11 @@ const BlogView = () => {
   const navigate = useNavigate();
 
   const { blog, allBlogs } = location.state || {};
+
+  useSeo({
+    title: blog ? blog.title : "News & Blog",
+    description: blog ? (blog.content || "").slice(0, 155) : "Latest news from Chanzeywe Vocational Training College, Vihiga County, Kenya.",
+  });
 
   if (!blog) {
     return (
@@ -47,7 +53,7 @@ const BlogView = () => {
           </div>
 
           <h1>{blog.title}</h1>
-          <p className="blogview-content">{blog.content.repeat(4)}</p>
+          <p className="blogview-content">{blog.content}</p>
         </div>
 
         {/* Related Blogs */}
