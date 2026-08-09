@@ -6,6 +6,19 @@
 header('Content-Type: application/json; charset=utf-8');
 
 /**
+ * PHP warnings/notices (not caught by set_exception_handler below, which
+ * only sees thrown Throwables) must never be echoed into what's supposed
+ * to be a clean JSON body — that both leaks file paths and breaks the
+ * response for every client. Default to production-safe (hidden, but
+ * still logged); set APP_ENV=development in api/config/.env for local
+ * debugging to see them inline instead.
+ */
+$isDev = getenv('APP_ENV') === 'development';
+ini_set('display_errors', $isDev ? '1' : '0');
+ini_set('log_errors', '1');
+error_reporting(E_ALL);
+
+/**
  * Never let a raw PHP/PDO error (with file paths, query text, stack trace)
  * reach the client. Log the real error server-side and return a generic
  * message instead.

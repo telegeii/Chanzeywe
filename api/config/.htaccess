@@ -1,0 +1,6 @@
+# This directory holds the .env file (DB + SMTP credentials) alongside
+# PHP config files that are only ever included by other scripts, never
+# requested directly. Block direct HTTP access to everything here so a
+# misconfigured server (or a future non-.php file dropped in) can never
+# leak secrets as plain text.
+Require all denied

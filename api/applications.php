@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config/session.php';
+require_once __DIR__ . '/config/uploads.php';
 require_once __DIR__ . '/lib/OfferLetter.php';
 require_once __DIR__ . '/lib/Mailer.php';
 
@@ -339,6 +340,11 @@ if ($method === 'POST') {
 
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             if (!in_array($ext, ALLOWED_EXT, true)) throw new RuntimeException("$label must be a PDF, JPG or PNG file");
+            try {
+                verify_upload_content($file['tmp_name'], $ext);
+            } catch (RuntimeException) {
+                throw new RuntimeException("$label is not a valid PDF, JPG or PNG file");
+            }
 
             $stored = 'app' . $appId . '_' . $key . '_' . bin2hex(random_bytes(6)) . '.' . $ext;
             $dest = UPLOAD_DIR . $stored;

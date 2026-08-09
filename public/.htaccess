@@ -1,0 +1,25 @@
+# Production web-root .htaccess — Vite copies everything in public/ into
+# dist/ verbatim, so this file lands at the root of the deployed site.
+#
+# Deploy layout expected: the contents of dist/ at the document root, with
+# the api/ folder placed alongside them (same document root, e.g.
+# /var/www/chanzeywe/{index.html,assets/,api/,...}). Requires mod_rewrite
+# enabled and AllowOverride All (or at least FileInfo+Indexes) for this
+# directory in the Apache vhost config.
+
+Options -Indexes
+RewriteEngine On
+RewriteBase /
+
+# Never touch API requests — Apache serves api/*.php directly.
+RewriteRule ^api/ - [L]
+
+# Real files/directories (built JS/CSS/images, robots.txt, etc.) are
+# served as-is.
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Everything else is a client-side route (React Router) — hand it to the
+# SPA shell so a hard refresh/direct link to e.g. /admission-letter works.
+RewriteRule ^ index.html [L]

@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../../AdminDashboard.css";
 import "./HeroPanel.css";
 import { apiGet, apiPostForm, apiDelete } from "../../../utils/api";
 import {
   FaEdit, FaTimes, FaSave, FaImage,
-  FaArrowUp, FaArrowDown, FaEye, FaEyeSlash,
+  FaEye, FaGripVertical,
   FaPlus, FaUserTie, FaQuoteLeft,
-  FaLink, FaChevronLeft, FaChevronRight,
-  FaUpload, FaTrash, FaCamera, FaExclamationCircle,
+  FaLink, FaUpload, FaTrash, FaCamera, FaExclamationCircle,
 } from "react-icons/fa";
 
 const BLANK_SLIDE = { eyebrow:"", headline:"", subtitle:"", ctaLabel:"Learn More", ctaLink:"/", active:true, image:null, imageFile:null };
@@ -55,56 +54,29 @@ function ImageUploadZone({ value, onPick, onRemove, label, hint }) {
 }
 
 /* ─────────────────────────────────────────
-   MINI LIVE SLIDER PREVIEW
+   SINGLE-SLIDE STATIC PREVIEW
+   Shows exactly one slide — whichever the admin last clicked in the
+   grid — instead of auto-cycling through all of them. Simpler to read
+   and matches how the homepage renders any one given slide.
 ───────────────────────────────────────── */
-function SliderPreview({ slides }) {
-  const active = slides.filter(s => s.active);
-  const [idx, setIdx] = useState(0);
-  const timer = useRef(null);
-
-  const startTimer = useCallback(() => {
-    clearInterval(timer.current);
-    if (active.length < 2) return;
-    timer.current = setInterval(() => setIdx(i => (i + 1) % active.length), 3000);
-  }, [active.length]);
-
-  useEffect(() => {
-    startTimer();
-    return () => clearInterval(timer.current);
-  }, [startTimer]);
-
-  const goTo = (i) => { setIdx(i); startTimer(); };
-
-  if (!active.length) return (
-    <div className="hp-preview-empty"><FaImage /><p>No active slides — enable at least one to preview.</p></div>
+function SinglePreview({ slide }) {
+  if (!slide) return (
+    <div className="hp-preview-empty"><FaImage /><p>No slides yet — add one to see a preview.</p></div>
   );
-
-  const s = active[Math.min(idx, active.length - 1)];
 
   return (
     <div
       className="hp-preview"
-      style={s.image ? { backgroundImage:`url(${s.image})`, backgroundSize:"cover", backgroundPosition:"center" } : {}}
+      style={slide.image ? { backgroundImage:`url(${slide.image})`, backgroundSize:"cover", backgroundPosition:"center" } : {}}
     >
       <div className="hp-preview__overlay" />
       <div className="hp-preview__content">
-        {s.eyebrow && <span className="hp-preview__eyebrow">{s.eyebrow}</span>}
-        <h2 className="hp-preview__title">{s.headline}</h2>
-        {s.subtitle && <p className="hp-preview__sub">{s.subtitle}</p>}
-        {s.ctaLabel && <div className="hp-preview__cta">{s.ctaLabel}</div>}
+        {slide.eyebrow && <span className="hp-preview__eyebrow">{slide.eyebrow}</span>}
+        <h2 className="hp-preview__title">{slide.headline || "Untitled slide"}</h2>
+        {slide.subtitle && <p className="hp-preview__sub">{slide.subtitle}</p>}
+        {slide.ctaLabel && <div className="hp-preview__cta">{slide.ctaLabel}</div>}
       </div>
-      {active.length > 1 && (
-        <div className="hp-preview__dots">
-          {active.map((_, i) => (
-            <button key={i} className={`hp-preview__dot${i===idx?" hp-preview__dot--active":""}`} onClick={() => goTo(i)} />
-          ))}
-        </div>
-      )}
-      {active.length > 1 && <>
-        <button className="hp-preview__arrow hp-preview__arrow--l" onClick={() => goTo((idx-1+active.length)%active.length)}><FaChevronLeft /></button>
-        <button className="hp-preview__arrow hp-preview__arrow--r" onClick={() => goTo((idx+1)%active.length)}><FaChevronRight /></button>
-      </>}
-      <div className="hp-preview__progress" key={idx}><div className="hp-preview__progress-bar" /></div>
+      {!slide.active && <span className="hp-preview__hidden-flag">Hidden from homepage</span>}
       <span className="hp-preview__label">Live Preview</span>
     </div>
   );
@@ -160,6 +132,10 @@ export default function HeroPanel() {
   const [form,      setForm]      = useState(BLANK_SLIDE);
   const [formError, setFormError] = useState("");
   const [saving,    setSaving]    = useState(false);
+
+  const [previewId, setPreviewId] = useState(null);
+  const [dragId,    setDragId]    = useState(null);
+  const [overId,    setOverId]    = useState(null);
 
   const [tab,       setTab]       = useState("slider");
   const [pSaved,    setPSaved]    = useState(false);
@@ -232,18 +208,57 @@ export default function HeroPanel() {
     }
   };
 
-  const moveSlide = async (id, dir) => {
-    const i = slides.findIndex(s => s.id === id);
-    if ((dir===-1&&i===0)||(dir===1&&i===slides.length-1)) return;
-    const a = slides[i], b = slides[i+dir];
-    const fdA = new FormData(); fdA.append("id", a.id); fdA.append("sortOrder", b.sortOrder);
-    const fdB = new FormData(); fdB.append("id", b.id); fdB.append("sortOrder", a.sortOrder);
+  // Persists a full reordering (from drag-and-drop) by writing a new
+  // sortOrder to every slide whose position actually changed.
+  const reorderSlides = async (newOrder) => {
+    const prevSlides = slides;
+    setSlides(newOrder.map((s, i) => ({ ...s, sortOrder: i + 1 })));
+
+    const toUpdate = newOrder
+      .map((s, i) => ({ id: s.id, oldOrder: s.sortOrder, pos: i + 1 }))
+      .filter(x => x.oldOrder !== x.pos);
+    if (!toUpdate.length) return;
+
     try {
-      const [ua, ub] = await Promise.all([apiPostForm("/hero.php", fdA), apiPostForm("/hero.php", fdB)]);
-      setSlides(ss => ss.map(x => x.id === ua.id ? ua : x.id === ub.id ? ub : x).sort((p,q)=>p.sortOrder-q.sortOrder));
+      const updated = await Promise.all(toUpdate.map(({ id, pos }) => {
+        const fd = new FormData();
+        fd.append("id", id);
+        fd.append("sortOrder", pos);
+        return apiPostForm("/hero.php", fd);
+      }));
+      setSlides(ss => {
+        const byId = new Map(updated.map(u => [u.id, u]));
+        return ss.map(s => byId.get(s.id) || s).sort((a, b) => a.sortOrder - b.sortOrder);
+      });
     } catch (err) {
-      setSlidesError(err.message);
+      setSlides(prevSlides);
+      setSlidesError(err.message || "Could not save the new slide order.");
     }
+  };
+
+  const handleDragStart = (e, id) => {
+    setDragId(id);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", String(id));
+  };
+  const handleDragOver = (e, id) => {
+    e.preventDefault();
+    if (id !== overId) setOverId(id);
+  };
+  const handleDragLeave = () => setOverId(null);
+  const handleDragEnd   = () => { setDragId(null); setOverId(null); };
+  const handleDrop = (e, dropId) => {
+    e.preventDefault();
+    setOverId(null);
+    if (dragId == null || dragId === dropId) { setDragId(null); return; }
+    const from = slides.findIndex(s => s.id === dragId);
+    const to   = slides.findIndex(s => s.id === dropId);
+    setDragId(null);
+    if (from === -1 || to === -1) return;
+    const next = [...slides];
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    reorderSlides(next);
   };
 
   const handlePrincipalPhoto = (file) => {
@@ -275,6 +290,8 @@ export default function HeroPanel() {
   };
 
   const activeCount = slides.filter(s=>s.active).length;
+  const previewSlide = slides.find(s => s.id === previewId) || slides.find(s => s.active) || slides[0] || null;
+  const previewIndex = previewSlide ? slides.findIndex(s => s.id === previewSlide.id) : -1;
 
   return (
     <div className="hp-root">
@@ -312,40 +329,63 @@ export default function HeroPanel() {
             {slidesLoading && <div className="hp-empty"><FaImage/><p>Loading slides…</p></div>}
             {slidesError && <div className="hp-empty" style={{color:"#b91c1c"}}><FaExclamationCircle/><p>{slidesError}</p></div>}
 
-            {!slidesLoading && !slidesError && slides.map((s,i) => (
-              <div key={s.id} className={`hp-slide-card${!s.active?" hp-slide-card--inactive":""}`}>
-                {/* Thumbnail */}
-                <div className="hp-slide-card__thumb">
-                  {s.image
-                    ? <img src={s.image} alt="slide" className="hp-slide-card__thumb-img"/>
-                    : <div className="hp-slide-card__thumb-empty"><FaImage/></div>
-                  }
-                  <span className="hp-slide-card__num">{i+1}</span>
-                </div>
-                {/* Body */}
-                <div className="hp-slide-card__body">
-                  {s.eyebrow && <span className="hp-slide-card__eyebrow">{s.eyebrow}</span>}
-                  <h3 className="hp-slide-card__headline">{s.headline}</h3>
-                  {s.subtitle && <p className="hp-slide-card__sub">{s.subtitle}</p>}
-                  <div className="hp-slide-card__cta">
-                    <FaLink style={{fontSize:"0.62rem",opacity:0.45}}/>
-                    <span className="hp-slide-card__cta-label">{s.ctaLabel}</span>
-                    <span className="hp-slide-card__cta-link">{s.ctaLink}</span>
+            {!slidesLoading && !slidesError && slides.length > 1 && (
+              <p className="hp-drag-hint"><FaGripVertical/> Drag a card to reorder it — click a card to preview it on the right.</p>
+            )}
+
+            {!slidesLoading && !slidesError && slides.length > 0 && (
+              <div className="hp-grid">
+                {slides.map((s,i) => (
+                  <div
+                    key={s.id}
+                    className={`hp-card${!s.active?" hp-card--inactive":""}${previewSlide?.id===s.id?" hp-card--selected":""}${dragId===s.id?" hp-card--dragging":""}${overId===s.id&&dragId!==s.id?" hp-card--over":""}`}
+                    draggable
+                    onDragStart={e=>handleDragStart(e,s.id)}
+                    onDragOver={e=>handleDragOver(e,s.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={e=>handleDrop(e,s.id)}
+                    onDragEnd={handleDragEnd}
+                    onClick={()=>setPreviewId(s.id)}
+                  >
+                    <div className="hp-card__drag" title="Drag to reorder" onClick={e=>e.stopPropagation()}>
+                      <FaGripVertical/>
+                    </div>
+
+                    <div className="hp-card__thumb">
+                      {s.image
+                        ? <img src={s.image} alt="slide" className="hp-card__thumb-img"/>
+                        : <div className="hp-card__thumb-empty"><FaImage/></div>
+                      }
+                      <span className="hp-card__num">{i+1}</span>
+                      {!s.active && <span className="hp-card__hidden-badge">Hidden</span>}
+                    </div>
+
+                    <div className="hp-card__body">
+                      {s.eyebrow && <span className="hp-card__eyebrow">{s.eyebrow}</span>}
+                      <h3 className="hp-card__headline">{s.headline}</h3>
+                      {s.subtitle && <p className="hp-card__sub">{s.subtitle}</p>}
+                      {s.ctaLabel && (
+                        <div className="hp-card__cta">
+                          <FaLink style={{fontSize:"0.6rem",opacity:0.45}}/>
+                          <span className="hp-card__cta-label">{s.ctaLabel}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="hp-card__footer" onClick={e=>e.stopPropagation()}>
+                      <label className="hp-toggle hp-toggle--sm" title={s.active?"Visible on homepage":"Hidden from homepage"}>
+                        <input type="checkbox" checked={s.active} onChange={()=>toggleSlide(s.id)}/>
+                        <span className="hp-toggle__track"><span className="hp-toggle__thumb"/></span>
+                      </label>
+                      <div className="hp-card__actions">
+                        <button className="hp-icon-btn hp-icon-btn--edit" onClick={()=>openSlide(s)} title="Edit"><FaEdit/></button>
+                        <button className="hp-icon-btn hp-icon-btn--del"  onClick={()=>delSlide(s.id)} title="Delete"><FaTrash/></button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                {/* Actions */}
-                <div className="hp-slide-card__actions">
-                  <button className="hp-icon-btn hp-icon-btn--move" onClick={()=>moveSlide(s.id,-1)} disabled={i===0} title="Move up"><FaArrowUp/></button>
-                  <button className="hp-icon-btn hp-icon-btn--move" onClick={()=>moveSlide(s.id,1)}  disabled={i===slides.length-1} title="Move down"><FaArrowDown/></button>
-                  <button className={`hp-icon-btn ${s.active?"hp-icon-btn--eye":"hp-icon-btn--eye-off"}`} onClick={()=>toggleSlide(s.id)} title={s.active?"Hide":"Show"}>
-                    {s.active?<FaEye/>:<FaEyeSlash/>}
-                  </button>
-                  <button className="hp-icon-btn hp-icon-btn--edit" onClick={()=>openSlide(s)} title="Edit"><FaEdit/></button>
-                  <button className="hp-icon-btn hp-icon-btn--del"  onClick={()=>delSlide(s.id)} title="Delete"><FaTrash/></button>
-                </div>
-                {!s.active && <span className="hp-slide-card__hidden-badge">Hidden</span>}
+                ))}
               </div>
-            ))}
+            )}
 
             {!slidesLoading && !slidesError && slides.length===0 && (
               <div className="hp-empty"><FaImage/><p>No slides yet. Click "Add Slide" to get started.</p></div>
@@ -354,9 +394,17 @@ export default function HeroPanel() {
 
           {/* Preview */}
           <div className="hp-preview-col">
-            <div className="hp-preview-col__title"><FaEye style={{opacity:0.5}}/> Homepage Preview</div>
-            <SliderPreview slides={slides}/>
-            <div className="hp-preview-note"><strong>{activeCount}</strong> of {slides.length} slides active · Auto-advances every 6s</div>
+            <div className="hp-preview-col__title"><FaEye style={{opacity:0.5}}/> Slide Preview</div>
+            <SinglePreview slide={previewSlide}/>
+            {previewSlide && (
+              <div className="hp-preview-note">
+                Previewing <strong>slide {previewIndex+1}</strong> of {slides.length}
+                {!previewSlide.active && " · hidden from the homepage"}
+              </div>
+            )}
+            {!previewSlide && (
+              <div className="hp-preview-note"><strong>{activeCount}</strong> of {slides.length} slides active</div>
+            )}
           </div>
         </div>
       )}

@@ -224,7 +224,9 @@ CREATE TABLE applications (
   offer_letter_path VARCHAR(255) NULL,
   offer_sent_at     TIMESTAMP NULL DEFAULT NULL,
   received_at    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_applications_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
+  CONSTRAINT fk_applications_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL,
+  INDEX idx_applications_kcse_index (kcse_index),
+  INDEX idx_applications_status (status, received_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ── application_documents ───────────────────────────────────
