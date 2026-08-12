@@ -83,7 +83,12 @@ const Career = () => {
   }, []);
 
   const openJobs   = jobs.filter((j) => isOpen(j.closeDate));
-  const closedJobs = jobs.filter((j) => !isOpen(j.closeDate));
+  // Public site only ever shows the 5 most recently closed vacancies —
+  // older ones stay in the admin panel's records but drop off this list.
+  const closedJobs = jobs
+    .filter((j) => !isOpen(j.closeDate))
+    .sort((a, b) => new Date(b.closeDate) - new Date(a.closeDate))
+    .slice(0, 5);
 
   return (
     <>

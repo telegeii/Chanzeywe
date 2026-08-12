@@ -10,7 +10,10 @@
 .slider {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 100vh;              /* fallback for browsers without dvh support */
+  height: 100dvh;             /* real visible viewport — avoids the mobile
+                                  address-bar bug where 100vh runs taller
+                                  than what's actually on screen */
   min-height: 520px;
   max-height: 900px;
   overflow: hidden;          /* CRITICAL — clips any translateX bleed */
@@ -294,13 +297,13 @@
 
 /* ── Tablet (≤ 1024px) ── */
 @media (max-width: 1024px) {
-  .slider          { height: 75vh; }
+  .slider          { height: 75vh; height: 75dvh; }
   .slide__content  { padding: 0 6% 108px; }
 }
 
 /* ── Small tablet / large phone (≤ 768px) ── */
 @media (max-width: 768px) {
-  .slider         { height: 68vh; min-height: 400px; }
+  .slider         { height: 68vh; height: 68dvh; min-height: 400px; }
   .slide__content { padding: 0 6% 100px; }
 
   /* ── ARROWS HIDDEN — swipe to navigate on touch ── */
@@ -339,7 +342,7 @@
 
 /* ── Mobile (≤ 480px) ── */
 @media (max-width: 480px) {
-  .slider          { height: 85vh; min-height: 380px; }
+  .slider          { height: 85vh; height: 85dvh; min-height: 380px; }
   .slide__content  { padding: 0 5% 90px; max-width: 100%; }
 
   .slide__bg       { background-position: center center; }
@@ -381,7 +384,7 @@
 
 /* ── Very small (≤ 360px) ── */
 @media (max-width: 360px) {
-  .slider         { height: 90vh; }
+  .slider         { height: 90vh; height: 90dvh; }
   .slide__title   { font-size: 1.7rem; }
   .slide__subtitle{ display: none; }
 }

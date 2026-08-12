@@ -11,6 +11,12 @@ import {
   FaDownload, FaGraduationCap, FaFileAlt,
 } from "react-icons/fa";
 
+// 11-digit KCSE index number, then a slash, then the 4-digit exam year —
+// e.g. 29513204036/2024. Same shape enforced on the application form and
+// server-side, so this catches typos before they turn into a confusing
+// "not found" result.
+const INDEX_PATTERN = /^\d{11}\/\d{4}$/;
+
 const AdmissionLetter = () => {
   useSeo({
     title: "Download Admission Letter",
@@ -32,15 +38,20 @@ const AdmissionLetter = () => {
 
   const check = async (e) => {
     e.preventDefault();
-    if (!indexNumber.trim()) {
+    const trimmed = indexNumber.trim();
+    if (!trimmed) {
       setError("Enter your KCSE index number.");
+      return;
+    }
+    if (!INDEX_PATTERN.test(trimmed)) {
+      setError("That doesn't look right — enter it as 11 digits, a slash, then the year, e.g. 29513204036/2024.");
       return;
     }
     setLoading(true);
     setError("");
     setResult(null);
     try {
-      const data = await apiGet(`/applications.php?checkOffer=${encodeURIComponent(indexNumber.trim())}`);
+      const data = await apiGet(`/applications.php?checkOffer=${encodeURIComponent(trimmed)}`);
       setResult(data);
     } catch (err) {
       setError(err.message || "No accepted admission was found for that KCSE index number.");
@@ -73,7 +84,10 @@ const AdmissionLetter = () => {
         <div className="adml-card">
 
           <form className="adml-form" onSubmit={check}>
-            <label htmlFor="adml-index">KCSE Index Number</label>
+            <label htmlFor="adml-index">
+              KCSE Index Number
+              <span className="adml-format-tag">Format: 11 digits / year</span>
+            </label>
             <div className="adml-input-row">
               <input
                 id="adml-index"
@@ -82,13 +96,17 @@ const AdmissionLetter = () => {
                 onChange={(e) => setIndexNumber(e.target.value)}
                 placeholder="e.g. 29513204036/2024"
                 autoComplete="off"
+                inputMode="numeric"
+                aria-describedby="adml-index-hint"
               />
               <button type="submit" disabled={loading}>
                 <FaSearch /> {loading ? "Checking…" : "Check Status"}
               </button>
             </div>
-            <span className="adml-hint">
-              This is the same KCSE index number you gave on your application form.
+            <span className="adml-hint" id="adml-index-hint">
+              This is the same KCSE index number you gave on your application form —
+              enter it exactly as <strong>29513204036/2024</strong>: your 11-digit index
+              number, a forward slash, then the 4-digit exam year.
             </span>
           </form>
 

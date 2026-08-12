@@ -57,7 +57,7 @@ const levels = [
 ];
 
 const Hospitality = () => {
-  const [activeTab, setActiveTab] = useState("admission");
+  const [activeTab, setActiveTab] = useState("courses");
   const [department, setDepartment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

@@ -85,7 +85,12 @@ const Tender = () => {
   }, []);
 
   const openTenders   = tenders.filter((t) => isOpen(t.closeDate));
-  const closedTenders = tenders.filter((t) => !isOpen(t.closeDate));
+  // Public site only ever shows the 5 most recently closed tenders — older
+  // ones stay in the admin panel's records but drop off the public list.
+  const closedTenders = tenders
+    .filter((t) => !isOpen(t.closeDate))
+    .sort((a, b) => new Date(b.closeDate) - new Date(a.closeDate))
+    .slice(0, 5);
 
   return (
     <>
