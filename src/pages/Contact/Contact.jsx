@@ -43,7 +43,7 @@ const contactDetails = [
 const Contact = () => {
   useSeo({
     title: "Contact Us",
-    description: "Get in touch with Chanzeywe Vocational Training College — located near Mahanga Market, Vihiga County, Kenya. Call +254 740 932 743 or email chanzeywetvc@gmail.com.",
+    description: "Get in touch with Chanzeywe Technical and Vocational College— located near Mahanga Market, Vihiga County, Kenya. Call +254 740 932 743 or email chanzeywetvc@gmail.com.",
   });
 
   const [focused, setFocused] = useState(null);

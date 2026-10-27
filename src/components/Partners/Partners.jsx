@@ -1,7 +1,6 @@
 import React from "react";
 import "./Partner.css";
 import Tveta from "../../assets/tveta.png";
-import Vibrant from "../../assets/Vibrant.jpeg";
 import Cdacc from "../../assets/CDACC.png";
 import Nita from "../../assets/nita.jpg";
 import Moe from "../../assets/Moe.png";
@@ -22,7 +21,6 @@ const logos = [
   { logo: Moe, name: "Ministry of Education (MOE)" },
   { logo: Nita, name: "National Industrial Training Authority (NITA)" },
   { logo: Cdacc, name: "Curriculum Development, Assessment and Certification Council (CDACC)" },
-  { logo: Vibrant, name: "Vibrant Village Foundation" },
   { logo: Tveta, name: "Technical and Vocational Education and Training Authority (TVETA)" },
 ];
 

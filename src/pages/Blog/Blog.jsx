@@ -19,7 +19,7 @@ import {
 const Blog = () => {
   useSeo({
     title: "News & Blog",
-    description: "Latest news, announcements and achievements from Chanzeywe Vocational Training College, Vihiga County, Kenya.",
+    description: "Latest news, announcements and achievements from Chanzeywe Technical Vocational and Training College, Vihiga County, Kenya.",
   });
 
   const navigate = useNavigate();

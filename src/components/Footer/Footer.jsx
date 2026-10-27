@@ -62,7 +62,7 @@ const Footer = () => {
               <img src={logo} alt="Chanzeywe TVC Logo" />
             </div>
             <p className="footer-brand__desc">
-              Chanzeywe Vocational Training College is a public TVET institution
+              Chanzeywe Technical Vocational and Training College is a public TVET institution
               offering Diploma, Certificate, and Artisan-level programmes. Located
               1 km from Mahanga Market, Vihiga County.
             </p>
@@ -138,8 +138,8 @@ const Footer = () => {
 
       {/* ── Bottom bar ── */}
       <div className="footer-bottom">
-        <p>© {year} Chanzeywe Vocational Training College. All rights reserved.</p>
-        <p>Designed & Built by <a href="#" className="footer-bottom__credit">Techfric Kenya</a></p>
+        <p>© {year} Chanzeywe Technical Vocational and Training College. All rights reserved.</p>
+        <p>Designed & Built by <a href="techfric.co.ke" className="footer-bottom__credit">Techfric Kenya</a></p>
       </div>
 
     </footer>

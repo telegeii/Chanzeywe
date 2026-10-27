@@ -3,7 +3,7 @@ import "./Principal.css";
 import PrincipalPhoto from "../../assets/Photo4.jpg";
 
 const DEFAULTS = {
-  name: "Mr. Gilbert G. Mwavali",
+  name: "Mr. Telegei Edward",
   title: "Principal / Secretary – B.O.G",
   greeting: "Karibu",
   message:

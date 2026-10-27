@@ -18,7 +18,7 @@ const FALLBACK_IMAGES = [Image1, Image2, Image3];
 const Home = () => {
   useSeo({
     title: "Home",
-    description: "Chanzeywe Vocational Training College in Vihiga County, Kenya — CDACC-accredited diploma, certificate and artisan courses in Computing, Building, Electrical, Hospitality, Agriculture and Liberal Studies. Apply online today.",
+    description: " Chanzeywe Technical and Vocational College in Vihiga County, Kenya — CDACC-accredited diploma, certificate and artisan courses in Computing, Building, Electrical, Hospitality, Agriculture and Liberal Studies. Apply online today.",
   });
 
   const [slides, setSlides] = useState(null);

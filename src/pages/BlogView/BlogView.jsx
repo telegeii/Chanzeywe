@@ -15,7 +15,7 @@ const BlogView = () => {
 
   useSeo({
     title: blog ? blog.title : "News & Blog",
-    description: blog ? (blog.content || "").slice(0, 155) : "Latest news from Chanzeywe Vocational Training College, Vihiga County, Kenya.",
+    description: blog ? (blog.content || "").slice(0, 155) : "Latest news from Chanzeywe Technical Vocational and Training College, Vihiga County, Kenya.",
   });
 
   if (!blog) {

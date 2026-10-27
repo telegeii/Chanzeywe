@@ -20,7 +20,7 @@ const INDEX_PATTERN = /^\d{11}\/\d{4}$/;
 const AdmissionLetter = () => {
   useSeo({
     title: "Download Admission Letter",
-    description: "Accepted applicants can download their official Chanzeywe Vocational Training College admission letter using their KCSE index number.",
+    description: "Accepted applicants can download their official Chanzeywe Technical Vocational and Training College admission letter using their KCSE index number.",
   });
 
   const location = useLocation();

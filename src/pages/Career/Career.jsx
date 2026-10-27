@@ -68,7 +68,7 @@ const JobTable = ({ rows, showAction }) => (
 const Career = () => {
   useSeo({
     title: "Careers",
-    description: "Current job vacancies at Chanzeywe Vocational Training College, Vihiga County, Kenya. We are an equal opportunity employer.",
+    description: "Current job vacancies at Chanzeywe Technical Vocational and Training College, Vihiga County, Kenya. We are an equal opportunity employer.",
   });
 
   const [jobs, setJobs] = useState([]);
@@ -98,7 +98,7 @@ const Career = () => {
       <section className="career-hero">
         <img src={Photo} alt="Careers at Chanzeywe" />
         <div className="career-hero-text">
-          <h2>Careers at Chanzeywe Vocational Training College</h2>
+          <h2>Careers at Chanzeywe Technical Vocational and Training College</h2>
           <p>Chanzeywe is an equal opportunity employer.</p>
           <div className="career-hero-text__breadcrumb">
             <Link to="/">Home</Link>

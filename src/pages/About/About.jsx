@@ -42,7 +42,7 @@ const values = [
 const About = () => {
   useSeo({
     title: "About Us",
-    description: "Learn about Chanzeywe Vocational Training College — founded in 2020 in Vihiga County, Kenya, serving the community with quality, accessible technical and vocational education.",
+    description: "Learn about Chanzeywe Technical Vocational and Training College — founded in 2020 in Vihiga County, Kenya, serving the community with quality, accessible technical and vocational education.",
   });
 
   return (
@@ -51,7 +51,7 @@ const About = () => {
 
       {/* ── Hero ── */}
       <div className="about-hero">
-        <img src={Photo} alt="Chanzeywe Vocational Training College campus" />
+        <img src={Photo} alt="Chanzeywe Technical Vocational and Training College campus" />
         <div className="about-hero__overlay" />
         <div className="about-hero__content">
           <span className="about-hero__eyebrow">Who We Are</span>
@@ -80,9 +80,9 @@ const About = () => {
           <div className="about-intro__label">
             <span className="about-eyebrow">Our Story</span>
           </div>
-          <h2>Chanzeywe Vocational Training College</h2>
+          <h2>Chanzeywe Technical Vocational and Training College</h2>
           <p>
-            Founded in 2005 and nestled in Vihiga County, Chanzeywe Vocational Training College
+            Founded in 2005 and nestled in Vihiga County, Chanzeywe Technical Vocational and Training College
             is a public TVET institution committed to delivering quality technical and business
             education. We equip learners with practical, industry-ready skills for both local
             and international markets — producing responsible, innovative professionals who

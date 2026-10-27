@@ -287,7 +287,7 @@ const ApplicationForm = () => {
         <div className="app-institute-header__overlay" />
         <div className="app-institute-header__rings" />
         <div className="app-institute-header__content">
-          <h1>Chanzeywe Vocational Training College</h1>
+          <h1>Chanzeywe Technical Vocational and Training College</h1>
           <p className="app-institute-header__tagline">Skills to Transform Livelihoods — Vihiga County</p>
           <div className="app-institute-header__contacts">
             <span>P.O. Box 413 – 50310 Vihiga</span>

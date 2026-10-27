@@ -35,8 +35,8 @@ const News = () => {
         <span className="blog-eyebrow">Newsroom</span>
         <h2>Latest News & Updates</h2>
         <p>
-          Announcements, partnerships, and achievements from Chanzeywe
-          Vocational College.
+          Announcements, partnerships, and achievements from Chanzeywe Technical
+           Vocational and Training College.
         </p>
       </div>
 

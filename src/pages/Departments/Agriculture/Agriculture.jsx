@@ -130,7 +130,7 @@ const Agriculture = () => {
             Head of Department: <strong>{department.hod || "TBD"}</strong>
           </p>
           <p className="cmp-dept__tagline">
-            Chanzeywe Vocational Training College — Skills to Transform Livelihoods
+             Chanzeywe Technical and Vocational College — Skills to Transform Livelihoods
           </p>
         </div>
       </section>

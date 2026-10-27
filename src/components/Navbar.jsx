@@ -91,11 +91,11 @@ export default function Navbar() {
       <div className="nav-topbar">
       <div className="nav-topbar__track">
         <span className="nav-topbar__content">
-          Chanzeywe Vocational Training College — Skills to Transform Livelihoods
+          Chanzeywe Technical Vocational and Training College — Skills to Transform Livelihoods
         </span>
         {/* Duplicate for seamless loop on mobile */}
         <span className="nav-topbar__content">
-          Chanzeywe Vocational Training College — Skills to Transform Livelihoods
+          Chanzeywe Technical Vocational and Training College — Skills to Transform Livelihoods
         </span>
       </div>
     </div>
@@ -108,7 +108,7 @@ export default function Navbar() {
           </div>
           <div className="nav-logo__text">
             <span className="nav-logo__name">Chanzeywe</span>
-            <span className="nav-logo__sub">Vocational Training College</span>
+            <span className="nav-logo__sub">Technical Vocational and Training College</span>
           </div>
         </Link>
 
