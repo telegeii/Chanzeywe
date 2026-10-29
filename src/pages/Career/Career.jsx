@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
-import Photo from "../../assets/Photo1.jpg";
+import Photo from "../../assets/Photo1.png";
 import Sorry from "../../assets/sorry.png";
 import "./Career.css";
 import { Link } from "react-router-dom";

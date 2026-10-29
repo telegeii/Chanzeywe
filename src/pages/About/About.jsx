@@ -1,6 +1,6 @@
 import React from "react";
 import "./About.css";
-import Photo from "../../assets/Photo1.jpg";
+import Photo from "../../assets/Photo1.png";
 import Mission from "../../assets/mission.png";
 import Vision from "../../assets/vision.png";
 import Footer from "../../components/Footer/Footer";

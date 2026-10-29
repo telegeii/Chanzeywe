@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
 import Footer from "../../../components/Footer/Footer";
-import Photo from "../../../assets/Photo1.jpg";
+import Photo from "../../../assets/Photo1.png";
 import Level6 from "../../../assets/Level6.png";
 import Level5 from "../../../assets/Level5.png";
 import Level4 from "../../../assets/Level4.png";

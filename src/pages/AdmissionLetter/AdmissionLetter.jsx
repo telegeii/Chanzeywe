@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
-import Photo from "../../assets/Photo1.jpg";
+import Photo from "../../assets/Photo1.png";
 import "./AdmissionLetter.css";
 import useSeo from "../../utils/useSeo";
 import { apiGet } from "../../utils/api";

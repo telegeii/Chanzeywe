@@ -1,5 +1,5 @@
 import React from "react";
-import Photo from "../../assets/Photo1.jpg";
+import Photo from "../../assets/Photo1.png";
 import Footer from "../../components/Footer/Footer";
 import Navbar from "../../components/Navbar";
 import Level6 from "../../assets/Level6.png";

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import "./Downloads.css";
-import Photo from "../../assets/Photo1.jpg";
+import Photo from "../../assets/Photo1.png";
 import { Link } from "react-router-dom";
 import {
   FaDownload,

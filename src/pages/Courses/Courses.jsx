@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Courses.css";
-import Photo from "../../assets/Photo1.jpg";
+import Photo from "../../assets/Photo1.png";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer/Footer";
 import PDF from "../../assets/English.pdf";
