@@ -36,7 +36,7 @@ const contactDetails = [
     icon: <FaClock />,
     label: "Working Hours",
     value: "Mon – Fri: 8:00 AM – 5:00 PM",
-    sub: "Sat: 8:00 AM – 1:00 PM",
+    sub: "Sat: Closed",
   },
 ];
 
