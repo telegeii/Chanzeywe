@@ -139,7 +139,7 @@ const Footer = () => {
       {/* ── Bottom bar ── */}
       <div className="footer-bottom">
         <p>© {year} Chanzeywe Technical Vocational and Training College. All rights reserved.</p>
-        <p>Designed & Built by <a href="techfric.co.ke" className="footer-bottom__credit">Techfric Kenya</a></p>
+        <p>Designed & Built by <a href="techfric.co.ke" className="footer-bottom__credit"></a></p>
       </div>
 
     </footer>
