@@ -131,7 +131,7 @@ const Computing = () => {
             Head of Department: <strong>{department.hod || "TBD"}</strong>
           </p>
           <p className="cmp-dept__tagline">
-             Chanzeywe Technical and Vocational College — Skills to Transform Livelihoods
+             Ngeria Technical Training Institute — Skills to Transform Livelihoods
           </p>
         </div>
       </section>

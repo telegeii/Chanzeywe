@@ -1,6 +1,6 @@
 import React from "react";
 import "./Footer.css";
-import logo from "../../assets/Logo.png";
+import logo from "../../assets/logo.jpg";
 import { Link } from "react-router-dom";
 import {
   FaMapMarkerAlt,
@@ -59,12 +59,12 @@ const Footer = () => {
           {/* ── Brand ── */}
           <div className="footer-brand">
             <div className="footer-logo-wrap">
-              <img src={logo} alt="Chanzeywe TVC Logo" />
+              <img src={logo} alt="Ngeria TVC Logo" />
             </div>
             <p className="footer-brand__desc">
-              Chanzeywe Technical Vocational and Training College is a public TVET institution
+              Ngeria Technical Training Institute is a public TVET institution
               offering Diploma, Certificate, and Artisan-level programmes. Located
-              1 km from Mahanga Market, Vihiga County.
+              10 km from Ngeria Market Center, Uasin Gishu County.
             </p>
             <div className="footer-badge">
               <span><FaCertificate /> ISO 9001:2015 Certified</span>
@@ -115,15 +115,15 @@ const Footer = () => {
             <ul className="footer-contact__list">
               <li>
                 <span className="footer-contact__icon"><FaMapMarkerAlt /></span>
-                <span>P.O. Box 413 – 50310, Vihiga County, Kenya</span>
+                <span>P.O. Box 413 – 50310, Uasin Gishu County, Kenya</span>
               </li>
               <li>
                 <span className="footer-contact__icon"><FaPhoneAlt /></span>
-                <a href="tel:+254740932743">+254 740 932 743</a>
+                <a href="tel:+25470792 604748">0792 604748</a>
               </li>
               <li>
                 <span className="footer-contact__icon"><FaEnvelope /></span>
-                <a href="mailto:chanzeywetvc@gmail.com">chanzeywetvc@gmail.com</a>
+                <a href="mailto:ngeriatechnical@gmail.com">ngeriatechnical@gmail.com</a>
               </li>
             </ul>
 
@@ -138,8 +138,8 @@ const Footer = () => {
 
       {/* ── Bottom bar ── */}
       <div className="footer-bottom">
-        <p>© {year} Chanzeywe Technical Vocational and Training College. All rights reserved.</p>
-        <p>Designed & Built by <a href="techfric.co.ke" className="footer-bottom__credit"></a></p>
+        <p>© {year} Ngeria Technical Training Institute. All rights reserved.</p>
+        <p>Designed & Built by Techfric Kenya<a href="techfric.co.ke" className="footer-bottom__credit"></a></p>
       </div>
 
     </footer>

@@ -70,7 +70,7 @@ const TenderTable = ({ rows, showAction }) => (
 const Tender = () => {
   useSeo({
     title: "Tenders",
-    description: "Current and past procurement tenders at Chanzeywe Vocational Training College, Vihiga County, Kenya. Subject to PPRA regulations.",
+    description: "Current and past procurement tenders at Ngeria Technical Training Institute, Uasin Gishu County, Kenya. Subject to PPRA regulations.",
   });
 
   const [tenders, setTenders] = useState([]);
@@ -98,9 +98,9 @@ const Tender = () => {
 
       {/* ── Hero ── */}
       <section className="tender-hero">
-        <img src={Photo} alt="Tenders at Chanzeywe" />
+        <img src={Photo} alt="Tenders at Ngeria Technical Training Institute" />
         <div className="tender-hero-text">
-          <h2>Tenders at  Chanzeywe Technical and Vocational College</h2>
+          <h2>Tenders at  Ngeria Technical Training Institute</h2>
           <p>We welcome suppliers to participate in our procurement processes.</p>
           <div className="tender-hero-text__breadcrumb">
             <Link to="/">Home</Link>

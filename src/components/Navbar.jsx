@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logoImg from "../assets/Logo.png";
+import logoImg from "../assets/logo.jpg";
 import "../Style/Nav.css";
 
 const navItems = [
@@ -91,11 +91,11 @@ export default function Navbar() {
       <div className="nav-topbar">
       <div className="nav-topbar__track">
         <span className="nav-topbar__content">
-          Chanzeywe Technical Vocational and Training College — Skills to Transform Livelihoods
+           Ngeria Technical Training institute
         </span>
         {/* Duplicate for seamless loop on mobile */}
         <span className="nav-topbar__content">
-          Chanzeywe Technical Vocational and Training College — Skills to Transform Livelihoods
+          Ngeria Technical Training institute
         </span>
       </div>
     </div>
@@ -107,8 +107,8 @@ export default function Navbar() {
             <img src={logoImg} alt="Chanzeywe Logo" />
           </div>
           <div className="nav-logo__text">
-            <span className="nav-logo__name">Chanzeywe</span>
-            <span className="nav-logo__sub">Technical Vocational and Training College</span>
+            <span className="nav-logo__name">Ngeria</span>
+            <span className="nav-logo__sub">Technical Training Institute</span>
           </div>
         </Link>
 

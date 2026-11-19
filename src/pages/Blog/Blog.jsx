@@ -19,7 +19,7 @@ import {
 const Blog = () => {
   useSeo({
     title: "News & Blog",
-    description: "Latest news, announcements and achievements from Chanzeywe Technical Vocational and Training College, Vihiga County, Kenya.",
+    description: "Latest news, announcements and achievements from Ngeria Technical Training Institute, Uasin Gishu County, Kenya.",
   });
 
   const navigate = useNavigate();
@@ -60,7 +60,7 @@ const Blog = () => {
           <h2>Latest News & Updates</h2>
           <p>
             Discover announcements, partnerships, and achievements from
-            Chanzeywe Vocational College.
+            Ngeria Technical Training Institute.
           </p>
         </div>
 

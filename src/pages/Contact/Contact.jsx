@@ -43,7 +43,7 @@ const contactDetails = [
 const Contact = () => {
   useSeo({
     title: "Contact Us",
-    description: "Get in touch with Chanzeywe Technical and Vocational College— located near Mahanga Market, Vihiga County, Kenya. Call +254 740 932 743 or email chanzeywetvc@gmail.com.",
+    description: "Get in touch with Ngeria Technical Training Institute— located near Ngeria Market Center, Uasin Gishu County, Kenya. Call +254 740 932 743 or email ngeriatechnical@gmail.com.",
   });
 
   const [focused, setFocused] = useState(null);
@@ -165,8 +165,8 @@ const Contact = () => {
               <span className="contact-eyebrow">Find Us</span>
               <h2>Our Location</h2>
               <p className="contact-info-card__desc">
-                Chanzeywe TVC is a public TVET institution offering Diploma,
-                Certificate, and Artisan programmes, located in Vihiga County.
+                Ngeria Technical Training Institute is a public TVET institution offering Diploma,
+                Certificate, and Artisan programmes, located in Uasin Gishu County.
               </p>
 
               <div className="contact-details">

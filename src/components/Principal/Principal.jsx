@@ -1,13 +1,13 @@
 import React from "react";
 import "./Principal.css";
-import PrincipalPhoto from "../../assets/Photo4.jpg";
+import PrincipalPhoto from "../../assets/Photo5.jpg";
 
 const DEFAULTS = {
-  name: "Mr. Moses Mayoya",
+  name: "Mrs. Unice Kerich",
   title: "Principal / Secretary – B.O.G",
   greeting: "Karibu",
   message:
-    "A heartfelt welcome to the digital home of Chanzeywe Institute. We are committed to academic excellence, innovation, and the development of skilled professionals ready to thrive in the modern technological world.",
+    "A heartfelt welcome to the digital home of Ngeria Technical Training Institute. We are committed to academic excellence, innovation, and the development of skilled professionals ready to thrive in the modern technological world.",
   photo: null,
 };
 

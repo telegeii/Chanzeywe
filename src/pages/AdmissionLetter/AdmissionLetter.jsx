@@ -66,7 +66,7 @@ const AdmissionLetter = () => {
 
       {/* ── Hero ── */}
       <div className="adml-hero">
-        <img src={Photo} alt="Chanzeywe Admission Letter" />
+        <img src={Photo} alt="ngeria Admission Letter" />
         <div className="adml-hero__overlay" />
         <div className="adml-hero__content">
           <span className="adml-hero__eyebrow">Accepted Applicants</span>

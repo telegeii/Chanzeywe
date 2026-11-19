@@ -69,7 +69,7 @@ const levels = [
 const Instruction = () => {
   useSeo({
     title: "Admission Instructions",
-    description: "How to apply and enroll at Chanzeywe Vocational Training College — admission requirements, documents needed, and entry levels for TVET programmes in Vihiga, Kenya.",
+    description: "How to apply and enroll at Ngeria Technical Training Institute — admission requirements, documents needed, and entry levels for TVET programmes in Uasin Gishu, Kenya.",
   });
 
   return (
@@ -78,7 +78,7 @@ const Instruction = () => {
 
       {/* ── Hero ── */}
       <section className="ins-hero">
-        <img src={Photo} alt="Chanzeywe Technical Training College" />
+        <img src={Photo} alt="Ngeria Technical Training Institute" />
         <div className="ins-hero__overlay" />
         <div className="ins-hero__content">
           <span className="ins-hero__eyebrow">Joining Instructions</span>
@@ -108,9 +108,9 @@ const Instruction = () => {
         <div className="ins-why__container">
           <div className="ins-why__text">
             <span className="ins-eyebrow">Our Advantage</span>
-            <h2>Why Chanzeywe Stands Out</h2>
+            <h2>Why Ngeria Technical Training Institute Stands Out</h2>
             <p>
-              At <strong>Chanzeywe</strong>, we understand the fast-changing job
+              At <strong>Ngeria Technical Training Institute</strong>, we understand the fast-changing job
               market and the importance of hands-on expertise. Our programmes are
               designed to equip you with real-world technical skills that
               employers are actively seeking.

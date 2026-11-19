@@ -43,7 +43,7 @@ const getLevelVariant = (level = "") => {
 const Courses = () => {
   useSeo({
     title: "Courses & Programmes",
-    description: "Explore CDACC-accredited diploma, certificate and artisan courses at Chanzeywe Vocational Training College across Computing, Building, Electrical, Hospitality, Agriculture and Liberal Studies departments.",
+    description: "Explore CDACC-accredited diploma, certificate and artisan courses at Ngeria Technical Training Institute across Computing, Building, Electrical, Hospitality, Agriculture and Liberal Studies departments.",
   });
 
   const itemsPerPage = 2;

@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import "./Slider.css";
 
-import Image1 from "../../assets/Photo1.jpg";
-import Image2 from "../../assets/Photo2.jpg";
-import Image3 from "../../assets/Photo3.jpg";
+import Image1 from "../../assets/school.jpg";
+import Image2 from "../../assets/school1.jpeg";
+import Image3 from "../../assets/school2.jpg";
 
 /* ─────────────────────────────────────────────
    Default slides — replace with data from your

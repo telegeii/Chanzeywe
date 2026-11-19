@@ -113,7 +113,7 @@ const Building = () => {
           <span className="cmp-eyebrow">Our Department</span>
           <h2>{department.name} Department</h2>
           <p className="cmp-dept__hod">Head of Department: <strong>{department.hod || "TBD"}</strong></p>
-          <p className="cmp-dept__tagline">Chanzeywe Vocational Training College — Skills to Transform Livelihoods</p>
+          <p className="cmp-dept__tagline">Ngeria Technical Training Institute — Skills to Transform Livelihoods</p>
         </div>
       </section>
 

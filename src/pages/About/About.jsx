@@ -10,9 +10,9 @@ import { Link } from "react-router-dom";
 import useSeo from "../../utils/useSeo";
 
 const stats = [
-  { num: "2020", label: "Est. Year" },
-  { num: "1,200+", label: "Alumni" },
-  { num: "11+", label: "Departments" },
+  { num: "2024", label: "Est. Year" },
+  { num: "100+", label: "Alumni" },
+  { num: "10+", label: "Departments" },
   { num: "ISO", label: "9001:2015" },
 ];
 
@@ -35,14 +35,14 @@ const values = [
   {
     icon: <FaMapMarkerAlt />,
     title: "Accessibility",
-    desc: "Strategically located near Mahanga Market, we are easy to reach for all learners.",
+    desc: "Strategically located near Ngeria Market Center, we are easy to reach for all learners.",
   },
 ];
 
 const About = () => {
   useSeo({
     title: "About Us",
-    description: "Learn about Chanzeywe Technical Vocational and Training College — founded in 2020 in Vihiga County, Kenya, serving the community with quality, accessible technical and vocational education.",
+    description: "Learn about Ngeria Technical Training Institute — founded in 2024 in Uasin Gishu County, Kenya, serving the community with quality, accessible technical and vocational education.",
   });
 
   return (
@@ -51,12 +51,12 @@ const About = () => {
 
       {/* ── Hero ── */}
       <div className="about-hero">
-        <img src={Photo} alt="Chanzeywe Technical Vocational and Training College campus" />
+        <img src={Photo} alt="Ngeria Technical Training Institute campus" />
         <div className="about-hero__overlay" />
         <div className="about-hero__content">
           <span className="about-hero__eyebrow">Who We Are</span>
-          <h1>About Chanzeywe</h1>
-          <p>Empowering communities through quality technical education since 2020.</p>
+          <h1>About Ngeria Technical Training Institute</h1>
+          <p>Empowering communities through quality technical education since 2024.</p>
           <div className="about-hero__breadcrumb">
             <Link to="/">Home</Link>
             <FaChevronRight />
@@ -80,9 +80,9 @@ const About = () => {
           <div className="about-intro__label">
             <span className="about-eyebrow">Our Story</span>
           </div>
-          <h2>Chanzeywe Technical Vocational and Training College</h2>
+          <h2>Ngeria Technical Training Institute</h2>
           <p>
-            Founded in 2005 and nestled in Vihiga County, Chanzeywe Technical Vocational and Training College
+            Founded in 2024 and nestled in Uasin Gishu County, Ngeria Technical Training Institute
             is a public TVET institution committed to delivering quality technical and business
             education. We equip learners with practical, industry-ready skills for both local
             and international markets — producing responsible, innovative professionals who

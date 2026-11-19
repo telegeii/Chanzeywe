@@ -9,10 +9,10 @@ import Knqa from "../../assets/KNQA.png";
 import Knec from "../../assets/KNEC.jpg";
 import Helb from "../../assets/helb.jpg";
 import Gok from "../../assets/gok.png";
-import County from "../../assets/County.png";
+import County from "../../assets/county1.jpg";
 
 const logos = [
-  { logo: County, name: "County Government of Vihiga" },
+  { logo: County, name: "County Government of Uasin Gishu" },
   { logo: Gok, name: "Government of Kenya (GOK)" },
   { logo: Helb, name: "Higher Education Loans Board (HELB)" },
   { logo: Knec, name: "Kenya National Examinations Council (KNEC)" },
@@ -67,7 +67,7 @@ export default function Partners() {
         </div>
         <div className="partners-stat__divider" />
         <div className="partners-stat">
-          <span className="partners-stat__num">Since 2020</span>
+          <span className="partners-stat__num">Since 2024</span>
           <span className="partners-stat__label">Accredited</span>
         </div>
       </div>

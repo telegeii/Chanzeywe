@@ -29,7 +29,7 @@ const TAG_ICON = {
 const Downloads = () => {
   useSeo({
     title: "Downloads",
-    description: "Download official forms and documents from Chanzeywe Vocational Training College — fee structure, admission form, medical form, registration form and more.",
+    description: "Download official forms and documents from Ngeria Technical Training Institute — fee structure, admission form, medical form, registration form and more.",
   });
 
   const [downloads, setDownloads] = useState([]);

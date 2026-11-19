@@ -20,7 +20,7 @@ import useSeo from "../../utils/useSeo";
 const Charter = () => {
   useSeo({
     title: "Service Charter",
-    description: "Chanzeywe Technical Vocational and Training College's Service Charter — our commitment to students, in English and Kiswahili, available as text, audio and video.",
+    description: "Ngeria Technical Training Institute's Service Charter — our commitment to students, in English and Kiswahili, available as text, audio and video.",
   });
 
   const [activeTab, setActiveTab] = useState("english");
@@ -70,11 +70,10 @@ const Charter = () => {
         {/* ── Intro ── */}
         <div className="charter-intro">
           <span className="charter-eyebrow">Download & View</span>
-          <h2>Chanzeywe TVC Service Charter</h2>
+          <h2>Ngeria Technical Training Institute Service Charter</h2>
           <p>
-            Our Service Charter outlines the services provided by Chanzeywe
-            Vocational Training College, our commitments to learners, and the
-            standards of service you should expect. Available in multiple formats
+            Our Service Charter outlines the services provided by Ngeria Technical Training Institute,
+            our commitments to learners, and the standards of service you should expect. Available in multiple formats
             for accessibility.
           </p>
         </div>
